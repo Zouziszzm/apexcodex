@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: Cm;
+  src: url("../../public/fonts/Cm/CascadiaMono.ttf");
+}
+
+@font-face {
+  font-family: En;
+  src: url("../../public/fonts/En/Aktura-Regular.ttf");
+}
+
+@font-face {
+  font-family: Jp;
+  src: url("../../public/fonts/Jp/BIZUDMincho-Bold.ttf");
+}
+
+/* Light Theme (default) */
+@theme {
+  --color-background: #f8f8ff;
+  --color-text: #3c3b3a;
+  --font-En: En;
+  --font-Jp: Jp;
+  --font-Cm: Cm;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --color-background: #3c3b3a;
+  --color-text: #f8f8ff;
+}
+
+/* Custom variant still available if needed */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Global body background and text color */
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  transition:
+    all 0.3s ease,
+    color 0.3s ease;
+}

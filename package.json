@@ -1,29 +1,48 @@
 {
-  "name": "farhaan's magus-codex",
+  "name": "apexmagus",
   "version": "1.0.0",
+  "description": "",
   "scripts": {
     "dev": "next dev",
+    "lint": "next lint",
     "build": "next build",
     "start": "next start",
-    "prettier": "prettier --write .",
-    "lint": "next lint"
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "keywords": [],
-  "author": "Farhaan",
+  "author": "",
   "license": "MIT",
-  "description": "Farhaan's magus-codex for Professional Journey",
+  "packageManager": "pnpm@10.9.0",
   "dependencies": {
-    "@tailwindcss/postcss": "^4.0.9",
-    "framer-motion": "^12.4.10",
-    "next": "^15.2.0",
+    "@tailwindcss/postcss": "^4.1.4",
+    "lenis": "^1.3.1",
+    "motion": "^12.7.4",
+    "next": "^15.3.1",
     "postcss": "^8.5.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwindcss": "^4.0.9"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.4"
   },
   "devDependencies": {
-    "@types/node": "22.13.8",
-    "@types/react": "19.0.10",
-    "typescript": "5.8.2"
+    "@types/node": "^22.14.1",
+    "@types/react": "^19.1.2",
+    "typescript": "^5.8.3",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@eslint/js": "^9.24.0",
+    "eslint": "^9.24.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
+    "prettier": "3.5.3",
+    "typescript-eslint": "^8.29.1"
   }
 }

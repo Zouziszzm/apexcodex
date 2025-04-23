@@ -1,0 +1,38 @@
+# Ignore artifacts
+build/
+dist/
+coverage/
+
+# Node modules
+node_modules/
+
+# Logs
+*.log
+
+# Dependency lock files (if preferred)
+package-lock.json
+yarn.lock
+
+# Environment files
+.env
+.env.*  
+
+# Public/static assets
+public/
+static/
+
+# Configs and misc
+*.min.js
+*.snap
+*.tsbuildinfo
+
+# Ignore version control folders (optional if you're formatting entire repo)
+.git/
+
+# Ignore specific file types
+*.png
+*.jpg
+*.svg
+*.ico
+
+
