@@ -1,8 +1,9 @@
 'use client';
 import React from 'react';
 import { motion } from 'motion/react';
-import { useInView } from 'motion/react';
 import { useRef } from 'react';
+import { useInView } from 'motion/react';
+import { useLanguage } from '../../../../context/Language/LanguageContext';
 import type { ReactNode } from 'react';
 
 const containerVariants = {
@@ -29,7 +30,11 @@ export default function AnimatedContainer({
   children: ReactNode;
 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, margin: '-100px' }); // triggers earlier and allows multiple triggers
+  const isInView = useInView(ref, { once: false, margin: '-100px' });
+  const { language } = useLanguage();
+
+  // Combine view state and language to trigger animation
+  const shouldAnimate = isInView || language;
 
   return (
     <motion.div
@@ -37,11 +42,11 @@ export default function AnimatedContainer({
       className="w-full"
       variants={containerVariants}
       initial="hidden"
-      animate={isInView ? 'show' : 'hidden'}
+      animate={shouldAnimate ? 'show' : 'hidden'}
     >
       {Array.isArray(children) ? (
         children.map((child, index) => (
-          <motion.div key={index} variants={itemVariants}>
+          <motion.div key={`${language}-${index}`} variants={itemVariants}>
             {child}
           </motion.div>
         ))

@@ -17,7 +17,7 @@ const Navbar = () => {
 
   return (
     <nav className="w-full h-9 sticky flex justify-center items-center">
-      <div className="w-[70%] h-full flex gap-4 justify-center items-center">
+      <div className="w-full md:w-[70%] h-full flex gap-4 justify-center items-center">
         {Links.map((link) => (
           <div key={link.title} className="p-1.5 m-0.5 font-bold">
             {link.title === 'Theme' ? (
@@ -32,7 +32,7 @@ const Navbar = () => {
                 onClick={toggleLanguage}
                 className="cursor-pointer hover:underline"
               >
-                Toggle Language ({language === 'en' ? 'English' : 'Japanese'})
+                {language === 'en' ? 'En' : 'Jp'}
               </button>
             ) : (
               <AnimatedLink href={link.url} className="hover:underline">

@@ -22,5 +22,5 @@ export const LangText = ({
   const className = language === 'en' ? styleEn : styleJp;
   const text = language === 'en' ? en : jp;
 
-  return <span className={`${classname} ${className}`}>{text}</span>;
+  return <div className={`${classname} ${className}`}>{text}</div>;
 };
