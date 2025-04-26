@@ -10,11 +10,11 @@ const Home = () => {
         <div className="flex flex-col 6xl:flex-row gap-4 6xl:gap-8 items-center 6xl:items-start">
           <div className="bg-gray-300 flex justify-center items-center w-fit h-fit border rounded-full 2xl:rounded-none ">
             <Image
-              src="/profile.png"
-              width={300}
-              height={400}
+              src="/profile.svg"
+              width={504}
+              height={798}
               alt="Picture of the author"
-              className="rounded-full 2xl:rounded-none h-[150px] w-[150px] 3xl:h-[250px] 3xl:w-[250px] 5xl:h-[300px] 5xl:w-[300px]"
+              className="5xl:w-[400px] "
             />
           </div>
           <div className="h-fit flex-1 w-full">
@@ -27,7 +27,7 @@ const Home = () => {
                   styleEn="font-En text-4xl text-justify"
                   classname="w-fit pb-4"
                 />
-                <div className="flex flex-col">
+                <div className="gap-4 flex flex-col">
                   <AnimatedContainer>
                     <div className="pb-4">
                       <LangText
