@@ -15,17 +15,17 @@ export default function ClientLayoutWrapper({
   const [splashDone, setSplashDone] = useState(false);
 
   return (
-    <TransitionProvider>
-      <PageTransitionWrapper>
-        <LanguageProvider>
-          <ThemeProvider>
+    <ThemeProvider>
+      <TransitionProvider>
+        <PageTransitionWrapper>
+          <LanguageProvider>
             {!splashDone && (
               <InitialSplash onDoneAction={() => setSplashDone(true)} />
             )}
             {splashDone && children}
-          </ThemeProvider>
-        </LanguageProvider>
-      </PageTransitionWrapper>
-    </TransitionProvider>
+          </LanguageProvider>
+        </PageTransitionWrapper>
+      </TransitionProvider>
+    </ThemeProvider>
   );
 }

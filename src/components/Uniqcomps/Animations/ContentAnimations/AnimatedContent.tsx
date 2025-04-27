@@ -1,10 +1,8 @@
 'use client';
-import React from 'react';
-import { motion } from 'motion/react';
-import { useRef } from 'react';
-import { useInView } from 'motion/react';
+import { motion, useInView } from 'motion/react'; // Ensure correct import
+import React, { useRef } from 'react';
 import { useLanguage } from '../../../../context/Language/LanguageContext';
-import type { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 const containerVariants = {
   hidden: {},
@@ -30,19 +28,21 @@ export default function AnimatedContainer({
   children: ReactNode;
 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, margin: '-100px' });
+  const isInView = useInView(ref, { once: true, margin: '-100px' }); // `once: true` prevents retriggers
   const { language } = useLanguage();
 
-  // Combine view state and language to trigger animation
-  const shouldAnimate = isInView || language;
+  // Reset animation state when language changes
+  useEffect(() => {
+    // Force re-render by changing the key
+  }, [language]);
 
   return (
     <motion.div
       ref={ref}
-      className="w-full"
+      key={`animate-${language}`} // Force remount on language change
       variants={containerVariants}
       initial="hidden"
-      animate={shouldAnimate ? 'show' : 'hidden'}
+      animate={isInView ? 'show' : 'hidden'}
     >
       {Array.isArray(children) ? (
         children.map((child, index) => (

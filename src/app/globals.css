@@ -37,6 +37,16 @@
   --breakpoint-9xl: 120rem; /* 1920px */
 }
 
+@layer utilities {
+  /* Manually map theme variables to max-width classes */
+  .max-w-8xl {
+    max-width: var(--breakpoint-8xl);
+  }
+  .max-w-9xl {
+    max-width: var(--breakpoint-9xl);
+  }
+}
+
 /* Dark Theme */
 [data-theme='dark'] {
   --color-background: #3c3b3a;

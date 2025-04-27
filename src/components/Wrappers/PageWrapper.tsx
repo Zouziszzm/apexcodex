@@ -1,9 +1,10 @@
 'use client';
 import { motion } from 'motion/react';
-import { ReactNode } from 'react';
 import React from 'react';
+import { ReactNode } from 'react';
+
 const containerVariants = {
-  hidden: { opacity: 0, y: 0 },
+  hidden: { opacity: 0, y: 20 },
   show: {
     opacity: 1,
     y: 0,
@@ -17,7 +18,12 @@ const containerVariants = {
 
 export default function PageWrapper({ children }: { children: ReactNode }) {
   return (
-    <motion.div initial="hidden" animate="show" variants={containerVariants}>
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      key="page-wrapper" // Stable key to prevent retriggers
+    >
       {children}
     </motion.div>
   );
