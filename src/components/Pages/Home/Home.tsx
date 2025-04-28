@@ -73,6 +73,7 @@ const Home = () => {
                 </div>
               </div>
             </AnimatedContainer>
+            {/*
             <AnimatedContainer>
               <div className="py-4">
                 <LangText
@@ -84,6 +85,7 @@ const Home = () => {
                 />
               </div>
             </AnimatedContainer>
+            */}
           </div>
         </div>
       </div>
