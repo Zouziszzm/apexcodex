@@ -19,6 +19,7 @@
 @theme {
   --color-background: #f8f8ff;
   --color-text: #3c3b3a;
+  --color-borders: #3c3b3a;
   --font-En: En;
   --font-Jp: Jp;
   --font-Cm: Cm;
@@ -51,6 +52,7 @@
 [data-theme='dark'] {
   --color-background: #3c3b3a;
   --color-text: #f8f8ff;
+  --color-borders: #f8f8ff;
 }
 
 /* Custom variant still available if needed */
