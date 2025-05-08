@@ -3,6 +3,7 @@ const Projects = () => {
   return (
     <div>
       <div>Projects</div>
+      <div>Projects</div>
     </div>
   );
 };
