@@ -129,7 +129,7 @@ const Home = () => {
               </div>
             </AnimatedContainer>
           </div>
-          <div>
+          {/* <div>
             <AnimatedContainer>
               <div className="py-4">
                 <LangText
@@ -141,7 +141,7 @@ const Home = () => {
                 />
               </div>
             </AnimatedContainer>
-          </div>
+          </div>*/}
         </div>
       </div>
     </div>
