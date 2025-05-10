@@ -10,6 +10,8 @@ const Navbar = () => {
     { title: 'Projects', url: '/Projects' },
     { title: 'Theme', url: '#' }, // We'll handle the theme toggle separately
     { title: 'Lang', url: '#' }, // We'll handle the language toggle separately
+    { title: 'Langs', url: '#' }, // We'll handle the language toggle separately
+
   ];
 
   const { toggleTheme } = useTheme();
