@@ -129,19 +129,67 @@ const Home = () => {
               </div>
             </AnimatedContainer>
           </div>
-          {/* <div>
-            <AnimatedContainer>
-              <div className="py-4">
-                <LangText
-                  en="Career"
-                  jp="キャリア"
-                  styleJp="font-Jp"
-                  styleEn="font-En"
-                  classname="text-4xl"
-                />
+          <AnimatedContainer>
+            <div className="py-4">
+              <LangText
+                en="Career"
+                jp="キャリア"
+                styleJp="font-Jp"
+                styleEn="font-En"
+                classname="text-4xl"
+              />
+            </div>
+            <div className="flex flex-col 3xl:flex-row gap-4">
+              <div className="font-Cm">
+                <div className="flex gap-2">
+                  <p>2022</p>
+                  <p>-</p>
+                  <p>2023</p>
+                </div>
+                <p>Jr.Frontend developer</p>
+                <div>
+                  <p>ItBigBang</p>
+                  <p>Chennai, India</p>
+                </div>
               </div>
-            </AnimatedContainer>
-          </div>*/}
+              <div className="font-Cm">
+                <div className="flex gap-2">
+                  <p>2023</p>
+                  <p>-</p>
+                  <p>2024</p>
+                </div>
+                <p>Frontend Developer</p>
+                <div>
+                  <p>Metaline-X</p>
+                  <p>Shanghai, China</p>
+                </div>
+              </div>
+              <div className="font-Cm">
+                <div className="flex gap-2">
+                  <p>2024</p>
+                  <p>-</p>
+                  <p>2025</p>
+                </div>
+                <p>Q.A.S Engineer</p>
+                <div>
+                  <p>NDTCCS</p>
+                  <p>Dammam, Kingdom Of SaudiArabia</p>
+                </div>
+              </div>
+              <div className="font-Cm">
+                <div className="flex gap-2">
+                  <p>2025</p>
+                  <p>-</p>
+                  <p>~</p>
+                </div>
+                <p>sr.Frontend Developer / Mobile Developer</p>
+                <div>
+                  <p>Mantiqh</p>
+                  <p>Bengluru, India</p>
+                </div>
+              </div>
+            </div>
+          </AnimatedContainer>
         </div>
       </div>
     </div>
