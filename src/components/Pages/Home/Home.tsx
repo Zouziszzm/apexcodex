@@ -51,7 +51,7 @@ const Home = () => {
             <AnimatedContainer>
               <div className="py-4">
                 <LangText
-                  en="About me"
+                  en="About"
                   jp="自己紹介"
                   styleJp="font-Jp"
                   styleEn="font-En"
