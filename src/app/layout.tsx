@@ -4,7 +4,7 @@ import ClientLayoutWrapper from '../components/Wrappers/ClientLayoutWrapper';
 import './globals.css';
 
 export const metadata = {
-  title: 'AlFarhaan Khan (Static)',
+  title: 'AlFarhaan Khan',
   description: "AlFarhaan's Portfolio site",
 };
 
