@@ -1,5 +1,4 @@
 import React from 'react';
-// src/app/layout.tsx
 import ClientLayoutWrapper from '../components/Wrappers/ClientLayoutWrapper';
 import './globals.css';
 
