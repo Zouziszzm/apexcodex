@@ -4,7 +4,7 @@ import './globals.css';
 
 export const metadata = {
   title: 'AlFarhaan Khan',
-  description: "AlFarhaan's Portfolio site",
+  description: "AlFarhaan's Portfolio",
 };
 
 export default function RootLayout({
