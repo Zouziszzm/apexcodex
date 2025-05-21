@@ -1,4 +1,4 @@
-// components/commons/InitialSplash.tsx
+// components/commons/InitialSplash.tsxgg
 'use client';
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
