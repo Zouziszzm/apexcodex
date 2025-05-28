@@ -11,8 +11,8 @@
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx}": [
-      "eslint --fix",
-      "prettier --write"
+      "eslint",
+      "prettier --write --fix"
     ]
   },
   "keywords": [],
