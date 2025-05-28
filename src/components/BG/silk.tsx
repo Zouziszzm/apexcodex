@@ -1,6 +1,5 @@
-/* eslint-disable react/no-unknown-property */
 import React, { forwardRef, useMemo, useRef, useLayoutEffect } from "react";
-import { Canvas, useFrame, useThree, RootState } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Color, Mesh, ShaderMaterial } from "three";
 import { IUniform } from "three";
 
@@ -81,7 +80,6 @@ void main() {
                                   0.02 * tOffset) +
                           sin(20.0 * (tex.x + tex.y - 0.1 * tOffset)));
 
-  // Blend between base color and wave highlights
   vec3 blendedColor = mix(uColor, uWaveColor, smoothstep(0.4, 0.8, pattern));
   
   vec4 col = vec4(blendedColor, 1.0) - rnd / 15.0 * uNoiseIntensity;
@@ -100,14 +98,14 @@ const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(function SilkPlane(
   const { viewport } = useThree();
 
   useLayoutEffect(() => {
-    const mesh = ref as React.MutableRefObject<Mesh | null>;
+    const mesh = ref as React.RefObject<Mesh>;
     if (mesh.current) {
       mesh.current.scale.set(viewport.width, viewport.height, 1);
     }
   }, [ref, viewport]);
 
-  useFrame((_state: RootState, delta: number) => {
-    const mesh = ref as React.MutableRefObject<Mesh | null>;
+  useFrame((_state, delta: number) => {
+    const mesh = ref as React.RefObject<Mesh>;
     if (mesh.current) {
       const material = mesh.current.material as ShaderMaterial & {
         uniforms: SilkUniforms;
@@ -128,14 +126,15 @@ const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(function SilkPlane(
     </mesh>
   );
 });
+
 SilkPlane.displayName = "SilkPlane";
 
 export interface SilkProps {
   speed?: number;
   scale?: number;
-  color?: string; // Base silk color
-  waveColor?: string; // Wave highlight color
-  bgColor?: string; // Background color
+  color?: string;
+  waveColor?: string;
+  bgColor?: string;
   noiseIntensity?: number;
   rotation?: number;
 }
@@ -143,9 +142,9 @@ export interface SilkProps {
 const Silk: React.FC<SilkProps> = ({
   speed = 5,
   scale = 1,
-  color = "#7B7481", // Default silk color
-  waveColor = "#E6F5FF", // Default wave highlights (light blue)
-  bgColor = "#000000", // Default background
+  color = "#7B7481",
+  waveColor = "#E6F5FF",
+  bgColor = "#000000",
   noiseIntensity = 1.5,
   rotation = 0,
 }) => {
@@ -179,7 +178,6 @@ const Silk: React.FC<SilkProps> = ({
         gl={{
           antialias: true,
           alpha: false,
-          clearColor: new Color(bgColor).getHex(),
         }}
         style={{
           display: "block",
