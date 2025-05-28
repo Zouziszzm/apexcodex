@@ -1,42 +1,16 @@
-import { defineConfig } from 'eslint/config';
-import js from '@eslint/js';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
-import pluginReact from 'eslint-plugin-react';
-import prettier from 'eslint-config-prettier';
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import { FlatCompat } from "@eslint/eslintrc";
 
-export default defineConfig([
-  js.configs.recommended,
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-  // TypeScript recommended configuration from typescript-eslint.
-  // Note: ts-eslint config exports an array so we use the spread operator.
-  ...tseslint.configs.recommended,
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
 
-  // React recommended configuration for flat config.
-  pluginReact.configs.flat.recommended,
+const eslintConfig = [
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
+];
 
-  // Prettier configuration; should be last so it overrides conflicting rules.
-  prettier,
-
-  // Base configuration for JavaScript/TypeScript and React files.
-  {
-    files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
-    languageOptions: {
-      globals: globals.browser,
-    },
-    settings: {
-      react: {
-        version: 'detect', // Automatically detects the React version
-      },
-    },
-    plugins: {
-      react: pluginReact,
-    },
-    rules: {
-      'no-unused-vars': 'warn',
-      'react/react-in-jsx-scope': 'off',
-    },
-  },
-
-  // JavaScript recommended configuration from @eslint/js.
-]);
+export default eslintConfig;
