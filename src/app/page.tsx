@@ -1,7 +1,7 @@
 const Main = () => {
   return (
     <>
-      <div className="w-full h-screen">hello</div>
+      <div className="w-full h-screen">hello kombava </div>
     </>
   );
 };
