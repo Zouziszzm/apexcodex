@@ -194,3 +194,4 @@ const Silk: React.FC<SilkProps> = ({
 };
 
 export default Silk;
+//close color for bg and contrast
