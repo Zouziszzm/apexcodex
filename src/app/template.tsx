@@ -1,33 +1,18 @@
-// app/template.tsx
 "use client";
-
-import React from "react";
-import Silk from "@/components/BG/silk";
-
-interface TemplateProps {
-  children: React.ReactNode;
-}
-
-const Template: React.FC<TemplateProps> = ({ children }) => {
+import { useScroll } from "motion/react";
+import Navbar from "@/components/common/navbar/Navbar";
+export default function Template({ children }: { children: React.ReactNode }) {
+  const { scrollYProgress } = useScroll();
   return (
-    <div className="relative w-full min-h-screen">
-      {/* Fixed Silk background */}
-      <div className="fixed inset-0 -z-10">
-        <Silk
-          color="#edf2f4"
-          waveColor="#2b2d42"
-          bgColor="#ef476f"
-          speed={2.5}
-          scale={0.5}
-          noiseIntensity={5}
-          rotation={1.5}
-        />
+    <>
+      <div className="flex h-screen w-full justify-center">
+        <div className="relative flex h-full w-full max-w-6xl flex-col px-2 lg:px-8">
+          <div className="relative">
+            <Navbar scrollYProgress={scrollYProgress} />
+            {children}
+          </div>
+        </div>
       </div>
-
-      {/* Content */}
-      <div className="relative z-10">{children}</div>
-    </div>
+    </>
   );
-};
-
-export default Template;
+}

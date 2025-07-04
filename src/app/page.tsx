@@ -1,9 +1,11 @@
-const Main = () => {
+import Home from "@/components/pages/home/Home";
+
+const page = () => {
   return (
     <>
-      <div className="w-full h-screen">hello its done will puah code instantly kombava </div>
+      <Home />
     </>
   );
 };
 
-export default Main;
+export default page;
