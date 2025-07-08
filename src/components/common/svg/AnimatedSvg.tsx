@@ -14,17 +14,15 @@ interface AnimatedPathsProps {
 
 export const AnimatedPaths = ({
   paths,
-  stroke, // Made optional since we'll use theme by default
+  stroke,
   width = "100%",
   height = "100%",
 }: AnimatedPathsProps) => {
   const { theme } = useTheme(); // Removed unused toggleTheme
 
-  // Theme-based colors
   const darkModeStroke = "#fff"; // Light color for dark mode
   const lightModeStroke = "#000"; // Dark color for light mode
 
-  // Use provided stroke color or theme-based color
   const strokeColor = stroke
     ? stroke
     : theme === "dark"
@@ -34,16 +32,18 @@ export const AnimatedPaths = ({
   return (
     <svg
       viewBox="0 0 575 250"
-      stroke={strokeColor} // Applied theme-based stroke color here
+      stroke={strokeColor}
       width={width}
       height={height}
+      fill={strokeColor}
+      className="scale-120"
       xmlns="http://www.w3.org/2000/svg"
     >
       {paths.map((d, idx) => (
         <motion.path
           key={idx}
           d={d}
-          strokeWidth={0.8}
+          strokeWidth={0}
           stroke={strokeColor} // Also applied stroke color to each path
         />
       ))}
