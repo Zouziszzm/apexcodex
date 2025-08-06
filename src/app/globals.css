@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f5e6d0; /* Kanagawa light base (parchment) */
+  --background: #f5e6D0; /* Kanagawa light base (parchment) */
   --foreground: #171717; /* Deep text (unchanged) */
 }
 
