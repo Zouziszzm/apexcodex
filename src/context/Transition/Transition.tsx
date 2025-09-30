@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { animate } from "motion";
+import { animate } from "motion/react";
 import { paths } from "../../../public/Sakura";
 import { AnimatedPaths } from "@/components/common/svg/AnimatedSvg";
 import { motion } from "motion/react";
