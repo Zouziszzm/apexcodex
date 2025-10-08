@@ -46,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inconsolata.variable} ${bebas.variable} ${yuji.variable} ${yusi.variable} antialiased`}
+        className={`${inconsolata.variable} ${bebas.variable} ${yuji.variable} ${yusi.variable}`}
       >
         <ThemeProvider>
           <TransitionProvider>{children}</TransitionProvider>
