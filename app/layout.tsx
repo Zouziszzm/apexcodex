@@ -5,8 +5,8 @@ import { neueMontreal, notoSansJp } from "./fonts";
 import { RootLayoutProps } from "@/lib/types";
 
 export const metadata = {
-  title: "My App",
-  description: "Example with Neue Montreal",
+  title: "AlfarhaanKhan",
+  description: "A Codex of my proffesional Journey",
 };
 
 export default function RootLayout({ children }: RootLayoutProps) {
