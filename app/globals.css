@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+
+:root {
+  --background: #dcdcde;
+  --foreground: #1c1c1e;
+}
+
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-family-sans: var(--font-neue-montreal);
+  --font-family-body: var(--font-neue-montreal);
+  --font-family-heading: var(--font-neue-montreal);
+
+  --font-family-jp: var(--font_sans_JP);
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+
+  /* Very extra small text (badges, tiny labels) */
+  --text-size-vxs: clamp(0.625rem, 0.625rem + 0.25vw, 0.75rem);
+  /* 10px → 12px */
+
+  /* Extra small text (captions, metadata) */
+  --text-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  /* 12px → 14px */
+
+  /* Small body text (secondary content) */
+  --text-size-sm: clamp(0.875rem, 0.825rem + 0.25vw, 1rem);
+  /* 14px → 16px */
+
+  /* Base body text (primary reading size) */
+  --text-size-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  /* 16px → 18px */
+
+  /* Larger body or small subheadings */
+  --text-size-lg: clamp(1.125rem, 1.05rem + 0.375vw, 1.25rem);
+  /* 18px → 20px */
+
+  /* Small heading / section title */
+  --text-size-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  /* 20px → 24px */
+
+  /* Medium heading (H3) */
+  --text-size-2xl: clamp(1.5rem, 1.35rem + 0.75vw, 2rem);
+  /* 24px → 32px */
+
+  /* Large heading (H2) */
+  --text-size-3xl: clamp(1.875rem, 1.65rem + 1.125vw, 2.5rem);
+  /* 30px → 40px */
+
+  /* Extra large heading (H1) */
+  --text-size-4xl: clamp(2.25rem, 1.95rem + 1.5vw, 3.5rem);
+  /* 36px → 56px */
+
+  /* Display heading (hero H2/H1 on tablet) */
+  --text-size-5xl: clamp(3rem, 2.55rem + 2.25vw, 4.5rem);
+  /* 48px → 72px */
+
+  /* Display 2 (hero heading) */
+  --text-size-6xl: clamp(3.75rem, 3.15rem + 3vw, 6rem);
+  /* 60px → 96px */
+
+  /* Display 3 (showcase, hero) */
+  --text-size-7xl: clamp(4.5rem, 3.75rem + 3.75vw, 8rem);
+  /* 72px → 128px */
+
+  /* Display 4 (very large hero text) */
+  --text-size-8xl: clamp(6rem, 4.95rem + 5.25vw, 10rem);
+  /* 96px → 160px */
+
+  /* Display 5 (massive typography, splash pages) */
+  --text-size-9xl: clamp(8rem, 6.6rem + 7vw, 14rem);
+  /* 128px → 224px */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  letter-spacing: 0.2px;
+}
+
+* {
+  box-sizing: border-box;
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
