@@ -219,15 +219,14 @@ const CasesPage = () => {
                         </div>
                       </div>
 
-                      {/* Only show image if provided */}
                       {item.image && item.image.trim() !== "" && (
                         <div className="w-full flex justify-end">
-                          <div className="border border-neutral-300 overflow-hidden transition-all duration-500 ease-out opacity-100 translate-y-0 w-fit">
+                          <div className="border border-neutral-300 overflow-hidden transition-all duration-500 ease-out opacity-100 translate-y-0 w-fit h-fit">
                             <AnimatedText>
                               <img
                                 src={item.image}
                                 alt={item.title}
-                                className="h-fit lg:h-[400px] w-auto object-contain lg:object-cover"
+                                className="h-fit lg:h-[400px] w-auto object-cover"
                               />
                             </AnimatedText>
                           </div>

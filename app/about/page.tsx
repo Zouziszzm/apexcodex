@@ -132,7 +132,7 @@ const about = () => {
       </div>
       <AnimatedLine />
       <div className="mt-1.5">
-        <div className="flex justify-between   gap-2">
+        <div className="flex justify-between gap-2">
           <AnimatedText
             className="font-family-body text-size-xs tracking-wide font-normal"
             japanese={translateType(experience.type)}
