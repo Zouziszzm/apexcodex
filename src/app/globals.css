@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .transition-overlay {
+    @apply fixed top-0 left-0 w-full h-screen z-9999 pointer-events-none flex flex-col;
+  }
+
+  .logo-overlay {
+    @apply fixed top-0 left-0 w-full h-screen z-10000 pointer-events-none flex items-center justify-center opacity-0 bg-[#D5D5D5];
+  }
+
+  .logo-container {
+    @apply w-[300px] h-[132px] text-[#1C1C1E];
+  }
+}
+
+* {
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.line {
+  display: block;
+  line-height: 1.2;
+}
+
+.line-mask {
+  overflow: hidden;
+  padding: 0.002em 0;
+}
