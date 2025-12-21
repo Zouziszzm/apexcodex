@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "faraan's codex",
+    title: "farhaan's codex",
     description: "This is the codex of alfarhaans profesional journey.",
     images: ["/logo.png"],
   },
