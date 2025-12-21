@@ -39,7 +39,7 @@ export default function Page() {
         <div className="flex flex-col gap-4 items-center">
           <Copy delay={1.2}>
             <Link
-              href="https://github.com/farhumaid"
+              href="https://github.com/zouziszzm"
               target="_blank"
               className={`text-sm underline hover:text-[#5f5f5f] transition-colors duration-300 ${
                 language === "jp" ? "font-['Noto_Sans_JP']" : ""

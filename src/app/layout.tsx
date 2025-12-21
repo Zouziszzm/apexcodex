@@ -8,12 +8,12 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 export const metadata: Metadata = {
   metadataBase: new URL("https://alfarhaankhan.vercel.app"),
   title: {
-    default: "faraan's codex",
-    template: "%s | faraan's codex",
+    default: "farhaan's codex",
+    template: "%s | farhaan's codex",
   },
   description: "This is the codex of alfarhaans profesional journey.",
   openGraph: {
-    title: "faraan's codex",
+    title: "farhaan's codex",
     description: "This is the codex of alfarhaans profesional journey.",
     url: "https://alfarhaankhan.vercel.app",
     siteName: "alfarhaankhan",
