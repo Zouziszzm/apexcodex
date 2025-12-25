@@ -6,11 +6,11 @@
   }
 
   .logo-overlay {
-    @apply fixed top-0 left-0 w-full h-screen z-10000 pointer-events-none flex items-center justify-center opacity-0 bg-[#D5D5D5];
+    @apply fixed top-0 left-0 w-full h-screen z-10000 pointer-events-none flex items-center justify-center opacity-0 bg-[#D4CFCB];
   }
 
   .logo-container {
-    @apply w-[300px] h-[132px] text-[#1C1C1E];
+    @apply w-[300px] h-[132px] text-[#963531];
   }
 }
 

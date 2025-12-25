@@ -194,18 +194,18 @@ const Menu = () => {
           } px-6 lg:px-[60px] py-4 flex justify-between items-center transition-all duration-1000 ease-in-out`}
         >
           <Link href="/" className="w-8 h-8 backdrop-blur-sm rounded-[2px]">
-            <Asterisk size={32} />
+            <Asterisk size={32} className="text-[#5C5C5C]/50" />
           </Link>
 
           <div className="flex items-center gap-3 ">
             {/* Language Toggle */}
             <div
               onClick={toggleLanguage}
-              className="relative w-10 h-10 flex items-center justify-center border border-black/10 cursor-pointer overflow-hidden font-['Noto_Sans_JP'] backdrop-blur-sm"
+              className="relative w-10 h-10 flex items-center justify-center border border-[#5C5C5C]/50 cursor-pointer overflow-hidden font-['Noto_Sans_JP'] backdrop-blur-sm"
             >
               <p
                 ref={languageLabelRef}
-                className="absolute text-sm font-medium transition-transform duration-700"
+                className="absolute text-sm text-[#5C5C5C]/50 font-medium transition-transform duration-700"
               >
                 <span className="block">{language === "en" ? "日" : "EN"}</span>
               </p>
@@ -215,10 +215,10 @@ const Menu = () => {
             <div
               ref={hamburgerIconRef}
               onClick={toggleMenu}
-              className="group relative w-10 h-10 lg:w-10 lg:h-10 flex flex-col justify-center items-center gap-1 border border-black/10 cursor-pointer backdrop-blur-sm"
+              className="group relative w-10 h-10 lg:w-10 lg:h-10 flex flex-col justify-center items-center gap-1 border border-[#5C5C5C]/50 cursor-pointer backdrop-blur-sm"
             >
-              <span className="absolute w-[15px] h-[1.25px] bg-black transition-all duration-700 translate-y-[-3px] group-[.active]:translate-y-0 group-[.active]:rotate-45" />
-              <span className="absolute w-[15px] h-[1.25px] bg-black transition-all duration-700 translate-y-[3px] group-[.active]:translate-y-0 group-[.active]:-rotate-45" />
+              <span className="absolute w-[15px] h-[1.25px] bg-[#5C5C5C]/50 transition-all duration-700 translate-y-[-3px] group-[.active]:translate-y-0 group-[.active]:rotate-45" />
+              <span className="absolute w-[15px] h-[1.25px] bg-[#5C5C5C]/50 transition-all duration-700 translate-y-[3px] group-[.active]:translate-y-0 group-[.active]:-rotate-45" />
             </div>
           </div>
         </div>
@@ -251,7 +251,7 @@ const Menu = () => {
                   <Link
                     href={item.href}
                     onClick={toggleMenu}
-                    className="hover:text-[#5f5f5f]  transition-colors duration-300"
+                    className="hover:text-[#963531]/50 text-[#963531] transition-colors duration-300"
                   >
                     <Copy
                       key={`${item.label}-${menuVersion}-${language}`}
@@ -284,7 +284,7 @@ const Menu = () => {
               ))}
             </div>
 
-            <div className="w-[85%] lg:w-3/4 mx-auto mt-16 flex gap-8 text-sm text-[#5f5f5f]">
+            <div className="w-[85%] lg:w-3/4 mx-auto mt-16 flex gap-8 text-sm text-[#963531]">
               <div className="w-1/2">
                 <Copy
                   key={`loc-${menuVersion}-${language}`}

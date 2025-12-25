@@ -51,7 +51,7 @@ export default function RootLayout({
           ${neueMontreal.className}
           ${notoSansJp.variable}
           antialiased
-          bg-[#D5D5D5]
+          bg-[#D4CFCB]
         `}
       >
         <LanguageProvider>
@@ -59,10 +59,10 @@ export default function RootLayout({
           <PageTransition>
             <div
               id="main-container"
-              className="relative transform will-change-transform bg-[#D5D5D5]"
+              className="relative transform will-change-transform bg-[#D4CFCB]"
             >
               {children}
-              <div className="w-full py-10 flex justify-center text-[#1C1C1E] opacity-60 text-[11px] capitalize tracking-[0.2em] font-light">
+              <div className="w-full py-10 flex justify-center text-[#963531] opacity-60 text-[11px] capitalize tracking-[0.2em] font-light">
                 all rights reserved alfarhaankhan Inamdar @2025- through untill
                 end.
               </div>

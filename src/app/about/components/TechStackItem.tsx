@@ -90,7 +90,7 @@ export const TechStackItem = ({
               className="w-full h-full"
             >
               <div
-                className={`text-[14px] lg:text-[14px] w-full h-full py-1 text-[#1C1C1E] transition-all duration-300 cursor-default flex items-center justify-start text-left px-1 ${
+                className={`text-[14px] lg:text-[14px] w-full h-full py-1 text-[#963531] transition-all duration-300 cursor-default flex items-center justify-start text-left px-1 ${
                   language === "jp" ? "font-['Noto_Sans_JP']" : ""
                 }`}
               >

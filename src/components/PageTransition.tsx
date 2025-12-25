@@ -165,9 +165,9 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
 
       for (let i = 0; i < numberOfBlocks; i++) {
         const block = document.createElement("div");
-        block.className = "block bg-[#737272]";
+        block.className = "block bg-[#963531]";
         block.style.width = "100%";
-        block.style.height = `${100 / numberOfBlocks}%`;
+        block.style.height = `calc(${100 / numberOfBlocks}% + 1px)`;
         overlayRef.current.appendChild(block);
         blocksRef.current.push(block);
       }
@@ -210,7 +210,7 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
               p,
               {
                 strokeDashoffset: 0,
-                duration: 1.5,
+                duration: 0.5,
                 ease: "power3.out",
               },
               0
@@ -218,47 +218,8 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
           });
         }
 
-        // 3. Counter & Progress Fill
-        const proxy = { value: 0 };
-        tl.to(
-          proxy,
-          {
-            value: 100,
-            duration: 3,
-            ease: "power3.out",
-            onUpdate: () => {
-              const val = Math.floor(proxy.value);
-
-              const h = document.querySelector(".hundreds-slot .digit");
-              const t = document.querySelector(
-                ".tens-slot .digit"
-              ) as HTMLElement;
-              const u = document.querySelector(
-                ".units-slot .digit"
-              ) as HTMLElement;
-
-              if (val >= 100) {
-                if (h) h.textContent = "1";
-                if (t) t.textContent = "0";
-                if (u) u.textContent = "0";
-              } else if (val >= 10) {
-                if (h) h.textContent = "";
-                if (t) t.textContent = Math.floor(val / 10).toString();
-                if (u) u.textContent = (val % 10).toString();
-              } else {
-                if (h) h.textContent = "";
-                if (t) t.textContent = "";
-                if (u) u.textContent = val.toString();
-              }
-
-              // Update progress bar
-              if (progressRef.current) {
-                gsap.set(progressRef.current, { scaleX: proxy.value / 100 });
-              }
-            },
-          },
-          0.5
-        ); // Start slightly after logo starts drawing
+        // 3. (REMOVED) Counter & Progress Fill
+        // proxy/counter logic removed per request
 
         function exitSequence() {
           const exitTl = gsap.timeline({
@@ -357,38 +318,12 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <div ref={overlayRef} className="transition-overlay" />
-      <div ref={logoOverlayRef} className="logo-overlay bg-[#D5D5D5]">
+      <div ref={logoOverlayRef} className="logo-overlay bg-[#D4CFCB]">
         <div className="logo-container mb-20">
-          <Svg paths={paths} ref={logoRef} className="text-black" />
+          <Svg paths={paths} ref={logoRef} className="text-[#963531]" />
         </div>
 
-        <div className="absolute bottom-10 left-10 right-10 flex flex-col gap-4">
-          {/* Progress Bar */}
-          {/* Laser-Style Counter with Individual Clipping Slots */}
-          <div
-            className="self-end flex items-center text-lg font-medium
-           tracking-normal text-[#1C1C1E]/50 h-fit leading-none"
-          >
-            <div className="slot hundreds-slot relative overflow-hidden w-[0.6em] h-[1em] flex justify-center">
-              <span className="digit inline-block px-[0.5px]"></span>
-            </div>
-            <div className="slot tens-slot relative overflow-hidden w-fit h-[1em] flex justify-center px-[0.5px]">
-              <span className="digit inline-block px-[0.5px]"></span>
-            </div>
-            <div className="slot units-slot relative overflow-hidden w-fit h-[1em] flex justify-center ">
-              <span className="digit inline-block px-[0.5px]">0</span>
-            </div>
-            <div className="slot symbol-slot relative overflow-hidden w-fit h-[1em] flex justify-center ml-1 ">
-              <span className="percent-symbol inline-block px-px">%</span>
-            </div>
-          </div>
-          <div className="h-px w-full bg-black/10 overflow-hidden">
-            <div
-              ref={progressRef}
-              className="h-full w-full bg-black scale-x-0 origin-left"
-            />
-          </div>
-        </div>
+        {/* Loader elements (Counter/Progress) removed per request */}
       </div>
       {children}
     </>

@@ -36,13 +36,13 @@ export default function HoverLink({
               animateOnScroll={animateOnScroll}
               delay={delay}
               duration={duration}
-              className="transition-all duration-500 ease-in-out group-hover:bg-[#5f5f5f]"
+              className="transition-all duration-500 ease-in-out group-hover:bg-[#963531]"
             />
             {/* 
               Optional: If we want a dynamic expansion effect where a 
               second line slides over the first one:
             */}
-            <div className="absolute top-0 left-0 h-px bg-[#1C1C1E] transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] -translate-x-full group-hover:translate-x-0 w-full" />
+            <div className="absolute top-0 left-0 h-px bg-[#963531] transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] -translate-x-full group-hover:translate-x-0 w-full" />
           </div>
         </div>
       </Link>
