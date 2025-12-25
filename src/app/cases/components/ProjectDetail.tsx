@@ -17,6 +17,8 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
 }) => {
   const { language } = useLanguage();
   const [showContent, setShowContent] = useState(isSelected);
+  // Track active image index for gallery
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   // Sync state with prop: if selected, show immediately
   if (isSelected && !showContent) {
@@ -124,11 +126,14 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
         </div>
       </div>
 
-      {/* MAIN IMAGE PLACEHOLDER */}
+      {/* MAIN IMAGE DISPLAY */}
       <div className="mt-20 w-full max-w-[800px] mx-auto group">
-        <div className="aspect-[1.6/1] border border-[#963531]/10 bg-[#963531]/5 flex items-center justify-center relative overflow-hidden">
+        <div
+          className="aspect-[1.6/1] border border-[#963531]/10 bg-[#963531]/5 flex items-center justify-center relative overflow-hidden transition-all duration-500"
+          key={activeImageIndex} // Key forces re-render/anim on change if needed
+        >
           <span className="text-[12px] uppercase tracking-[0.3em] opacity-30 select-none">
-            {project.title} Visual
+            {project.title} Visual {activeImageIndex + 1}
           </span>
           {/* Subtle corner accents */}
           <div className="absolute top-4 left-4 w-4 h-px bg-[#963531]/10"></div>
@@ -138,15 +143,24 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
         </div>
       </div>
 
-      {/* GALLERY THUMBNAILS */}
+      {/* GALLERY THUMBNAILS (Clickable) */}
       <div className="mt-8 flex justify-center gap-4">
-        {[1, 2, 3].map((i) => (
-          <div
+        {[0, 1, 2].map((i) => (
+          <button
             key={i}
-            className="w-16 h-16 border border-[#963531]/10 bg-[#963531]/5 flex items-center justify-center"
+            onClick={() => setActiveImageIndex(i)}
+            className={`w-16 h-16 border transition-all duration-300 flex items-center justify-center ${
+              activeImageIndex === i
+                ? "border-[#963531] bg-[#963531]/10"
+                : "border-[#963531]/10 bg-[#963531]/5 hover:border-[#963531]/50"
+            }`}
           >
-            <div className="w-1 h-1 bg-[#963531]/10 rounded-full"></div>
-          </div>
+            <div
+              className={`w-1 h-1 rounded-full transition-colors ${
+                activeImageIndex === i ? "bg-[#963531]" : "bg-[#963531]/10"
+              }`}
+            ></div>
+          </button>
         ))}
       </div>
     </div>
