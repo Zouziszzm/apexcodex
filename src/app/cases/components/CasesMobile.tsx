@@ -3,23 +3,23 @@
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { casesData } from "@/data/cases";
+import Image from "next/image";
 
 const CasesMobile = () => {
   const { language } = useLanguage();
   const t = casesData[language];
-  const allProjects = t.projects as unknown as import("@/data/cases").Project[];
+  const allProjects = t.projects as readonly import("@/data/cases").Project[];
 
   // Filter State
-  const [activeFilter, setActiveFilter] = useState(t.filters[0]);
+  const [activeFilter, setActiveFilter] = useState<string>(t.filters[0]);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
-
   // Filter Logic
   const projects = useMemo(() => {
     const allLabel = t.filters[0];
     if (activeFilter === allLabel) return allProjects;
 
     return allProjects.filter((p) => {
-      const tags = p.tags as unknown as string[];
+      const tags = p.tags;
       return tags.includes(activeFilter);
     });
   }, [activeFilter, allProjects, t.filters]);
@@ -28,6 +28,7 @@ const CasesMobile = () => {
   const minimapRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<HTMLDivElement>(null);
   const requestRef = useRef<number>(0);
+  const snapTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const state = useRef({
     currentTranslate: 0,
@@ -97,6 +98,8 @@ const CasesMobile = () => {
     const handleStart = (e: TouchEvent | MouseEvent) => {
       state.current.isDragging = true;
       state.current.startX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      // Clear snap timeout on user interaction
+      if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
     };
 
     const handleMove = (e: TouchEvent | MouseEvent) => {
@@ -108,14 +111,30 @@ const CasesMobile = () => {
       clamp();
     };
 
+    const snapToNearest = () => {
+      const itemWidth = 72;
+      const index = Math.round(-state.current.targetTranslate / itemWidth);
+      const clampedIndex = Math.max(0, Math.min(index, projects.length - 1));
+      state.current.targetTranslate = -clampedIndex * itemWidth;
+    };
+
     const handleEnd = () => {
       state.current.isDragging = false;
+      snapToNearest();
     };
 
     const handleWheel = (e: WheelEvent) => {
       const delta = e.deltaY;
       state.current.targetTranslate -= delta * 0.8;
       clamp();
+
+      // Clear existing timeout
+      if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
+
+      // Set new timeout to snap after scroll stops
+      snapTimeoutRef.current = setTimeout(() => {
+        snapToNearest();
+      }, 100);
     };
 
     const clamp = () => {
@@ -135,6 +154,7 @@ const CasesMobile = () => {
     return () => {
       window.removeEventListener("resize", updateDimensions);
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
 
       window.removeEventListener("touchstart", handleStart);
       window.removeEventListener("touchmove", handleMove);
@@ -160,10 +180,10 @@ const CasesMobile = () => {
 
       {/* Filters List */}
       <div className="flex flex-col mb-10 gap-1">
-        {(t.filters as unknown as string[]).map((filter) => (
+        {t.filters.map((filter) => (
           <button
             key={filter}
-            onClick={() => setActiveFilter(filter as any)}
+            onClick={() => setActiveFilter(filter)}
             className={`text-[14px] text-left transition-colors duration-300 ${
               activeFilter === filter
                 ? "text-[#963531] font-medium"
@@ -179,12 +199,15 @@ const CasesMobile = () => {
       {activeProject ? (
         <div className="flex-1 flex flex-col min-h-0 mb-32">
           {/* Image */}
-          <div className="w-full aspect-[1.6/1] bg-[#963531]/10 border border-[#963531]/20 mb-6 relative overflow-hidden">
+          <div className="w-full aspect-3/2 bg-[#963531]/10 border border-[#963531]/20 mb-6 relative overflow-hidden">
             {/* Visual Placeholder */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-[#963531]/30 text-[10px] uppercase tracking-widest">
-                {activeProject.title} Visual
-              </span>
+              <Image
+                src={activeProject.images[0]}
+                alt={activeProject.title}
+                className="object-cover opacity-80"
+                fill
+              />
             </div>
             {/* Decorative Lines from image */}
             <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjOTYzNTMxIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')]"></div>
@@ -194,13 +217,29 @@ const CasesMobile = () => {
           <h2 className="text-[#963531] text-[18px] mb-4">
             {activeProject.title}
           </h2>
-          <p className="text-[#963531] text-[15px] leading-snug">
-            {activeProject.description}
-          </p>
+          {/* Grid Stack for fixed height */}
+          <div className="grid grid-cols-1 grid-rows-1">
+            {/* Invisible spacer with longest description */}
+            <p className="text-[#963531] text-[15px] leading-snug col-start-1 row-start-1 invisible pointer-events-none">
+              {projects.reduce(
+                (longest, current) =>
+                  current.description.length > longest.length
+                    ? current.description
+                    : longest,
+                ""
+              )}
+            </p>
+            {/* Visible content */}
+            <p className="text-[#963531] text-[15px] leading-snug col-start-1 row-start-1">
+              {activeProject.description}
+            </p>
+          </div>
         </div>
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center mb-32 text-[#963531]/50 italic">
-          No projects found.
+          {language === "jp"
+            ? "プロジェクトが見つかりません。"
+            : "No projects found."}
         </div>
       )}
 
@@ -219,19 +258,19 @@ const CasesMobile = () => {
               {projects.map((p, i) => (
                 <div
                   key={p.id}
-                  className="w-16 h-16 bg-[#963531]/10 border border-[#963531]/10 shrink-0 flex items-center justify-center transition-opacity duration-300"
+                  className="w-16 h-16 bg-[#963531]/10 border border-[#963531]/10 shrink-0 flex items-center justify-center overflow-hidden duration-300 transition-all"
                   style={{
-                    opacity: i === activeProjectIndex ? 1 : 0.4,
+                    opacity: i === activeProjectIndex ? 1 : 0.8,
                   }}
                 >
-                  {/* Tiny Visual */}
-                  <div
-                    className={`w-2 h-2 rounded-full ${
-                      i === activeProjectIndex
-                        ? "bg-[#963531]"
-                        : "bg-[#963531]/30"
-                    }`}
-                  ></div>
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={p.images[0]}
+                      alt={p.title}
+                      className="object-cover"
+                      fill
+                    />
+                  </div>
                 </div>
               ))}
               {/* Extra space to allow last item to reach first slot */}

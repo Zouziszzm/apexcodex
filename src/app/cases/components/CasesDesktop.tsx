@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { casesData, Project } from "@/data/cases";
 import gsap from "gsap";
@@ -33,16 +33,17 @@ const CasesDesktop = () => {
   const detailRefs = useRef<(HTMLDivElement | null)[]>([]);
   const scrollPosRef = useRef(0); // Store scroll position
 
-  const filteredProjects = useMemo(() => {
-    const allLabel = language === "jp" ? "すべて" : "All";
-    if (filter === "All" || filter === allLabel) return t.projects;
-    return t.projects.filter((p) =>
-      (p.tags as unknown as string[]).includes(filter)
-    );
-  }, [filter, t.projects, language]);
-
   const handleFilterChange = (newFilter: string) => {
     if (newFilter === filter) return;
+
+    // Helper to get new projects list
+    const getNewProjects = (filterKey: string) => {
+      const allLabel = language === "jp" ? "すべて" : "All";
+      if (filterKey === "All" || filterKey === allLabel) return t.projects;
+      return t.projects.filter((p) =>
+        (p.tags as unknown as string[]).includes(filterKey)
+      );
+    };
 
     const projectElements =
       listContainerRef.current?.querySelectorAll(".project-row");
@@ -56,12 +57,12 @@ const CasesDesktop = () => {
         ease: "power2.in",
         onComplete: () => {
           setFilter(newFilter);
-          setDisplayProjects(filteredProjects as unknown as Project[]);
+          setDisplayProjects(getNewProjects(newFilter) as unknown as Project[]);
         },
       });
     } else {
       setFilter(newFilter);
-      setDisplayProjects(filteredProjects as unknown as Project[]);
+      setDisplayProjects(getNewProjects(newFilter) as unknown as Project[]);
     }
   };
 
