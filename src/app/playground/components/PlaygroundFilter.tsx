@@ -17,7 +17,7 @@ const PlaygroundFilter: React.FC<PlaygroundFilterProps> = ({
   const { language } = useLanguage();
 
   return (
-    <div className="text-[#5C5C5C] text-[14px] leading-[100%] tracking-normal flex flex-col gap-2 mt-10">
+    <div className="text-[var(--text-secondary)] text-[14px] leading-[100%] tracking-normal flex flex-col gap-2 mt-10">
       {filters.map((f, i) => (
         <button
           key={f}

@@ -45,8 +45,6 @@ const GithubStats: React.FC<GithubStatsProps> = ({ stats }) => {
 
       const handleTransitionComplete = () => {
         ScrollTrigger.refresh();
-        // Force re-check
-        animate();
       };
 
       window.addEventListener(

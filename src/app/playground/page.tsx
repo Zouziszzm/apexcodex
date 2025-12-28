@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <main className="bg-[#EBE9E4] min-h-screen w-full relative">
+    <main className="bg-[var(--background)] min-h-screen w-full relative">
       <PlaygroundClient />
     </main>
   );

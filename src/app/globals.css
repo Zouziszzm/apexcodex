@@ -21,6 +21,8 @@
   --text-secondary: #5c5c5c;
   --bg-overlay: #d9d9d9;
   --transition-block-bg: #963531;
+  --bg-cases: #EBE9E4;
+  --bg-mobile-cases: #EBE9E4;
 }
 
 .dark {
@@ -30,6 +32,8 @@
   --text-secondary: #a1a1a1; /* Soft Grey */
   --bg-overlay: #2c2c2e; /* Dark Grey Overlay */
   --transition-block-bg: #2c2c2e; /* Dark Grey for Transition Blocks */
+  --bg-cases: #1c1c1e;
+  --bg-mobile-cases: #1c1c1e;
 }
 
 body {

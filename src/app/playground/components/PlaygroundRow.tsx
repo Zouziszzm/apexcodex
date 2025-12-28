@@ -36,7 +36,7 @@ const PlaygroundRow: React.FC<PlaygroundRowProps> = ({
 
           {/* Right Side: Tags and Arrow */}
           <div className="flex items-center gap-4">
-            <p className="text-[#5C5C5C]/50 text-[14px]">
+            <p className="text-[var(--text-secondary)]/50 text-[14px]">
               {item.tags.join(" | ")}
             </p>
           </div>
