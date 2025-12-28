@@ -13,6 +13,7 @@ export interface Project {
   iosUrl?: string;
   androidUrl?: string;
   images: readonly string[];
+  copyright?: string;
 }
 
 export const casesData = {
@@ -63,6 +64,7 @@ export const casesData = {
         contribution: "Lead Frontend Developer",
         extent: ["Develop"],
         stack: ["Next.js", "Vite", "TypeScript"],
+        copyright: "Developed at Mantiqh. Intellectual property rights reserved.",
         images: ["/assets/img6.jpeg"],
       },
       {
@@ -77,6 +79,7 @@ export const casesData = {
         contribution: "Sole Frontend Developer",
         extent: ["Develop"],
         stack: ["Next.js", "Three.js"],
+        copyright: "Developed at Mantiqh. Intellectual property rights reserved.",
         images: ["/assets/img7.jpeg", "/assets/img8.jpeg", "/assets/img9.jpeg"],
       },
       {
@@ -91,6 +94,7 @@ export const casesData = {
         contribution: "Frontend Developer",
         extent: ["Develop"],
         stack: ["Vite", "Next.js"],
+        copyright: "Developed at Mantiqh. Intellectual property rights reserved.",
         images: ["/assets/img10.jpeg", "/assets/img11.jpeg"],
       },
       {
@@ -105,6 +109,7 @@ export const casesData = {
         contribution: "Lead Frontend Developer (Solo)",
         extent: ["Develop"],
         stack: ["Next.js", "Three.js"],
+        copyright: "Developed at Mantiqh. Intellectual property rights reserved.",
         images: ["/assets/img12.jpeg"],
       },
       {
@@ -164,6 +169,7 @@ export const casesData = {
         contribution: "Frontend & Mobile Developer",
         extent: ["Develop"],
         stack: ["Next.js", "React Native"],
+        copyright: "Developed at Mantiqh. Intellectual property rights reserved.",
         images: ["/assets/img4.jpeg", "/assets/img5.jpeg"],
       },
       {
@@ -244,6 +250,7 @@ export const casesData = {
         contribution: "リードフロントエンド開発者",
         extent: ["開発"],
         stack: ["Next.js", "Vite", "TypeScript"],
+        copyright: "Mantiqhにて開発。知的財産権は同社に帰属します。",
         images: ["/assets/img6.jpeg"],
       },
       {
@@ -258,6 +265,7 @@ export const casesData = {
         contribution: "単独フロントエンド開発者",
         extent: ["開発"],
         stack: ["Next.js", "Three.js"],
+        copyright: "Mantiqhにて開発。知的財産権は同社に帰属します。",
         images: ["/assets/img7.jpeg", "/assets/img8.jpeg", "/assets/img9.jpeg"],
       },
       {
@@ -272,6 +280,7 @@ export const casesData = {
         contribution: "フロントエンド開発者",
         extent: ["開発"],
         stack: ["Vite", "Next.js"],
+        copyright: "Mantiqhにて開発。知的財産権は同社に帰属します。",
         images: ["/assets/img10.jpeg", "/assets/img11.jpeg"],
       },
       {
@@ -286,6 +295,7 @@ export const casesData = {
         contribution: "リードフロントエンド開発者",
         extent: ["開発"],
         stack: ["Next.js", "Three.js"],
+        copyright: "Mantiqhにて開発。知的財産権は同社に帰属します。",
         images: ["/assets/img12.jpeg"],
       },
       {
@@ -345,6 +355,7 @@ export const casesData = {
         contribution: "フロントエンド・モバイル開発者",
         extent: ["開発"],
         stack: ["Next.js", "React Native"],
+        copyright: "Mantiqhにて開発。知的財産権は同社に帰属します。",
         images: ["/assets/img4.jpeg", "/assets/img5.jpeg"],
       },
       {

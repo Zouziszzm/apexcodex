@@ -165,6 +165,28 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
             />
           </div>
         </div>
+
+        {/* Copyright */}
+        {project.copyright && (
+          <div className="grid grid-cols-1 relative">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center py-4 relative gap-2 md:gap-0">
+              <Copy forceReady={showContent} delay={0.6}>
+                <span className="text-[14px] text-[#963531]/50 uppercase tracking-widest flex-shrink-0">
+                  {language === "jp" ? "知的財産" : "Intellectual Property"}
+                </span>
+              </Copy>
+              <Copy forceReady={showContent} delay={0.6}>
+                <span className="text-[14px] font-medium text-[#963531] text-left md:text-right">
+                  {project.copyright}
+                </span>
+              </Copy>
+              <Line
+                forceReady={showContent}
+                className="absolute bottom-0 left-0 w-full"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* MAIN IMAGE DISPLAY */}
