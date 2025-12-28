@@ -108,6 +108,6 @@ export const getGithubStats = unstable_cache(
       return [];
     }
   },
-  ["github-stats-v1"],
+  ["github-stats-v2"],
   { revalidate: 3600 * 24 } // Cache for 24 hours
 );

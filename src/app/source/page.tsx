@@ -1,4 +1,5 @@
 import React from "react";
+export const dynamic = "force-dynamic";
 import { getGithubStats } from "@/lib/github";
 
 import SourceClient from "./SourceClient";
