@@ -28,7 +28,7 @@ export const aboutData = {
       {
         company: "Mantiqh Technologies",
         href: "https://www.mantiqh.com",
-        location: "Belgaum, Karnataka, India",
+        location: "Bangalore, India",
         jobType: "Full-Time",
         workMode: "Onsite",
         roles: [

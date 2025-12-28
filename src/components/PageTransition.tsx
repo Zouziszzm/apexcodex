@@ -311,6 +311,7 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
   // Effect to trigger Reveal on Pathname Change (Transition completion)
   useEffect(() => {
     if (isTransitioning.current) {
+      window.scrollTo(0, 0);
       revealPage();
     }
   }, [pathname, revealPage]);
