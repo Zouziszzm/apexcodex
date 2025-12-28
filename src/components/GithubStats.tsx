@@ -88,7 +88,7 @@ const GithubStats: React.FC<GithubStatsProps> = ({ stats }) => {
           .map((stat) => (
             <div
               key={stat.year}
-              className="stat-row flex items-baseline justify-between border-b border-[#1C1C1E]/10 pb-2"
+              className="stat-row flex items-baseline justify-between border-b border-[var(--text-primary)]/10 pb-2"
             >
               <span className="text-[16px] font-medium opacity-80">
                 {stat.year}

@@ -29,7 +29,7 @@ export default function Page() {
   const t = content[language];
 
   return (
-    <main className="relative min-h-screen pt-20 px-6 lg:px-12 text-[#1C1C1E] max-w-[1440px] mx-auto flex flex-col items-center justify-center text-center pb-20">
+    <main className="relative min-h-screen pt-20 px-6 lg:px-12 text-[var(--text-primary)] max-w-[1440px] mx-auto flex flex-col items-center justify-center text-center pb-20">
       <div className="max-w-[700px]">
         <Copy delay={0.5} stagger={0.2}>
           <h1

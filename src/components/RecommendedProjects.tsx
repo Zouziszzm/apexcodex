@@ -28,7 +28,7 @@ const RecommendedProjects: React.FC<RecommendedProjectsProps> = ({
                 {/* Left Side: Name */}
                 <div className="flex items-center gap-6">
                   <Copy>
-                    <p className="text-[#963531] text-[18px] group-hover:translate-x-2 transition-transform duration-300">
+                    <p className="text-[var(--text-primary)] text-[18px] group-hover:translate-x-2 transition-transform duration-300">
                       {proj.name}
                     </p>
                   </Copy>
@@ -37,7 +37,7 @@ const RecommendedProjects: React.FC<RecommendedProjectsProps> = ({
                 {/* Right Side: Tech Stack / Description */}
                 <div className="flex items-center gap-4">
                   <Copy delay={0.1}>
-                    <p className="text-[#5C5C5C]/50 text-[14px] uppercase tracking-wider">
+                    <p className="text-[var(--text-secondary)]/50 text-[14px] uppercase tracking-wider">
                       {proj.license}
                     </p>
                   </Copy>

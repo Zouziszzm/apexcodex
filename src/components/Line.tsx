@@ -124,7 +124,7 @@ export default function Line({
   return (
     <div
       ref={lineRef}
-      className={`h-px bg-[#5C5C5C]/50 ${className}`}
+      className={`h-px bg-[var(--text-secondary)]/50 ${className}`}
       style={{ opacity: isReady ? 1 : 0 }}
     />
   );

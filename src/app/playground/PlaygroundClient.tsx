@@ -82,7 +82,7 @@ const PlaygroundClient = () => {
   return (
     <div
       ref={containerRef}
-      className="relative min-h-screen pt-40 px-6 lg:px-12 text-[#963531] max-w-[1440px] mx-auto pb-40"
+      className="relative min-h-screen pt-40 px-6 lg:px-12 text-[var(--text-primary)] max-w-[1440px] mx-auto pb-40"
     >
       <div className="mb-24">
         <PlaygroundHeader

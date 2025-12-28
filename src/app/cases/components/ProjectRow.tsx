@@ -46,7 +46,7 @@ const ProjectRow: React.FC<ProjectRowProps> = ({
           >
             <button
               onClick={onClose}
-              className="flex items-center gap-2 text-[16px] text-[#963531] hover:opacity-70 transition-opacity uppercase tracking-wider font-medium pointer-events-auto"
+              className="flex items-center gap-2 text-[16px] text-[var(--text-primary)] hover:opacity-70 transition-opacity uppercase tracking-wider font-medium pointer-events-auto"
             >
               <ArrowLeft size={16} strokeWidth={2.5} />
               {language === "jp" ? "戻る" : "Back"}
@@ -62,14 +62,16 @@ const ProjectRow: React.FC<ProjectRowProps> = ({
               isSelected ? "pointer-events-none" : ""
             }`}
           >
-            <p className="text-[#963531] text-[20px] mb-2 md:mb-0 group-hover:translate-x-2 transition-transform duration-300">
+            <p className="text-[var(--text-primary)] text-[20px] mb-2 md:mb-0 group-hover:translate-x-2 transition-transform duration-300">
               {project.title}
             </p>
             <div className="w-full md:w-[45%] flex justify-between items-center">
               <p className="text-[#5C5C5C]/50 text-[14px]">
                 {project.tags.join(" | ")}
               </p>
-              <p className="text-[#963531] text-[18px]">{project.category}</p>
+              <p className="text-[var(--text-primary)] text-[18px]">
+                {project.category}
+              </p>
             </div>
           </div>
 

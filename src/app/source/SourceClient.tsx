@@ -23,13 +23,13 @@ const SourceClient: React.FC<SourceClientProps> = ({ githubStats }) => {
   const t = sourceData[language];
 
   return (
-    <main className="relative min-h-screen pt-40 px-6 lg:px-12 text-[#1C1C1E] max-w-[1440px] mx-auto pb-40">
+    <main className="relative min-h-screen pt-40 px-6 lg:px-12 text-[var(--text-primary)] max-w-[1440px] mx-auto pb-40">
       <div className="flex flex-col gap-16 md:gap-24">
         {/* Header Section */}
         <div className="flex flex-col gap-8 max-w-[800px]">
           <Copy delay={0.2} stagger={0.1}>
             <h1
-              className={`text-[24px] font-semibold leading-[100%] cursor-default text-[#963531] ${
+              className={`text-[24px] font-semibold leading-[100%] cursor-default text-[var(--text-primary)] ${
                 language === "jp" ? "font-['Noto_Sans_JP']" : ""
               }`}
             >
@@ -39,7 +39,7 @@ const SourceClient: React.FC<SourceClientProps> = ({ githubStats }) => {
 
           <Copy delay={0.4} stagger={0.1}>
             <p
-              className={`text-[16px] md:text-[18px] font-normal leading-[1.6] text-justify cursor-default text-[#963531] ${
+              className={`text-[16px] md:text-[18px] font-normal leading-[1.6] text-justify cursor-default text-[var(--text-primary)] ${
                 language === "jp" ? "font-['Noto_Sans_JP']" : ""
               }`}
             >
@@ -51,7 +51,7 @@ const SourceClient: React.FC<SourceClientProps> = ({ githubStats }) => {
             <Link
               href="https://github.com/zouziszzm"
               target="_blank"
-              className={`text-sm underline hover:text-[#5f5f5f] transition-colors duration-300 text-[#963531] ${
+              className={`text-sm underline hover:text-[#5f5f5f] transition-colors duration-300 text-[var(--text-primary)] ${
                 language === "jp" ? "font-['Noto_Sans_JP']" : ""
               }`}
             >
@@ -65,7 +65,7 @@ const SourceClient: React.FC<SourceClientProps> = ({ githubStats }) => {
             <div className="flex flex-col gap-2 mt-8">
               <Copy>
                 <h2
-                  className={`text-[20px] font-medium text-[#963531] ${
+                  className={`text-[20px] font-medium text-[var(--text-primary)] ${
                     language === "jp" ? "font-['Noto_Sans_JP']" : ""
                   }`}
                 >
@@ -78,7 +78,7 @@ const SourceClient: React.FC<SourceClientProps> = ({ githubStats }) => {
         </div>
 
         {/* Stats Section */}
-        <div className="text-[#963531]">
+        <div className="text-[var(--text-primary)]">
           <GithubStats stats={githubStats} />
         </div>
       </div>

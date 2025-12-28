@@ -4,6 +4,7 @@ import "./globals.css";
 import PageTransition from "@/components/PageTransition";
 import Menu from "@/components/Menu";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://alfarhaankhan.vercel.app"),
@@ -51,20 +52,22 @@ export default function RootLayout({
           ${neueMontreal.className}
           ${notoSansJp.variable}
           antialiased
-          bg-[#D4CFCB]
+          bg-[var(--background)]
         `}
       >
-        <LanguageProvider>
-          <Menu />
-          <PageTransition>
-            <div
-              id="main-container"
-              className="relative transform will-change-transform bg-[#D4CFCB]"
-            >
-              {children}
-            </div>
-          </PageTransition>
-        </LanguageProvider>
+        <ThemeProvider>
+          <LanguageProvider>
+            <Menu />
+            <PageTransition>
+              <div
+                id="main-container"
+                className="relative transform will-change-transform bg-[var(--background)]"
+              >
+                {children}
+              </div>
+            </PageTransition>
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

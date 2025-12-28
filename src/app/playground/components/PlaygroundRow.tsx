@@ -29,7 +29,7 @@ const PlaygroundRow: React.FC<PlaygroundRowProps> = ({
         <div className="w-full mx-auto flex flex-row justify-between items-center">
           {/* Left Side: Title */}
           <div className="flex items-center gap-6">
-            <p className="text-[#963531] text-[20px] group-hover:translate-x-2 transition-transform duration-300">
+            <p className="text-[var(--text-primary)] text-[20px] group-hover:translate-x-2 transition-transform duration-300">
               {item.title}
             </p>
           </div>

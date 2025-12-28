@@ -165,7 +165,7 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
 
       for (let i = 0; i < numberOfBlocks; i++) {
         const block = document.createElement("div");
-        block.className = "block bg-[#963531]";
+        block.className = "block bg-[var(--transition-block-bg)]";
         block.style.width = "100%";
         block.style.height = `calc(${100 / numberOfBlocks}% + 1px)`;
         overlayRef.current.appendChild(block);
@@ -321,7 +321,11 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
       <div ref={overlayRef} className="transition-overlay" />
       <div ref={logoOverlayRef} className="logo-overlay bg-[#D4CFCB]">
         <div className="logo-container mb-20">
-          <Svg paths={paths} ref={logoRef} className="text-[#963531]" />
+          <Svg
+            paths={paths}
+            ref={logoRef}
+            className="text-[var(--text-primary)]"
+          />
         </div>
 
         {/* Loader elements (Counter/Progress) removed per request */}

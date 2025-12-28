@@ -50,7 +50,7 @@ const PlaygroundHeader: React.FC<PlaygroundHeaderProps> = ({
     <div ref={containerRef} className="flex flex-col gap-8 md:gap-12">
       <Copy key={`title-${language}`} delay={0.2} stagger={0.2}>
         <h1
-          className={`text-[24px] font-semibold leading-[100%] cursor-default text-[#963531] ${
+          className={`text-[24px] font-semibold leading-[100%] cursor-default text-[var(--text-primary)] ${
             language === "jp" ? "font-['Noto_Sans_JP']" : ""
           }`}
         >
@@ -69,7 +69,7 @@ const PlaygroundHeader: React.FC<PlaygroundHeaderProps> = ({
             {description.map((paragraph, index) => (
               <p
                 key={index}
-                className={`text-[16px] font-normal text-justify leading-[1.3] tracking-[0.02rem] cursor-default text-[#963531] ${
+                className={`text-[16px] font-normal text-justify leading-[1.3] tracking-[0.02rem] cursor-default text-[var(--text-primary)] ${
                   language === "jp" ? "font-['Noto_Sans_JP']" : ""
                 }`}
               >
@@ -82,7 +82,7 @@ const PlaygroundHeader: React.FC<PlaygroundHeaderProps> = ({
         {/* Persistent Preview Box */}
         <div
           ref={previewContainerRef}
-          className={`hidden md:block w-full md:w-[400px] aspect-video bg-[#EBE9E4] border border-[#963531]/20 overflow-hidden relative ${
+          className={`hidden md:block w-full md:w-[400px] aspect-video bg-[var(--bg-cases)] border border-[var(--text-primary)]/20 overflow-hidden relative ${
             hasAnimated ? "" : "opacity-0"
           }`}
         >

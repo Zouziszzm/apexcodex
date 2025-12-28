@@ -28,7 +28,7 @@ const RecommendedProfiles: React.FC<RecommendedProfilesProps> = ({
                 {/* Left Side: Name */}
                 <div className="flex items-center gap-6">
                   <Copy>
-                    <p className="text-[#963531] text-[18px] group-hover:translate-x-2 transition-transform duration-300">
+                    <p className="text-[var(--text-primary)] text-[18px] group-hover:translate-x-2 transition-transform duration-300">
                       {rec.name}
                     </p>
                   </Copy>

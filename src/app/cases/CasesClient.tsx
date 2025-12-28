@@ -8,7 +8,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const CasesClient = () => {
   const { language } = useLanguage();
   return (
-    <main className="bg-[#EBE9E4] min-h-screen w-full relative">
+    <main className="bg-[var(--bg-cases)] min-h-screen w-full relative">
       {/* Mobile View (Visible on < lg, Hidden on >= lg) */}
       <div className="block lg:hidden w-full h-full">
         <CasesMobile key={language} />

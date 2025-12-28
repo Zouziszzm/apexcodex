@@ -56,7 +56,7 @@ export const JobItem = ({ job, language, index }: JobItemProps) => {
           </Copy>
           <div
             ref={companyLineRef}
-            className="h-px bg-[#1C1C1E] mt-1"
+            className="h-px bg-[var(--text-primary)] mt-1"
             style={{ width: "0%" }}
           />
         </Link>

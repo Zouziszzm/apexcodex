@@ -12,7 +12,7 @@ const HomeClient = () => {
   const t = homeData[language];
 
   return (
-    <main className="relative min-h-screen pt-40 px-6 lg:px-12 text-[#963531] max-w-[1440px] mx-auto">
+    <main className="relative min-h-screen pt-40 px-6 lg:px-12 text-[var(--text-primary)] max-w-[1440px] mx-auto">
       <div className="flex flex-col gap-4">
         <Copy key={`title-${language}`} stagger={0.2} delay={0.2}>
           <h1
@@ -58,7 +58,7 @@ const HomeClient = () => {
               className="flex gap-2  items-center "
             >
               <div>
-                <Asterisk className="text-[#963531]" />
+                <Asterisk className="text-[var(--text-primary)]" />
               </div>
               <Link
                 href="https://www.github.com/zouziszzm"
@@ -69,7 +69,10 @@ const HomeClient = () => {
                   {t.projects[0]}
                 </p>
                 <div>
-                  <ArrowUpRight size={16} className="text-[#963531]" />
+                  <ArrowUpRight
+                    size={16}
+                    className="text-[var(--text-primary)]"
+                  />
                 </div>
               </Link>
             </Copy>
@@ -82,7 +85,7 @@ const HomeClient = () => {
               className="flex gap-2  items-center "
             >
               <div>
-                <Asterisk className="text-[#963531]" />
+                <Asterisk className="text-[var(--text-primary)]" />
               </div>
               <p
                 className={`cursor-default ${

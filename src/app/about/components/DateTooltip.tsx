@@ -82,11 +82,11 @@ export const DateTooltip = ({
     >
       {children}
       {isVisible && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-[#1C1C1E] text-white text-[12px] rounded shadow-xl whitespace-nowrap z-100 animate-in fade-in slide-in-from-bottom-1 duration-300">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-[var(--bg-overlay)] text-[var(--text-primary)] text-[12px] rounded shadow-xl whitespace-nowrap z-100 animate-in fade-in slide-in-from-bottom-1 duration-300">
           <p className={language === "jp" ? "font-['Noto_Sans_JP']" : ""}>
             {formatDateTooltip(dateRange, language)}
           </p>
-          <div className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-[#1C1C1E]" />
+          <div className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-[var(--bg-overlay)]" />
         </div>
       )}
     </div>
