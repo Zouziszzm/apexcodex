@@ -5,6 +5,10 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
 interface GithubStatsProps {
   stats: { year: number; count: number }[];
 }
@@ -16,23 +20,54 @@ const GithubStats: React.FC<GithubStatsProps> = ({ stats }) => {
   useGSAP(
     () => {
       const rows = containerRef.current?.querySelectorAll(".stat-row");
-      if (rows && rows.length > 0) {
-        gsap.fromTo(
-          rows,
-          { y: 20, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-            },
-          }
+
+      const animate = () => {
+        if (rows && rows.length > 0) {
+          gsap.fromTo(
+            rows,
+            { y: 20, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.6,
+              stagger: 0.1,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top 80%",
+              },
+            }
+          );
+        }
+      };
+
+      animate();
+
+      const handleTransitionComplete = () => {
+        ScrollTrigger.refresh();
+        // Force re-check
+        animate();
+      };
+
+      window.addEventListener(
+        "pageTransitionComplete",
+        handleTransitionComplete
+      );
+      window.addEventListener(
+        "languageTransitionComplete",
+        handleTransitionComplete
+      );
+
+      return () => {
+        window.removeEventListener(
+          "pageTransitionComplete",
+          handleTransitionComplete
         );
-      }
+        window.removeEventListener(
+          "languageTransitionComplete",
+          handleTransitionComplete
+        );
+      };
     },
     { scope: containerRef }
   );
