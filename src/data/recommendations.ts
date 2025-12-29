@@ -8,11 +8,11 @@ export interface Recommendation {
 
 export const recommendedProfiles: Recommendation[] = [
   {
-    name: "Rauno Freiberg",
-    role: "Design Engineer",
-    url: "https://github.com/raunofreiberg",
+    name: "Takuya Matsuyama",
+    role: "Indi Developer",
+    url: "https://github.com/craftzdog",
 
-    description: "Incredible attention to detail in UI/UX. Creator of Vercel's interaction details.",
+    description: "Takuya is a freelance and a full-stack developer based in Osaka with a passion for building digital services/stuff he wants.",
   },
   {
     name: "Paco Coursey",
