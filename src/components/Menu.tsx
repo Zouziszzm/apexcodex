@@ -264,7 +264,7 @@ const Menu = () => {
                   <Link
                     href={item.href}
                     onClick={toggleMenu}
-                    className="hover:text-[var(--text-primary)]/50 text-[var(--text-primary)] transition-colors duration-300"
+                    className="hover:text-[var(--text-primary)]/50 text-[var(--text-primary)] transition-colors duration-700"
                   >
                     <Copy
                       key={`${item.label}-${menuVersion}-${language}`}

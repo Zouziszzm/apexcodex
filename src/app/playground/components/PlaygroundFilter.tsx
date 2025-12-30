@@ -22,7 +22,7 @@ const PlaygroundFilter: React.FC<PlaygroundFilterProps> = ({
         <button
           key={f}
           onClick={() => onFilterChange(f)}
-          className={`text-left w-fit transition-colors duration-300 cursor-pointer ${
+          className={`text-left w-fit transition-colors duration-700 cursor-pointer ${
             activeFilter === f || (activeFilter === "All" && i === 0)
               ? "text-[var(--text-primary)]"
               : "hover:text-[var(--text-primary)] opacity-70 hover:opacity-100"

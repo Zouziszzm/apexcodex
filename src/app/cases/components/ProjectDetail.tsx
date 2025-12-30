@@ -196,7 +196,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
         }`}
       >
         <div
-          className="aspect-[1.6/1] border border-[var(--text-primary)]/10 bg-[var(--text-primary)]/5 flex items-center justify-center relative overflow-hidden transition-all duration-500"
+          className="aspect-[1.6/1] border border-[var(--text-primary)]/10 bg-[var(--text-primary)]/5 flex items-center justify-center relative overflow-hidden transition-all duration-700"
           key={activeImageIndex} // Key forces re-render/anim on change if needed
         >
           <Image
@@ -223,7 +223,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
           <button
             key={i}
             onClick={() => setActiveImageIndex(i)}
-            className={`w-16 h-16 border transition-all duration-300 flex items-center justify-center p-1 ${
+            className={`w-16 h-16 border transition-all duration-700 flex items-center justify-center p-1 ${
               activeImageIndex === i
                 ? "border-[var(--text-primary)] bg-[var(--text-primary)]/10"
                 : "border-[var(--text-primary)]/10 bg-[var(--text-primary)]/5 hover:border-[var(--text-primary)]/50"

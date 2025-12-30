@@ -46,17 +46,20 @@ export const JobItem = ({ job, language, index }: JobItemProps) => {
             <p
               className={`font-medium ${
                 language === "jp" ? "font-['Noto_Sans_JP']" : ""
-              }`}
+              } text-[var(--text-primary)] transition-colors duration-700`}
             >
               {job.company}
             </p>
             <div>
-              <ArrowUpRight size={20} />
+              <ArrowUpRight
+                size={20}
+                className="transition-colors duration-700"
+              />
             </div>
           </Copy>
           <div
             ref={companyLineRef}
-            className="h-px bg-[var(--text-primary)] mt-1"
+            className="h-px bg-[var(--text-primary)] mt-1 transition-colors duration-700"
             style={{ width: "0%" }}
           />
         </Link>

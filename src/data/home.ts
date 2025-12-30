@@ -6,9 +6,12 @@ export const homeData = {
     currentlyWorkingOn: "Currently Working On",
     projects: [
       "Life journal — A diary application.",
-      "Japanese N4",
     ],
     readmore: "Read more",
+    learning: {
+      title: "Learning",
+      items: ["WebGL Shaders", "Backend Architecture", "Japanese"],
+    },
   },
   jp: {
     title: "開発者ポートフォリオ",
@@ -17,8 +20,12 @@ export const homeData = {
     currentlyWorkingOn: "現在取り組んでいること",
     projects: [
       "ライフジャーナル — 日記アプリケーション。",
-      "日本語N4",
     ],
     readmore: "もっと見る",
+   
+    learning: {
+      title: "学習中",
+      items: ["WebGLシェーダー", "バックエンドアーキテクチャ", "システム設計"],
+    },
   },
 } as const;

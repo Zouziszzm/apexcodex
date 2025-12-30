@@ -22,7 +22,7 @@ const CasesFilter: React.FC<CasesFilterProps> = ({
         <button
           key={f}
           onClick={() => onFilterChange(f)}
-          className={`text-left w-fit transition-colors duration-300 ${
+          className={`text-left w-fit transition-colors duration-700 ${
             activeFilter === f || (activeFilter === "All" && i === 0)
               ? "text-[var(--text-primary)]"
               : "hover:text-[var(--text-primary)] opacity-70 hover:opacity-100"

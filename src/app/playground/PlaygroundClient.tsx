@@ -17,6 +17,14 @@ const PlaygroundClient = () => {
     t.items as unknown as PlaygroundItem[]
   );
 
+  // React to language changes
+  React.useEffect(() => {
+    // Reset to "local" All when language changes
+    const defaultFilter = language === "jp" ? "すべて" : "All";
+    setFilter(defaultFilter);
+    setDisplayItems(t.items as unknown as PlaygroundItem[]);
+  }, [language, t.items]);
+
   // Initialize with empty string - image appears on first hover
   const [activePreviewImage, setActivePreviewImage] = useState<string>("");
 
@@ -99,7 +107,7 @@ const PlaygroundClient = () => {
 
       <div ref={listContainerRef} className="flex flex-col gap-0 mt-0">
         {displayItems.map((item, index) => (
-          <div key={item.id} className="playground-row">
+          <div key={`${language}-${item.id}`} className="playground-row">
             <PlaygroundRow
               item={item}
               index={index}

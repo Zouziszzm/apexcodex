@@ -186,7 +186,7 @@ const CasesMobile = () => {
           <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
-            className={`text-[14px] text-left transition-colors duration-300 ${
+            className={`text-[14px] text-left transition-colors duration-700 ${
               activeFilter === filter
                 ? "text-[var(--text-primary)] font-medium"
                 : "text-[var(--text-primary)]/40 hover:text-[var(--text-primary)]/70"
@@ -260,7 +260,7 @@ const CasesMobile = () => {
               {projects.map((p, i) => (
                 <div
                   key={p.id}
-                  className="w-16 h-16 bg-[var(--text-primary)]/10 border border-[var(--text-primary)]/10 shrink-0 flex items-center justify-center overflow-hidden duration-300 transition-all"
+                  className="w-16 h-16 bg-[var(--text-primary)]/10 border border-[var(--text-primary)]/10 shrink-0 flex items-center justify-center overflow-hidden duration-700 transition-all"
                   style={{
                     opacity: i === activeProjectIndex ? 1 : 0.8,
                   }}

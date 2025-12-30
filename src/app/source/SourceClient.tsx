@@ -51,7 +51,7 @@ const SourceClient: React.FC<SourceClientProps> = ({ githubStats }) => {
             <Link
               href="https://github.com/zouziszzm"
               target="_blank"
-              className={`text-sm underline hover:text-[#5f5f5f] transition-colors duration-300 text-[var(--text-primary)] ${
+              className={`text-sm underline hover:text-[#5f5f5f] transition-colors duration-700 text-[var(--text-primary)] ${
                 language === "jp" ? "font-['Noto_Sans_JP']" : ""
               }`}
             >
