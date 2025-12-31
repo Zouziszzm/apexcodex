@@ -169,13 +169,13 @@ const CasesMobile = () => {
   const activeProject = projects[activeProjectIndex] || projects[0];
 
   return (
-    <div className="min-h-screen bg-[var(--bg-mobile-cases)] px-6 pt-32 pb-12 flex flex-col relative overflow-hidden">
+    <div className="min-h-screen bg-(--bg-mobile-cases) px-6 pt-32 pb-12 flex flex-col relative overflow-hidden">
       {/* Title Group */}
       <div className="mb-8">
-        <h1 className="text-[var(--text-primary)] text-[18px] font-bold mb-4">
+        <h1 className="text-(--text-primary) text-[18px] font-bold mb-4">
           {t.title}
         </h1>
-        <p className="text-[var(--text-primary)] text-[15px] leading-snug w-[90%]">
+        <p className="text-(--text-primary) text-[15px] leading-snug w-[90%]">
           {t.description}
         </p>
       </div>
@@ -186,10 +186,14 @@ const CasesMobile = () => {
           <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
+            aria-label={
+              language === "jp" ? `${filter} フィルター` : `${filter} filter`
+            }
+            aria-pressed={activeFilter === filter}
             className={`text-[14px] text-left transition-colors duration-700 ${
               activeFilter === filter
-                ? "text-[var(--text-primary)] font-medium"
-                : "text-[var(--text-primary)]/40 hover:text-[var(--text-primary)]/70"
+                ? "text-(--text-primary) font-medium"
+                : "text-(--text-primary)/40 hover:text-(--text-primary)/70"
             }`}
           >
             {filter}
@@ -201,7 +205,7 @@ const CasesMobile = () => {
       {activeProject ? (
         <div className="flex-1 flex flex-col min-h-0 mb-32">
           {/* Image */}
-          <div className="w-full aspect-3/2 bg-[var(--text-primary)]/10 border border-[var(--text-primary)]/20 mb-6 relative overflow-hidden">
+          <div className="w-full aspect-3/2 bg-(--text-primary)/10 border border-(--text-primary)/20 mb-6 relative overflow-hidden">
             {/* Visual Placeholder */}
             <div className="absolute inset-0 flex items-center justify-center">
               <Image
@@ -216,13 +220,13 @@ const CasesMobile = () => {
           </div>
 
           {/* Text */}
-          <h2 className="text-[var(--text-primary)] text-[18px] mb-4">
+          <h2 className="text-(--text-primary) text-[18px] mb-4">
             {activeProject.title}
           </h2>
           {/* Grid Stack for fixed height */}
           <div className="grid grid-cols-1 grid-rows-1">
             {/* Invisible spacer with longest description */}
-            <p className="text-[var(--text-primary)] text-[15px] leading-snug col-start-1 row-start-1 invisible pointer-events-none">
+            <p className="text-(--text-primary) text-[15px] leading-snug col-start-1 row-start-1 invisible pointer-events-none">
               {projects.reduce(
                 (longest, current) =>
                   current.description.length > longest.length
@@ -232,13 +236,13 @@ const CasesMobile = () => {
               )}
             </p>
             {/* Visible content */}
-            <p className="text-[var(--text-primary)] text-[15px] leading-snug col-start-1 row-start-1">
+            <p className="text-(--text-primary) text-[15px] leading-snug col-start-1 row-start-1">
               {activeProject.description}
             </p>
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center mb-32 text-[var(--text-primary)]/50 italic">
+        <div className="flex-1 flex flex-col items-center justify-center mb-32 text-(--text-primary)/50 italic">
           {language === "jp"
             ? "プロジェクトが見つかりません。"
             : "No projects found."}
@@ -250,7 +254,7 @@ const CasesMobile = () => {
         <div className="absolute bottom-12 left-6 right-6 h-16">
           <div className="relative w-full h-full" ref={minimapRef}>
             {/* Focus Indicator (Static Box at Left) */}
-            <div className="absolute top-0 left-0 w-16 h-16 border border-[var(--text-primary)] z-20 pointer-events-none bg-transparent"></div>
+            <div className="absolute top-0 left-0 w-16 h-16 border border-(--text-primary) z-20 pointer-events-none bg-transparent"></div>
 
             {/* Scrollable Strip */}
             <div
@@ -260,7 +264,7 @@ const CasesMobile = () => {
               {projects.map((p, i) => (
                 <div
                   key={p.id}
-                  className="w-16 h-16 bg-[var(--text-primary)]/10 border border-[var(--text-primary)]/10 shrink-0 flex items-center justify-center overflow-hidden duration-700 transition-all"
+                  className="w-16 h-16 bg-(--text-primary)/10 border border-(--text-primary)/10 shrink-0 flex items-center justify-center overflow-hidden duration-700 transition-all"
                   style={{
                     opacity: i === activeProjectIndex ? 1 : 0.8,
                   }}

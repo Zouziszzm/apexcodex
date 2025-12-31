@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Line from "@/components/Line";
 import Copy from "@/components/Copy";
-import { Recommendation } from "@/data/recommendations";
+import { Recommendation } from "@/data/source";
 
 interface RecommendedProfilesProps {
   recommendations: Recommendation[];

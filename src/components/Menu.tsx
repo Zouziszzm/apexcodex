@@ -198,16 +198,22 @@ const Menu = () => {
           } px-6 lg:px-[60px] py-4 flex justify-between items-center transition-all duration-1000 ease-in-out`}
         >
           <Link href="/" className="w-8 h-8 backdrop-blur-sm rounded-[2px]">
-            <Asterisk size={32} className="text-[var(--text-secondary)]/50" />
+            <Asterisk size={32} className="text-(--text-secondary)/50" />
           </Link>
 
           <div className="flex items-center gap-3 ">
             {/* Theme Toggle */}
             <div
               onClick={toggleTheme}
-              className="relative w-10 h-10 flex items-center justify-center border border-[var(--text-secondary)]/50 cursor-pointer overflow-hidden backdrop-blur-sm transition-colors duration-700"
+              className="relative w-10 h-10 flex items-center justify-center border border-(--text-secondary)/50 cursor-pointer overflow-hidden backdrop-blur-sm transition-colors duration-700"
+              aria-label={
+                theme === "dark"
+                  ? "Switch to light theme"
+                  : "Switch to dark theme"
+              }
+              role="button"
             >
-              <div className="absolute inset-0 flex items-center justify-center text-[var(--text-secondary)]/50">
+              <div className="absolute inset-0 flex items-center justify-center text-(--text-secondary)/50">
                 {theme === "dark" ? <Moon size={18} /> : <Sun size={18} />}
               </div>
             </div>
@@ -215,11 +221,17 @@ const Menu = () => {
             {/* Language Toggle */}
             <div
               onClick={toggleLanguage}
-              className="relative w-10 h-10 flex items-center justify-center border border-[var(--text-secondary)]/50 cursor-pointer overflow-hidden font-['Noto_Sans_JP'] backdrop-blur-sm transition-colors duration-700"
+              className="relative w-10 h-10 flex items-center justify-center border border-(--text-secondary)/50 cursor-pointer overflow-hidden font-['Noto_Sans_JP'] backdrop-blur-sm transition-colors duration-700"
+              aria-label={
+                language === "en"
+                  ? "言語を日本語に切り替える"
+                  : "Switch language to English"
+              }
+              role="button"
             >
               <p
                 ref={languageLabelRef}
-                className="absolute text-sm text-[var(--text-secondary)]/50 font-medium transition-transform duration-700"
+                className="absolute text-sm text-(--text-secondary)/50 font-medium transition-transform duration-700"
               >
                 <span className="block">{language === "en" ? "日" : "EN"}</span>
               </p>
@@ -229,17 +241,20 @@ const Menu = () => {
             <div
               ref={hamburgerIconRef}
               onClick={toggleMenu}
-              className="group relative w-10 h-10 lg:w-10 lg:h-10 flex flex-col justify-center items-center gap-1 border border-[var(--text-secondary)]/50 cursor-pointer backdrop-blur-sm transition-colors duration-700"
+              className="group relative w-10 h-10 lg:w-10 lg:h-10 flex flex-col justify-center items-center gap-1 border border-(--text-secondary)/50 cursor-pointer backdrop-blur-sm transition-colors duration-700"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              role="button"
             >
-              <span className="absolute w-[15px] h-[1.25px] bg-[var(--text-secondary)]/50 transition-all duration-700 translate-y-[-3px] group-[.active]:translate-y-0 group-[.active]:rotate-45" />
-              <span className="absolute w-[15px] h-[1.25px] bg-[var(--text-secondary)]/50 transition-all duration-700 translate-y-[3px] group-[.active]:translate-y-0 group-[.active]:-rotate-45" />
+              <span className="absolute w-[15px] h-[1.25px] bg-(--text-secondary)/50 transition-all duration-700 translate-y-[-3px] group-[.active]:translate-y-0 group-[.active]:rotate-45" />
+              <span className="absolute w-[15px] h-[1.25px] bg-(--text-secondary)/50 transition-all duration-700 translate-y-[3px] group-[.active]:translate-y-0 group-[.active]:-rotate-45" />
             </div>
           </div>
         </div>
       </div>
       <div
         ref={menuOverlayRef}
-        className="fixed inset-0 bg-[var(--bg-overlay)] overflow-hidden z-40 [clip-path:polygon(0%_0%,100%_0%,100%_0%,0%_0%)]"
+        className="fixed inset-0 bg-(--bg-overlay) overflow-hidden z-40 [clip-path:polygon(0%_0%,100%_0%,100%_0%,0%_0%)]"
       >
         <div
           ref={menuOverlayContentRef}
@@ -264,7 +279,7 @@ const Menu = () => {
                   <Link
                     href={item.href}
                     onClick={toggleMenu}
-                    className="hover:text-[var(--text-primary)]/50 text-[var(--text-primary)] transition-colors duration-700"
+                    className="hover:text-(--text-primary)/50 text-(--text-primary) transition-colors duration-700"
                   >
                     <Copy
                       key={`${item.label}-${menuVersion}-${language}`}

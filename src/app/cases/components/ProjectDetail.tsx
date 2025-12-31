@@ -43,7 +43,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
       {/* DESCRIPTION */}
       <div className="mb-16">
         <Copy forceReady={showContent} delay={0.2}>
-          <p className="text-[17px] lg:text-[18px] leading-[1.45] text-[var(--text-primary)] max-w-[95%]">
+          <p className="text-[17px] lg:text-[18px] leading-[1.45] text-(--text-primary) max-w-[95%]">
             {project.description}
           </p>
         </Copy>
@@ -55,7 +55,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 relative">
           <div className="flex justify-between items-center py-4 mr-10 pr-0 md:pr-10 relative">
             <Copy forceReady={showContent} delay={0.1}>
-              <span className="text-[14px] text-[var(--text-primary)]/50 uppercase tracking-widest">
+              <span className="text-[14px] text-(--text-primary)/50 uppercase tracking-widest">
                 {language === "jp" ? "日付" : "Date"}
               </span>
             </Copy>
@@ -71,7 +71,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
           </div>
           <div className="flex justify-between items-center py-4 pl-0  relative">
             <Copy forceReady={showContent} delay={0.2}>
-              <span className="text-[14px] text-[var(--text-primary)]/50 uppercase tracking-widest">
+              <span className="text-[14px] text-(--text-primary)/50 uppercase tracking-widest">
                 {language === "jp" ? "貢献" : "Contribution"}
               </span>
             </Copy>
@@ -91,7 +91,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 relative">
           <div className="flex justify-between items-center py-4 mr-10 pr-0 md:pr-10 relative">
             <Copy forceReady={showContent} delay={0.3}>
-              <span className="text-[14px] text-[var(--text-primary)]/50 uppercase tracking-widest">
+              <span className="text-[14px] text-(--text-primary)/50 uppercase tracking-widest">
                 {language === "jp" ? "範囲" : "Extent"}
               </span>
             </Copy>
@@ -150,7 +150,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 relative">
           <div className="flex justify-between items-center py-4 mr-10 pr-0 md:pr-10 relative">
             <Copy forceReady={showContent} delay={0.5}>
-              <span className="text-[14px] text-[var(--text-primary)]/50 uppercase tracking-widest">
+              <span className="text-[14px] text-(--text-primary)/50 uppercase tracking-widest">
                 {language === "jp" ? "スタック" : "Stack"}
               </span>
             </Copy>
@@ -171,12 +171,12 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
           <div className="grid grid-cols-1 relative">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center py-4 relative gap-2 md:gap-0">
               <Copy forceReady={showContent} delay={0.6}>
-                <span className="text-[14px] text-[var(--text-primary)]/50 uppercase tracking-widest flex-shrink-0">
+                <span className="text-[14px] text-(--text-primary)/50 uppercase tracking-widest shrink-0">
                   {language === "jp" ? "知的財産" : "Intellectual Property"}
                 </span>
               </Copy>
               <Copy forceReady={showContent} delay={0.6}>
-                <span className="text-[14px] font-medium text-[var(--text-primary)] text-left md:text-right">
+                <span className="text-[14px] font-medium text-(--text-primary) text-left md:text-right">
                   {project.copyright}
                 </span>
               </Copy>
@@ -196,7 +196,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
         }`}
       >
         <div
-          className="aspect-[1.6/1] border border-[var(--text-primary)]/10 bg-[var(--text-primary)]/5 flex items-center justify-center relative overflow-hidden transition-all duration-700"
+          className="aspect-[1.6/1] border border-(--text-primary)/10 bg-(--text-primary)/5 flex items-center justify-center relative overflow-hidden transition-all duration-700"
           key={activeImageIndex} // Key forces re-render/anim on change if needed
         >
           <Image
@@ -206,10 +206,10 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
             fill
           />
           {/* Subtle corner accents */}
-          <div className="absolute top-4 left-4 w-4 h-px bg-[var(--text-primary)]/10"></div>
-          <div className="absolute top-4 left-4 h-4 w-px bg-[var(--text-primary)]/10"></div>
-          <div className="absolute bottom-4 right-4 w-4 h-px bg-[var(--text-primary)]/10"></div>
-          <div className="absolute bottom-4 right-4 h-4 w-px bg-[var(--text-primary)]/10"></div>
+          <div className="absolute top-4 left-4 w-4 h-px bg-(--text-primary)/10"></div>
+          <div className="absolute top-4 left-4 h-4 w-px bg-(--text-primary)/10"></div>
+          <div className="absolute bottom-4 right-4 w-4 h-px bg-(--text-primary)/10"></div>
+          <div className="absolute bottom-4 right-4 h-4 w-px bg-(--text-primary)/10"></div>
         </div>
       </div>
 
@@ -223,17 +223,26 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({
           <button
             key={i}
             onClick={() => setActiveImageIndex(i)}
+            aria-label={
+              language === "jp"
+                ? `プロジェクト画像 ${i + 1} を表示`
+                : `View project image ${i + 1}`
+            }
             className={`w-16 h-16 border transition-all duration-700 flex items-center justify-center p-1 ${
               activeImageIndex === i
-                ? "border-[var(--text-primary)] bg-[var(--text-primary)]/10"
-                : "border-[var(--text-primary)]/10 bg-[var(--text-primary)]/5 hover:border-[var(--text-primary)]/50"
+                ? "border-(--text-primary) bg-(--text-primary)/10"
+                : "border-(--text-primary)/10 bg-(--text-primary)/5 hover:border-(--text-primary)/50"
             }`}
           >
             {/* Render actual image thumbnail */}
             <div className="relative w-full h-full">
               <Image
                 src={img}
-                alt={`Thumbnail ${i + 1}`}
+                alt={
+                  language === "jp"
+                    ? `プロジェクトサムネイル ${i + 1}`
+                    : `Project thumbnail ${i + 1}`
+                }
                 className="object-cover opacity-80"
                 fill
               />

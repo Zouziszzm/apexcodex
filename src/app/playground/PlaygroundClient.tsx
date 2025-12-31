@@ -35,14 +35,10 @@ const PlaygroundClient = () => {
     if (newFilter === filter) return;
 
     const getNewItems = (filterKey: string) => {
-      const allLabel = language === "jp" ? "すべて" : "All";
-
-      if (filterKey === "All" || filterKey === allLabel) {
+      const allLabels = ["All", "すべて"];
+      if (allLabels.includes(filterKey)) {
         return t.items;
       }
-
-      // Filter based on exact tag match (case-sensitive usually fine given data structure)
-      // Logic: Item must have the selected tag
       return t.items.filter((item) => item.tags.includes(filterKey));
     };
 
@@ -90,7 +86,7 @@ const PlaygroundClient = () => {
   return (
     <div
       ref={containerRef}
-      className="relative min-h-screen pt-40 px-6 lg:px-12 text-[var(--text-primary)] max-w-[1440px] mx-auto pb-40"
+      className="relative min-h-screen pt-40 px-6 lg:px-12 text-(--text-primary) max-w-[1440px] mx-auto pb-40"
     >
       <div className="mb-24">
         <PlaygroundHeader
