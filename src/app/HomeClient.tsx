@@ -50,7 +50,7 @@ const HomeClient = () => {
         <div className="flex flex-col gap-2 mt-4">
           <Copy key={`learning-${language}`} stagger={0.2} animateOnScroll>
             <p
-              className={`text-[14px] text-[var(--text-secondary)] uppercase tracking-widest ${
+              className={`text-[14px] font-medium uppercase tracking-widest ${
                 language === "jp" ? "font-['Noto_Sans_JP']" : ""
               }`}
             >
