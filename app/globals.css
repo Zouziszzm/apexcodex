@@ -1,0 +1,419 @@
+@import "tailwindcss";
+
+@theme {
+  /* Font Family */
+  --font-sans:
+    var(--font-hanken, "Hanken Grotesk"), ui-sans-serif, system-ui, sans-serif;
+
+  /* Fluid Typography Scale */
+  --font-size-fluid-display: clamp(
+    2.67rem,
+    calc(2.67rem + 1.145rem * ((100vw - 20rem) / 220rem)),
+    3.815rem
+  );
+  --font-size-fluid-heading: clamp(
+    2.136rem,
+    calc(2.136rem + 0.916rem * ((100vw - 20rem) / 220rem)),
+    3.052rem
+  );
+  --font-size-fluid-title: clamp(
+    1.709rem,
+    calc(1.709rem + 0.732rem * ((100vw - 20rem) / 220rem)),
+    2.441rem
+  );
+  --font-size-fluid-subtitle: clamp(
+    1.368rem,
+    calc(1.368rem + 0.585rem * ((100vw - 20rem) / 220rem)),
+    1.953rem
+  );
+  --font-size-fluid-kicker: clamp(
+    1.094rem,
+    calc(1.094rem + 0.469rem * ((100vw - 20rem) / 220rem)),
+    1.563rem
+  );
+
+  --font-size-fluid-body: clamp(
+    0.875rem,
+    calc(0.875rem + 0.25rem * ((100vw - 20rem) / 220rem)),
+    1.125rem
+  );
+  --font-size-fluid-body-sm: clamp(
+    0.7rem,
+    calc(0.7rem + 0.2rem * ((100vw - 20rem) / 220rem)),
+    0.9rem
+  );
+  --font-size-fluid-body-xs: clamp(
+    0.56rem,
+    calc(0.56rem + 0.16rem * ((100vw - 20rem) / 220rem)),
+    0.72rem
+  );
+
+  /* Spacing */
+  --spacing-fluid-xs: clamp(0.25rem, 0.5vw, 0.75rem);
+  --spacing-fluid-sm: clamp(0.5rem, 1vw, 1.5rem);
+  --spacing-fluid-md: clamp(1rem, 2vw, 3rem);
+  --spacing-fluid-lg: clamp(1.5rem, 3vw, 5rem);
+  --spacing-fluid-xl: clamp(2rem, 5vw, 8rem);
+  --spacing-fluid-2xl: clamp(3rem, 8vw, 12rem);
+}
+
+@layer base {
+  :root {
+    --font-display: var(--font-size-fluid-display);
+    --font-heading: var(--font-size-fluid-heading);
+    --font-title: var(--font-size-fluid-title);
+    --font-subtitle: var(--font-size-fluid-subtitle);
+    --font-kicker: var(--font-size-fluid-kicker);
+    --font-body: var(--font-size-fluid-body);
+    --font-body-sm: var(--font-size-fluid-body-sm);
+    --font-body-xs: var(--font-size-fluid-body-xs);
+
+    --lh-heading: 1.15;
+    --lh-loose: 1.3;
+    --lh-body: 1.6;
+    --lh-tight: 1.5;
+
+    --ls-display: -0.02em;
+    --ls-heading: -0.015em;
+    --ls-title: -0.01em;
+    --ls-subtitle: -0.005em;
+
+    transition:
+      background-color 0.8s ease,
+      color 0.8s ease,
+      border-color 0.8s ease;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--font-body);
+    line-height: var(--lh-body);
+    background-color: var(--bg);
+    color: var(--body);
+    min-height: 100vh;
+    margin: 0;
+    cursor: default;
+  }
+
+  a, button {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  }
+
+  input, textarea {
+    cursor: text;
+  }
+
+  :lang(ar),
+  :lang(ur),
+  :lang(fa) {
+    line-height: 1.9;
+    direction: rtl;
+  }
+
+  /* Seasonal Colors */
+  :root[data-season="spring"][data-time="night-00"] {
+    --bg: #f3f5f6;
+    --surface: #eceff1;
+    --border: #d8dee2;
+    --title: #2b3136;
+    --display: #3b444b;
+    --body: #505b63;
+    --subtext: #7e8a92;
+    --accent: #8fa3a1;
+  }
+  :root[data-season="spring"][data-time="dawn"] {
+    --bg: #faf5f2;
+    --surface: #f4eeea;
+    --border: #e3d8d2;
+    --title: #352c2a;
+    --display: #4a3d39;
+    --body: #61534e;
+    --subtext: #93847d;
+    --accent: #c6aaa1;
+  }
+  :root[data-season="spring"][data-time="morning"] {
+    --bg: #f7f8f4;
+    --surface: #f0f3ed;
+    --border: #dce4d7;
+    --title: #28302b;
+    --display: #39443d;
+    --body: #4f5d54;
+    --subtext: #7f8d84;
+    --accent: #a9bbb0;
+  }
+  :root[data-season="spring"][data-time="noon"] {
+    --bg: #fbfbf8;
+    --surface: #f4f5f1;
+    --border: #e3e7de;
+    --title: #2b302d;
+    --display: #3c443f;
+    --body: #556059;
+    --subtext: #87918a;
+    --accent: #b7c6b5;
+  }
+  :root[data-season="spring"][data-time="afternoon"] {
+    --bg: #f7f6f2;
+    --surface: #f0efeb;
+    --border: #dde0d7;
+    --title: #2e312d;
+    --display: #434842;
+    --body: #5a625b;
+    --subtext: #8a938c;
+    --accent: #b7bdaf;
+  }
+  :root[data-season="spring"][data-time="dusk"] {
+    --bg: #f8f3f4;
+    --surface: #f1ebec;
+    --border: #e0d6d8;
+    --title: #322b2d;
+    --display: #463c3f;
+    --body: #5e5255;
+    --subtext: #8f8185;
+    --accent: #c1a9af;
+  }
+  :root[data-season="spring"][data-time="evening"] {
+    --bg: #f2f3f6;
+    --surface: #ebedf1;
+    --border: #d8dde3;
+    --title: #2a2e34;
+    --display: #3a4148;
+    --body: #515b64;
+    --subtext: #7e8894;
+    --accent: #99a8b8;
+  }
+
+  :root[data-season="summer"][data-time="night-00"] {
+    --bg: #f4f5f6;
+    --surface: #edeff1;
+    --border: #d9dee2;
+    --title: #2d3135;
+    --display: #3f454a;
+    --body: #565e64;
+    --subtext: #848d94;
+    --accent: #9da8b0;
+  }
+  :root[data-season="summer"][data-time="dawn"] {
+    --bg: #fbf5f0;
+    --surface: #f5eee7;
+    --border: #e5d9cf;
+    --title: #372e2a;
+    --display: #4b4039;
+    --body: #64554d;
+    --subtext: #97867c;
+    --accent: #d0b29c;
+  }
+  :root[data-season="summer"][data-time="morning"] {
+    --bg: #fcfaf4;
+    --surface: #f5f2ea;
+    --border: #e7e0d3;
+    --title: #343028;
+    --display: #494338;
+    --body: #615a4f;
+    --subtext: #93897c;
+    --accent: #cbbca2;
+  }
+  :root[data-season="summer"][data-time="noon"] {
+    --bg: #fffdf8;
+    --surface: #f8f6ef;
+    --border: #ebe4d8;
+    --title: #343129;
+    --display: #4a453a;
+    --body: #635d52;
+    --subtext: #948b80;
+    --accent: #d8c6a8;
+  }
+  :root[data-season="summer"][data-time="afternoon"] {
+    --bg: #fbf8f1;
+    --surface: #f3efe7;
+    --border: #e4ddd0;
+    --title: #353028;
+    --display: #4a433a;
+    --body: #625a50;
+    --subtext: #93887d;
+    --accent: #cdb79d;
+  }
+  :root[data-season="summer"][data-time="dusk"] {
+    --bg: #faf2ee;
+    --surface: #f3e9e4;
+    --border: #e2d4ce;
+    --title: #352c2a;
+    --display: #493c38;
+    --body: #61514c;
+    --subtext: #927f79;
+    --accent: #c9a79b;
+  }
+  :root[data-season="summer"][data-time="evening"] {
+    --bg: #f3f3f5;
+    --surface: #ecedef;
+    --border: #d9dde1;
+    --title: #2c3035;
+    --display: #3d434a;
+    --body: #555d65;
+    --subtext: #818b95;
+    --accent: #a6afbc;
+  }
+
+  :root[data-season="autumn"][data-time="night-00"] {
+    --bg: #f3f3f4;
+    --surface: #ecedef;
+    --border: #d8dadf;
+    --title: #2f3032;
+    --display: #434548;
+    --body: #5a5d61;
+    --subtext: #878b91;
+    --accent: #9c9fa8;
+  }
+  :root[data-season="autumn"][data-time="dawn"] {
+    --bg: #faf3ed;
+    --surface: #f3eae2;
+    --border: #e2d4c9;
+    --title: #362c28;
+    --display: #4a3d37;
+    --body: #61514a;
+    --subtext: #917e76;
+    --accent: #c5a391;
+  }
+  :root[data-season="autumn"][data-time="morning"] {
+    --bg: #f8f5ee;
+    --surface: #f1ece3;
+    --border: #e1d8cb;
+    --title: #342e29;
+    --display: #48403a;
+    --body: #5f564f;
+    --subtext: #8f847b;
+    --accent: #bda996;
+  }
+  :root[data-season="autumn"][data-time="noon"] {
+    --bg: #fbf8f2;
+    --surface: #f4f0e8;
+    --border: #e5ded2;
+    --title: #352f29;
+    --display: #49423a;
+    --body: #60584f;
+    --subtext: #91877d;
+    --accent: #c8b29b;
+  }
+  :root[data-season="autumn"][data-time="afternoon"] {
+    --bg: #f7f1ea;
+    --surface: #efe7de;
+    --border: #ddd1c5;
+    --title: #342c27;
+    --display: #473d37;
+    --body: #5d514b;
+    --subtext: #8b7d76;
+    --accent: #b89a84;
+  }
+  :root[data-season="autumn"][data-time="dusk"] {
+    --bg: #f7efec;
+    --surface: #efe4e0;
+    --border: #decfca;
+    --title: #342b2a;
+    --display: #473b39;
+    --body: #5e4f4c;
+    --subtext: #8d7b79;
+    --accent: #bb9790;
+  }
+  :root[data-season="autumn"][data-time="evening"] {
+    --bg: #f2f2f4;
+    --surface: #eaebee;
+    --border: #d6d9de;
+    --title: #2d2f34;
+    --display: #40454b;
+    --body: #575e65;
+    --subtext: #838c95;
+    --accent: #9ea8b4;
+  }
+
+  :root[data-season="winter"][data-time="night-00"] {
+    --bg: #eff2f5;
+    --surface: #e7ebef;
+    --border: #d2d9e0;
+    --title: #252c34;
+    --display: #36404a;
+    --body: #4d5965;
+    --subtext: #7a8794;
+    --accent: #8fa1b6;
+  }
+  :root[data-season="winter"][data-time="dawn"] {
+    --bg: #f4f3f6;
+    --surface: #ecebf0;
+    --border: #d9d7e0;
+    --title: #2b2d34;
+    --display: #3e424b;
+    --body: #555b65;
+    --subtext: #818895;
+    --accent: #a7a8bc;
+  }
+  :root[data-season="winter"][data-time="morning"] {
+    --bg: #f5f8fa;
+    --surface: #edf2f5;
+    --border: #d9e2e8;
+    --title: #27303a;
+    --display: #394551;
+    --body: #50606d;
+    --subtext: #7b8b98;
+    --accent: #a3b7c6;
+  }
+  :root[data-season="winter"][data-time="noon"] {
+    --bg: #fafcfd;
+    --surface: #f1f5f7;
+    --border: #dee6eb;
+    --title: #28313b;
+    --display: #3a4752;
+    --body: #51616c;
+    --subtext: #7c8c97;
+    --accent: #b4c3d0;
+  }
+  :root[data-season="winter"][data-time="afternoon"] {
+    --bg: #f4f7f9;
+    --surface: #ecf1f4;
+    --border: #d7e0e5;
+    --title: #28303a;
+    --display: #39444f;
+    --body: #505f69;
+    --subtext: #7b8892;
+    --accent: #a3b5c1;
+  }
+  :root[data-season="winter"][data-time="dusk"] {
+    --bg: #f2f2f2;
+    --surface: #eaeaef;
+    --border: #d2d4dc;
+    --title: #2b3135;
+    --display: #3b444b;
+    --body: #535b63;
+    --subtext: #7e8a92;
+    --accent: #9da8b0;
+  }
+  :root[data-season="winter"][data-time="evening"] {
+    --bg: #eef1f4;
+    --surface: #e6eaee;
+    --border: #d2d8de;
+    --title: #252d35;
+    --display: #36414b;
+    --body: #4d5964;
+    --subtext: #788592;
+    --accent: #8fa1b5;
+  }
+}
+
+@layer utilities {
+  .display-text {
+    color: var(--display);
+  }
+  .sub-text {
+    color: var(--subtext);
+  }
+  .border-theme {
+    border-color: var(--border);
+  }
+  .accent-theme {
+    color: var(--accent);
+  }
+  .bg-surface {
+    background-color: var(--surface);
+  }
+}
