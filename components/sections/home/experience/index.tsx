@@ -28,12 +28,16 @@ export const ExperienceSection = () => {
   const expandedRef = useRef<HTMLDivElement>(null);
   const chevronRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [expandedJobIndices, setExpandedJobIndices] = useState<Record<number, boolean>>({});
+  const [expandedJobIndices, setExpandedJobIndices] = useState<
+    Record<number, boolean>
+  >({});
 
   const totalMonths = companySpans.reduce((acc, span) => {
     const startDate = new Date(span.start);
     const endDate = span.end === "present" ? new Date() : new Date(span.end);
-    const diff = (endDate.getFullYear() - startDate.getFullYear()) * 12 + (endDate.getMonth() - startDate.getMonth());
+    const diff =
+      (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+      (endDate.getMonth() - startDate.getMonth());
     return acc + Math.max(0, diff);
   }, 0);
 
@@ -46,11 +50,16 @@ export const ExperienceSection = () => {
 
   const { contextSafe } = useGSAP({ scope: containerRef });
 
-  const toggleJobRoles = contextSafe((index: number) => {
-    const isNowExpanded = !expandedJobIndices[index];
+  const toggleJobRoles = contextSafe((index: number, forcedState?: boolean) => {
+    const isNowExpanded =
+      forcedState !== undefined ? forcedState : !expandedJobIndices[index];
+
+    // Skip if already in the desired state
+    if (expandedJobIndices[index] === isNowExpanded) return;
+
     playTick();
 
-    setExpandedJobIndices(prev => ({ ...prev, [index]: isNowExpanded }));
+    setExpandedJobIndices((prev) => ({ ...prev, [index]: isNowExpanded }));
 
     const rolesContainer = rolesRefs.current[index];
     if (rolesContainer) {
@@ -60,7 +69,7 @@ export const ExperienceSection = () => {
           opacity: 1,
           marginTop: 12,
           duration: 0.8,
-          ease: "expo.out"
+          ease: "expo.out",
         });
       } else {
         gsap.to(rolesContainer, {
@@ -68,7 +77,7 @@ export const ExperienceSection = () => {
           opacity: 0,
           marginTop: 0,
           duration: 1,
-          ease: "expo.inOut"
+          ease: "expo.inOut",
         });
       }
     }
@@ -134,9 +143,23 @@ export const ExperienceSection = () => {
 
   const togglePastExperience = contextSafe((forcedState?: boolean) => {
     const nextState = forcedState !== undefined ? forcedState : !isExpanded;
+
+    // Skip if already in the desired state
+    if (isExpanded === nextState) return;
+
     playTick();
 
     setIsExpanded(nextState);
+
+    // Clear hash from URL when closing the section
+    if (!nextState && window.location.hash === "#experience-metalinex") {
+      window.history.replaceState(
+        null,
+        document.title,
+        window.location.pathname + window.location.search,
+      );
+    }
+
     if (expandedRef.current) {
       if (nextState) {
         gsap.fromTo(
@@ -170,6 +193,32 @@ export const ExperienceSection = () => {
       }, 5000);
     }
   });
+
+  // Handle deep linking for MetaLine X
+  React.useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash === "#experience-metalinex") {
+        // Small delay to ensure layout is ready
+        setTimeout(() => {
+          // Find index of MetaLine X (it's index 2 in jobs)
+          const metalinexIndex = 2;
+
+          togglePastExperience(true);
+          toggleJobRoles(metalinexIndex, true);
+
+          containerRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }, 1000);
+      }
+    };
+
+    handleHash();
+    window.addEventListener("hashchange", handleHash);
+    return () => window.removeEventListener("hashchange", handleHash);
+  }, []); // Only run on mount or hash change
 
   useGSAP(
     () => {
@@ -238,9 +287,9 @@ export const ExperienceSection = () => {
             textColor="var(--body)"
           />
         </h2>
-        <span className="text-[11px] font-light text-(--subtext) uppercase tracking-wider">
+        <span className="font-body-sm font-medium text-(--subtext)">
           <DiaTextReveal
-            text={`${totalYears} Years Total`}
+            text={`${totalYears} Years`}
             delay={0.4}
             duration={1.2}
             textColor="var(--subtext)"
@@ -254,7 +303,7 @@ export const ExperienceSection = () => {
           ref={(el) => {
             itemsRef.current[0] = el;
           }}
-          className="flex flex-col items-start group relative pb-4 w-full"
+          className="flex flex-col items-start group relative w-full"
           style={{ opacity: 0, transform: "translateY(30px)" }}
           onMouseEnter={() => onJobHover(0)}
           onMouseLeave={() => onJobLeave(0)}
@@ -293,18 +342,24 @@ export const ExperienceSection = () => {
                   ref={(el) => {
                     pulseRefs.current[0] = el;
                   }}
-                  className="absolute inset-0 bg-linear-to-r from-transparent via-white/90 to-transparent -translate-x-full"
+                  className="absolute inset-0 bg-linear-to-r from-transparent via-(--accent) to-transparent -translate-x-full"
                 />
               </div>
             </div>
             {jobs[0].roles && (
-              <button 
+              <button
                 onClick={() => toggleJobRoles(0)}
                 className="p-2 hover:bg-white/5 transition-colors text-(--subtext) hover:text-(--body)"
                 aria-expanded={!!expandedJobIndices[0]}
-                aria-label={expandedJobIndices[0] ? "Collapse roles" : "Expand roles"}
+                aria-label={
+                  expandedJobIndices[0] ? "Collapse roles" : "Expand roles"
+                }
               >
-                <ChevronDown size={16} className={`transition-transform duration-300 ${expandedJobIndices[0] ? "rotate-180" : ""}`} aria-hidden="true" />
+                <ChevronDown
+                  size={16}
+                  className={`transition-transform duration-300 ${expandedJobIndices[0] ? "rotate-180" : ""}`}
+                  aria-hidden="true"
+                />
               </button>
             )}
           </div>
@@ -351,7 +406,7 @@ export const ExperienceSection = () => {
         </div>
 
         {/* Past Experience Section Wrapper for Auto-Close Tracking */}
-        <div 
+        <div
           className="flex flex-col gap-2 w-full"
           onMouseEnter={onPastExpEnter}
           onMouseLeave={onPastExpLeave}
@@ -361,10 +416,12 @@ export const ExperienceSection = () => {
               itemsRef.current[1] = el;
             }}
             onClick={() => togglePastExperience()}
-            className="flex items-center gap-2 py-2 text-[12px] font-medium text-(--subtext) hover:text-(--body) transition-colors group/toggle w-fit"
+            className="flex items-center gap-2  text-[12px] font-medium text-(--subtext) hover:text-(--body) transition-colors group/toggle w-fit"
             style={{ opacity: 0, transform: "translateY(30px)" }}
             aria-expanded={isExpanded}
-            aria-label={isExpanded ? "Hide past experience" : "Show past experience"}
+            aria-label={
+              isExpanded ? "Hide past experience" : "Show past experience"
+            }
           >
             <span>
               <DiaTextReveal
@@ -392,7 +449,7 @@ export const ExperienceSection = () => {
               return (
                 <div
                   key={index}
-                  className="flex flex-col items-start group relative pb-4 w-full"
+                  className="flex flex-col items-start group relative w-full"
                   onMouseEnter={() => onJobHover(index)}
                   onMouseLeave={() => onJobLeave(index)}
                 >
@@ -419,18 +476,26 @@ export const ExperienceSection = () => {
                           ref={(el) => {
                             pulseRefs.current[index] = el;
                           }}
-                          className="absolute inset-0 bg-linear-to-r from-transparent via-white/90 to-transparent -translate-x-full"
+                          className="absolute inset-0 bg-linear-to-r from-transparent via-(--accent) to-transparent -translate-x-full"
                         />
                       </div>
                     </div>
                     {job.roles && (
-                      <button 
+                      <button
                         onClick={() => toggleJobRoles(index)}
                         className="p-2 hover:bg-white/5 transition-colors text-(--subtext) hover:text-(--body)"
                         aria-expanded={!!expandedJobIndices[index]}
-                        aria-label={expandedJobIndices[index] ? "Collapse roles" : "Expand roles"}
+                        aria-label={
+                          expandedJobIndices[index]
+                            ? "Collapse roles"
+                            : "Expand roles"
+                        }
                       >
-                        <ChevronDown size={16} className={`transition-transform duration-300 ${expandedJobIndices[index] ? "rotate-180" : ""}`} aria-hidden="true" />
+                        <ChevronDown
+                          size={16}
+                          className={`transition-transform duration-300 ${expandedJobIndices[index] ? "rotate-180" : ""}`}
+                          aria-hidden="true"
+                        />
                       </button>
                     )}
                   </div>

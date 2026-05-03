@@ -267,7 +267,8 @@ export const AnimatedThemeToggler = ({
       type="button"
       ref={buttonRef}
       onClick={toggleTheme}
-      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      aria-label={isDark ? "Toggle Light Mode" : "Toggle Dark Mode"}
+      title={isDark ? "Toggle Light Mode" : "Toggle Dark Mode"}
       aria-pressed={isDark}
       className={cn(
         "p-2 border border-theme bg-surface hover:bg-theme/10 transition-colors flex items-center justify-center opacity-0",

@@ -6,46 +6,51 @@
     var(--font-hanken, "Hanken Grotesk"), ui-sans-serif, system-ui, sans-serif;
 
   /* Fluid Typography Scale */
-  --font-size-fluid-display: clamp(
+  --font-size-display: clamp(
     2.67rem,
     calc(2.67rem + 1.145rem * ((100vw - 20rem) / 220rem)),
     3.815rem
   );
-  --font-size-fluid-heading: clamp(
+  --font-size-heading: clamp(
     2.136rem,
     calc(2.136rem + 0.916rem * ((100vw - 20rem) / 220rem)),
     3.052rem
   );
-  --font-size-fluid-title: clamp(
+  --font-size-title: clamp(
     1.709rem,
     calc(1.709rem + 0.732rem * ((100vw - 20rem) / 220rem)),
     2.441rem
   );
-  --font-size-fluid-subtitle: clamp(
+  --font-size-subtitle: clamp(
     1.368rem,
     calc(1.368rem + 0.585rem * ((100vw - 20rem) / 220rem)),
     1.953rem
   );
-  --font-size-fluid-kicker: clamp(
+  --font-size-kicker: clamp(
     1.094rem,
     calc(1.094rem + 0.469rem * ((100vw - 20rem) / 220rem)),
     1.563rem
   );
 
-  --font-size-fluid-body: clamp(
+  --font-size-body: clamp(
     0.875rem,
     calc(0.875rem + 0.25rem * ((100vw - 20rem) / 220rem)),
     1.125rem
   );
-  --font-size-fluid-body-sm: clamp(
+  --font-size-body-sm: clamp(
     0.7rem,
-    calc(0.7rem + 0.2rem * ((100vw - 20rem) / 220rem)),
-    0.9rem
+    calc(0.7rem + 0.275rem * ((100vw - 20rem) / 220rem)),
+    0.875rem
   );
-  --font-size-fluid-body-xs: clamp(
+  --font-size-body-xs: clamp(
     0.56rem,
     calc(0.56rem + 0.16rem * ((100vw - 20rem) / 220rem)),
     0.72rem
+  );
+  --font-size-caption: clamp(
+    0.625rem,
+    calc(0.625rem + 0.3928rem * ((100vw - 20rem) / 220rem)),
+    0.875rem
   );
 
   /* Spacing */
@@ -55,6 +60,15 @@
   --spacing-fluid-lg: clamp(1.5rem, 3vw, 5rem);
   --spacing-fluid-xl: clamp(2rem, 5vw, 8rem);
   --spacing-fluid-2xl: clamp(3rem, 8vw, 12rem);
+
+  /* Animations */
+  --animate-gradient: gradient 8s linear infinite;
+
+  @keyframes gradient {
+    to {
+      background-position: var(--bg-size, 300%) 0;
+    }
+  }
 }
 
 .company-reveal {
@@ -68,14 +82,15 @@
 
 @layer base {
   :root {
-    --font-display: var(--font-size-fluid-display);
-    --font-heading: var(--font-size-fluid-heading);
-    --font-title: var(--font-size-fluid-title);
-    --font-subtitle: var(--font-size-fluid-subtitle);
-    --font-kicker: var(--font-size-fluid-kicker);
-    --font-body: var(--font-size-fluid-body);
-    --font-body-sm: var(--font-size-fluid-body-sm);
-    --font-body-xs: var(--font-size-fluid-body-xs);
+    --font-display: var(--font-size-display);
+    --font-heading: var(--font-size-heading);
+    --font-title: var(--font-size-title);
+    --font-subtitle: var(--font-size-subtitle);
+    --font-kicker: var(--font-size-kicker);
+    --font-body: var(--font-size-body);
+    --font-body-sm: var(--font-size-body-sm);
+    --font-body-xs: var(--font-size-body-xs);
+    --font-caption: var(--font-size-caption);
 
     --lh-heading: 1.15;
     --lh-loose: 1.3;
@@ -723,6 +738,9 @@ html[data-magicui-theme-vt="active"]::view-transition-group(root) {
 }
 
 @layer utilities {
+  .text-caption {
+    font-size: var(--font-size-caption);
+  }
   .display-text {
     color: var(--display);
   }

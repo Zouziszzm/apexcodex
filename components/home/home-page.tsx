@@ -9,19 +9,27 @@ import { AnimatedThemeToggler } from "@/components/ui/theme-toggler";
 
 const HomePage = () => {
   return (
-    <main className="max-w-[1440px] mx-auto min-h-screen px-6 pb-24">
+    <main className="max-w-[1440px] mx-auto flex flex-col flex-1 px-6 pb-0 w-full">
       <div className="flex justify-center w-full">
         <div className="flex flex-col gap-4 w-full max-w-3xl pt-[clamp(6rem,15vw,9rem)]">
           <h1 className="font-body font-medium flex flex-col sm:flex-row sm:justify-between items-start sm:items-baseline gap-3 w-full">
-            <DiaTextReveal text={["Alfarhaankhan Inamdar"]} priority={true} once={false} />
+            <DiaTextReveal
+              text={["Alfarhaankhan Inamdar"]}
+              priority={true}
+              once={false}
+            />
             <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
               <LocalTime />
               <AnimatedThemeToggler variant="circle" />
             </div>
-
           </h1>
           <p className="font-body-sm font-light">
-            <DiaTextReveal textColor="var(--body)" lineHeightGap="1" priority={true} once={false}>
+            <DiaTextReveal
+              textColor="var(--body)"
+              lineHeightGap="1"
+              priority={true}
+              once={false}
+            >
               <>
                 I create cross-platform experiences for web, mobile, and desktop
                 with a focus on interaction, motion, and performance. Working
@@ -76,8 +84,9 @@ const HomePage = () => {
                   Tauri
                 </Highlighter>
                 . Currently learning{" "}
-                <span className="italic font-normal">Japanese.</span> Based in
-                Bengaluru, India. Open to creative{" "}
+                <span className="italic font-normal">Japanese.</span> Based in{" "}
+                <span className="font-medium italic">Bengaluru, India.</span>{" "}
+                Open to creative{" "}
                 <span className="font-normal">frontend</span> and{" "}
                 <span className="font-normal">full-stack</span> opportunities.
               </>

@@ -4,6 +4,7 @@ import { TransitionProvider } from "@/components/providers/transition-provider";
 import { hankenGrotesk } from "./font";
 import { Footer } from "@/components/ui/footer";
 import { DevToolbar } from "@/components/ui/dev-toolbar";
+import ClickSpark from "@/components/ui/click-spark";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -68,11 +69,20 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <DevToolbar />
-          <TransitionProvider>
-            {children}
-            <Footer />
-          </TransitionProvider>
+          <ClickSpark
+            sparkColor="var(--title)"
+            sparkSize={7}
+            sparkRadius={7}
+            sparkCount={7}
+            duration={300}
+            sparkLineWidth={1}
+          >
+            <DevToolbar />
+            <TransitionProvider>
+              {children}
+              <Footer />
+            </TransitionProvider>
+          </ClickSpark>
         </ThemeProvider>
       </body>
     </html>
