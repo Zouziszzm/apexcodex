@@ -1,0 +1,741 @@
+@import "tailwindcss";
+
+@theme {
+  /* Font Family */
+  --font-sans:
+    var(--font-hanken, "Hanken Grotesk"), ui-sans-serif, system-ui, sans-serif;
+
+  /* Fluid Typography Scale */
+  --font-size-fluid-display: clamp(
+    2.67rem,
+    calc(2.67rem + 1.145rem * ((100vw - 20rem) / 220rem)),
+    3.815rem
+  );
+  --font-size-fluid-heading: clamp(
+    2.136rem,
+    calc(2.136rem + 0.916rem * ((100vw - 20rem) / 220rem)),
+    3.052rem
+  );
+  --font-size-fluid-title: clamp(
+    1.709rem,
+    calc(1.709rem + 0.732rem * ((100vw - 20rem) / 220rem)),
+    2.441rem
+  );
+  --font-size-fluid-subtitle: clamp(
+    1.368rem,
+    calc(1.368rem + 0.585rem * ((100vw - 20rem) / 220rem)),
+    1.953rem
+  );
+  --font-size-fluid-kicker: clamp(
+    1.094rem,
+    calc(1.094rem + 0.469rem * ((100vw - 20rem) / 220rem)),
+    1.563rem
+  );
+
+  --font-size-fluid-body: clamp(
+    0.875rem,
+    calc(0.875rem + 0.25rem * ((100vw - 20rem) / 220rem)),
+    1.125rem
+  );
+  --font-size-fluid-body-sm: clamp(
+    0.7rem,
+    calc(0.7rem + 0.2rem * ((100vw - 20rem) / 220rem)),
+    0.9rem
+  );
+  --font-size-fluid-body-xs: clamp(
+    0.56rem,
+    calc(0.56rem + 0.16rem * ((100vw - 20rem) / 220rem)),
+    0.72rem
+  );
+
+  /* Spacing */
+  --spacing-fluid-xs: clamp(0.25rem, 0.5vw, 0.75rem);
+  --spacing-fluid-sm: clamp(0.5rem, 1vw, 1.5rem);
+  --spacing-fluid-md: clamp(1rem, 2vw, 3rem);
+  --spacing-fluid-lg: clamp(1.5rem, 3vw, 5rem);
+  --spacing-fluid-xl: clamp(2rem, 5vw, 8rem);
+  --spacing-fluid-2xl: clamp(3rem, 8vw, 12rem);
+}
+
+.company-reveal {
+  transition: all 0.7s ease-in-out;
+}
+
+.reveal-link:hover .company-reveal {
+  background-image: linear-gradient(var(--accent), var(--accent)) !important;
+  color: var(--accent);
+}
+
+@layer base {
+  :root {
+    --font-display: var(--font-size-fluid-display);
+    --font-heading: var(--font-size-fluid-heading);
+    --font-title: var(--font-size-fluid-title);
+    --font-subtitle: var(--font-size-fluid-subtitle);
+    --font-kicker: var(--font-size-fluid-kicker);
+    --font-body: var(--font-size-fluid-body);
+    --font-body-sm: var(--font-size-fluid-body-sm);
+    --font-body-xs: var(--font-size-fluid-body-xs);
+
+    --lh-heading: 1.15;
+    --lh-loose: 1.3;
+    --lh-body: 1.6;
+    --lh-tight: 1.5;
+
+    --ls-display: -0.02em;
+    --ls-heading: -0.015em;
+    --ls-title: -0.01em;
+    --ls-subtitle: -0.005em;
+
+    transition:
+      background-color 0.8s ease,
+      color 0.8s ease,
+      border-color 0.8s ease;
+  }
+
+  html,
+  body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--font-body);
+    line-height: var(--lh-body);
+    background-color: var(--bg);
+    color: var(--body);
+    min-height: 100vh;
+    margin: 0;
+    cursor: default;
+  }
+
+  a,
+  button {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  }
+
+  input,
+  textarea {
+    cursor: text;
+  }
+
+  :lang(ar),
+  :lang(ur),
+  :lang(fa) {
+    line-height: 1.9;
+    direction: rtl;
+  }
+
+  /* Seasonal Colors */
+  :root[data-season="spring"][data-time="night-00"] {
+    --bg: #f3f5f6;
+    --surface: #eceff1;
+    --border: #d8dee2;
+    --title: #2b3136;
+    --display: #3b444b;
+    --body: #505b63;
+    --subtext: #5b666d;
+    --accent: #8fa3a1;
+  }
+  :root[data-season="spring"][data-time="dawn"] {
+    --bg: #faf5f2;
+    --surface: #f4eeea;
+    --border: #e3d8d2;
+    --title: #352c2a;
+    --display: #4a3d39;
+    --body: #61534e;
+    --subtext: #6b5d57;
+    --accent: #c6aaa1;
+  }
+  :root[data-season="spring"][data-time="morning"] {
+    --bg: #f7f8f4;
+    --surface: #f0f3ed;
+    --border: #dce4d7;
+    --title: #28302b;
+    --display: #39443d;
+    --body: #4f5d54;
+    --subtext: #5b6860;
+    --accent: #a9bbb0;
+  }
+  :root[data-season="spring"][data-time="noon"] {
+    --bg: #fbfbf8;
+    --surface: #f4f5f1;
+    --border: #e3e7de;
+    --title: #2b302d;
+    --display: #3c443f;
+    --body: #556059;
+    --subtext: #626b64;
+    --accent: #b7c6b5;
+  }
+  :root[data-season="spring"][data-time="afternoon"] {
+    --bg: #f7f6f2;
+    --surface: #f0efeb;
+    --border: #dde0d7;
+    --title: #2e312d;
+    --display: #434842;
+    --body: #5a625b;
+    --subtext: #656d67;
+    --accent: #b7bdaf;
+  }
+  :root[data-season="spring"][data-time="dusk"] {
+    --bg: #f8f3f4;
+    --surface: #f1ebec;
+    --border: #e0d6d8;
+    --title: #322b2d;
+    --display: #463c3f;
+    --body: #5e5255;
+    --subtext: #695d61;
+    --accent: #c1a9af;
+  }
+  :root[data-season="spring"][data-time="evening"] {
+    --bg: #f2f3f6;
+    --surface: #ebedf1;
+    --border: #d8dde3;
+    --title: #2a2e34;
+    --display: #3a4148;
+    --body: #515b64;
+    --subtext: #5a636c;
+    --accent: #99a8b8;
+  }
+
+  :root[data-season="summer"][data-time="night-00"] {
+    --bg: #f4f5f6;
+    --surface: #edeff1;
+    --border: #d9dee2;
+    --title: #2d3135;
+    --display: #3f454a;
+    --body: #565e64;
+    --subtext: #5f686c;
+    --accent: #9da8b0;
+  }
+  :root[data-season="summer"][data-time="dawn"] {
+    --bg: #fbf5f0;
+    --surface: #f5eee7;
+    --border: #e5d9cf;
+    --title: #372e2a;
+    --display: #4b4039;
+    --body: #64554d;
+    --subtext: #6e5e55;
+    --accent: #d0b29c;
+  }
+  :root[data-season="summer"][data-time="morning"] {
+    --bg: #fcfaf4;
+    --surface: #f5f2ea;
+    --border: #e7e0d3;
+    --title: #343028;
+    --display: #494338;
+    --body: #615a4f;
+    --subtext: #6b6257;
+    --accent: #cbbca2;
+  }
+  :root[data-season="summer"][data-time="noon"] {
+    --bg: #fffdf8;
+    --surface: #f8f6ef;
+    --border: #ebe4d8;
+    --title: #343129;
+    --display: #4a453a;
+    --body: #635d52;
+    --subtext: #6c635b;
+    --accent: #d8c6a8;
+  }
+  :root[data-season="summer"][data-time="afternoon"] {
+    --bg: #fbf8f1;
+    --surface: #f3efe7;
+    --border: #e4ddd0;
+    --title: #353028;
+    --display: #4a433a;
+    --body: #625a50;
+    --subtext: #6b6158;
+    --accent: #cdb79d;
+  }
+  :root[data-season="summer"][data-time="dusk"] {
+    --bg: #faf2ee;
+    --surface: #f3e9e4;
+    --border: #e2d4ce;
+    --title: #352c2a;
+    --display: #493c38;
+    --body: #61514c;
+    --subtext: #6a5953;
+    --accent: #c9a79b;
+  }
+  :root[data-season="summer"][data-time="evening"] {
+    --bg: #f3f3f5;
+    --surface: #ecedef;
+    --border: #d9dde1;
+    --title: #2c3035;
+    --display: #3d434a;
+    --body: #555d65;
+    --subtext: #5c666c;
+    --accent: #a6afbc;
+  }
+
+  :root[data-season="autumn"][data-time="night-00"] {
+    --bg: #f3f3f4;
+    --surface: #ecedef;
+    --border: #d8dadf;
+    --title: #2f3032;
+    --display: #434548;
+    --body: #5a5d61;
+    --subtext: #62666b;
+    --accent: #9c9fa8;
+  }
+  :root[data-season="autumn"][data-time="dawn"] {
+    --bg: #faf3ed;
+    --surface: #f3eae2;
+    --border: #e2d4c9;
+    --title: #362c28;
+    --display: #4a3d37;
+    --body: #61514a;
+    --subtext: #695952;
+    --accent: #c5a391;
+  }
+  :root[data-season="autumn"][data-time="morning"] {
+    --bg: #f8f5ee;
+    --surface: #f1ece3;
+    --border: #e1d8cb;
+    --title: #342e29;
+    --display: #48403a;
+    --body: #5f564f;
+    --subtext: #685e56;
+    --accent: #bda996;
+  }
+  :root[data-season="autumn"][data-time="noon"] {
+    --bg: #fbf8f2;
+    --surface: #f4f0e8;
+    --border: #e5ded2;
+    --title: #352f29;
+    --display: #49423a;
+    --body: #60584f;
+    --subtext: #6a6158;
+    --accent: #c8b29b;
+  }
+  :root[data-season="autumn"][data-time="afternoon"] {
+    --bg: #f7f1ea;
+    --surface: #efe7de;
+    --border: #ddd1c5;
+    --title: #342c27;
+    --display: #473d37;
+    --body: #5d514b;
+    --subtext: #655852;
+    --accent: #b89a84;
+  }
+  :root[data-season="autumn"][data-time="dusk"] {
+    --bg: #f7efec;
+    --surface: #efe4e0;
+    --border: #decfca;
+    --title: #342b2a;
+    --display: #473b39;
+    --body: #5e4f4c;
+    --subtext: #675654;
+    --accent: #bb9790;
+  }
+  :root[data-season="autumn"][data-time="evening"] {
+    --bg: #f2f2f4;
+    --surface: #eaebee;
+    --border: #d6d9de;
+    --title: #2d2f34;
+    --display: #40454b;
+    --body: #575e65;
+    --subtext: #5e676c;
+    --accent: #9ea8b4;
+  }
+
+  :root[data-season="winter"][data-time="night-00"] {
+    --bg: #eff2f5;
+    --surface: #e7ebef;
+    --border: #d2d9e0;
+    --title: #252c34;
+    --display: #36404a;
+    --body: #4d5965;
+    --subtext: #57626c;
+    --accent: #8fa1b6;
+  }
+  :root[data-season="winter"][data-time="dawn"] {
+    --bg: #f4f3f6;
+    --surface: #ecebf0;
+    --border: #d9d7e0;
+    --title: #2b2d34;
+    --display: #3e424b;
+    --body: #555b65;
+    --subtext: #5c636c;
+    --accent: #a7a8bc;
+  }
+  :root[data-season="winter"][data-time="morning"] {
+    --bg: #f5f8fa;
+    --surface: #edf2f5;
+    --border: #d9e2e8;
+    --title: #27303a;
+    --display: #394551;
+    --body: #50606d;
+    --subtext: #586670;
+    --accent: #a3b7c6;
+  }
+  :root[data-season="winter"][data-time="noon"] {
+    --bg: #fafcfd;
+    --surface: #f1f5f7;
+    --border: #dee6eb;
+    --title: #28313b;
+    --display: #3a4752;
+    --body: #51616c;
+    --subtext: #596770;
+    --accent: #b4c3d0;
+  }
+  :root[data-season="winter"][data-time="afternoon"] {
+    --bg: #f4f7f9;
+    --surface: #ecf1f4;
+    --border: #d7e0e5;
+    --title: #28303a;
+    --display: #39444f;
+    --body: #505f69;
+    --subtext: #58636b;
+    --accent: #a3b5c1;
+  }
+  :root[data-season="winter"][data-time="dusk"] {
+    --bg: #f2f2f2;
+    --surface: #eaeaef;
+    --border: #d2d4dc;
+    --title: #2b3135;
+    --display: #3b444b;
+    --body: #535b63;
+    --subtext: #5b666d;
+    --accent: #9da8b0;
+  }
+  :root[data-season="winter"][data-time="evening"] {
+    --bg: #eef1f4;
+    --surface: #e6eaee;
+    --border: #d2d8de;
+    --title: #252d35;
+    --display: #36414b;
+    --body: #4d5964;
+    --subtext: #55616b;
+    --accent: #8fa1b5;
+  }
+
+  /* DARK MODE SEASONS */
+  /* Spring Dark */
+  :root.dark[data-season="spring"][data-time="night-00"] {
+    --bg: #0b0c0d;
+    --surface: #121416;
+    --border: #1a1d20;
+    --title: #e0e2e4;
+    --display: #c5c8cb;
+    --body: #9ea4aa;
+    --subtext: #8e969d;
+    --accent: #6d7d7c;
+  }
+  :root.dark[data-season="spring"][data-time="dawn"] {
+    --bg: #0f0d0c;
+    --surface: #181514;
+    --border: #221e1c;
+    --title: #f0e6e2;
+    --display: #d6c8c3;
+    --body: #b09f98;
+    --subtext: #a4948e;
+    --accent: #9b8178;
+  }
+  :root.dark[data-season="spring"][data-time="morning"] {
+    --bg: #0d0e0d;
+    --surface: #151715;
+    --border: #1d211d;
+    --title: #e2e6e2;
+    --display: #c8ccc8;
+    --body: #9fa59f;
+    --subtext: #909790;
+    --accent: #7e8d83;
+  }
+  :root.dark[data-season="spring"][data-time="noon"] {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --border: #202020;
+    --title: #e8e8e8;
+    --display: #d0d0d0;
+    --body: #a8a8a8;
+    --subtext: #999999;
+    --accent: #8ba08a;
+  }
+  :root.dark[data-season="spring"][data-time="afternoon"] {
+    --bg: #0e0e0d;
+    --surface: #161615;
+    --border: #20201d;
+    --title: #e6e5e0;
+    --display: #cccbc6;
+    --body: #a6a5a0;
+    --subtext: #999893;
+    --accent: #90958a;
+  }
+  :root.dark[data-season="spring"][data-time="dusk"] {
+    --bg: #0e0d0d;
+    --surface: #161414;
+    --border: #201c1c;
+    --title: #e8e0e2;
+    --display: #ccc5c7;
+    --body: #a89fa1;
+    --subtext: #998f91;
+    --accent: #9b848a;
+  }
+  :root.dark[data-season="spring"][data-time="evening"] {
+    --bg: #0c0d0f;
+    --surface: #141618;
+    --border: #1c1e22;
+    --title: #e2e4e8;
+    --display: #c7cbd0;
+    --body: #a0a5aa;
+    --subtext: #91979e;
+    --accent: #7a8ba1;
+  }
+
+  /* Summer Dark */
+  :root.dark[data-season="summer"][data-time="night-00"] {
+    --bg: #0d0d0e;
+    --surface: #161617;
+    --border: #1e1e20;
+    --title: #e2e2e4;
+    --display: #c8c8cb;
+    --body: #a1a1a6;
+    --subtext: #94949a;
+    --accent: #7d848c;
+  }
+  :root.dark[data-season="summer"][data-time="dawn"] {
+    --bg: #110e0d;
+    --surface: #1a1514;
+    --border: #241e1b;
+    --title: #f4e8e2;
+    --display: #dbccbc;
+    --body: #b5a193;
+    --subtext: #a89588;
+    --accent: #aa8d7a;
+  }
+  :root.dark[data-season="summer"][data-time="morning"] {
+    --bg: #11100d;
+    --surface: #1a1814;
+    --border: #24221b;
+    --title: #f2ede2;
+    --display: #d8d0bc;
+    --body: #b2aa93;
+    --subtext: #a49e88;
+    --accent: #a59b7a;
+  }
+  :root.dark[data-season="summer"][data-time="noon"] {
+    --bg: #12110e;
+    --surface: #1b1a16;
+    --border: #26241d;
+    --title: #f5f0e6;
+    --display: #dbd4c4;
+    --body: #b5ae9c;
+    --subtext: #a6a091;
+    --accent: #b2a184;
+  }
+  :root.dark[data-season="summer"][data-time="afternoon"] {
+    --bg: #100f0d;
+    --surface: #181714;
+    --border: #22201b;
+    --title: #f0ebe2;
+    --display: #d6cfbc;
+    --body: #aea793;
+    --subtext: #a09a88;
+    --accent: #a3937a;
+  }
+  :root.dark[data-season="summer"][data-time="dusk"] {
+    --bg: #100e0d;
+    --surface: #181514;
+    --border: #221d1b;
+    --title: #f0e6e2;
+    --display: #d6ccbc;
+    --body: #ae9f93;
+    --subtext: #a09388;
+    --accent: #a3897a;
+  }
+  :root.dark[data-season="summer"][data-time="evening"] {
+    --bg: #0e0f10;
+    --surface: #161718;
+    --border: #202122;
+    --title: #e6e8e9;
+    --display: #cbd0d2;
+    --body: #a2a7a9;
+    --subtext: #94999b;
+    --accent: #868f9a;
+  }
+
+  /* Autumn Dark */
+  :root.dark[data-season="autumn"][data-time="night-00"] {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --border: #202020;
+    --title: #e4e4e4;
+    --display: #cbcbcb;
+    --body: #a3a3a3;
+    --subtext: #979797;
+    --accent: #7d808a;
+  }
+  :root.dark[data-season="autumn"][data-time="dawn"] {
+    --bg: #100e0d;
+    --surface: #181514;
+    --border: #221e1c;
+    --title: #f2e9e4;
+    --display: #d9ccc5;
+    --body: #b3a198;
+    --subtext: #a6958d;
+    --accent: #a38576;
+  }
+  :root.dark[data-season="autumn"][data-time="morning"] {
+    --bg: #100f0e;
+    --surface: #181715;
+    --border: #22201d;
+    --title: #f0ede6;
+    --display: #d6d1c5;
+    --body: #aeaa9d;
+    --subtext: #a09d92;
+    --accent: #9b8a78;
+  }
+  :root.dark[data-season="autumn"][data-time="noon"] {
+    --bg: #11100e;
+    --surface: #1a1815;
+    --border: #24221d;
+    --title: #f2f0e8;
+    --display: #d8d4c8;
+    --body: #b2ae9f;
+    --subtext: #a4a093;
+    --accent: #a89884;
+  }
+  :root.dark[data-season="autumn"][data-time="afternoon"] {
+    --bg: #0f0e0d;
+    --surface: #171514;
+    --border: #201d1c;
+    --title: #ede9e2;
+    --display: #d4cfc5;
+    --body: #aa9d93;
+    --subtext: #746a64;
+    --accent: #96816d;
+  }
+  :root.dark[data-season="autumn"][data-time="dusk"] {
+    --bg: #0f0d0d;
+    --surface: #171414;
+    --border: #201c1c;
+    --title: #ede4e2;
+    --display: #d4ccc5;
+    --body: #aa9f98;
+    --subtext: #9d938d;
+    --accent: #967d74;
+  }
+  :root.dark[data-season="autumn"][data-time="evening"] {
+    --bg: #0e0e10;
+    --surface: #161618;
+    --border: #202022;
+    --title: #e6e6e9;
+    --display: #cbcbd2;
+    --body: #a2a2a9;
+    --subtext: #94949b;
+    --accent: #868a9a;
+  }
+
+  /* Winter Dark */
+  :root.dark[data-season="winter"][data-time="night-00"] {
+    --bg: #0b0d0f;
+    --surface: #121416;
+    --border: #1a1d20;
+    --title: #e0e2e4;
+    --display: #c5c8cb;
+    --body: #9ea4aa;
+    --subtext: #8e969d;
+    --accent: #6d7b8c;
+  }
+  :root.dark[data-season="winter"][data-time="dawn"] {
+    --bg: #0d0d0e;
+    --surface: #151517;
+    --border: #1d1d20;
+    --title: #e6e6e9;
+    --display: #cccce2;
+    --body: #a5a5b0;
+    --subtext: #9797a1;
+    --accent: #81839a;
+  }
+  :root.dark[data-season="winter"][data-time="morning"] {
+    --bg: #0d0f11;
+    --surface: #14171a;
+    --border: #1c2024;
+    --title: #e2e6e9;
+    --display: #c8ced4;
+    --body: #a0a7af;
+    --subtext: #68717b;
+    --accent: #8195a8;
+  }
+  :root.dark[data-season="winter"][data-time="noon"] {
+    --bg: #0e1012;
+    --surface: #15181b;
+    --border: #1d2126;
+    --title: #e6e9ed;
+    --display: #ccd2d8;
+    --body: #a3aab2;
+    --subtext: #949aa4;
+    --accent: #8ea1b2;
+  }
+  :root.dark[data-season="winter"][data-time="afternoon"] {
+    --bg: #0d0f11;
+    --surface: #14171a;
+    --border: #1c2024;
+    --title: #e2e6e9;
+    --display: #c8ced4;
+    --body: #a0a7af;
+    --subtext: #919aa4;
+    --accent: #8195a1;
+  }
+  :root.dark[data-season="winter"][data-time="dusk"] {
+    --bg: #0c0c0c;
+    --surface: #141414;
+    --border: #1c1c1c;
+    --title: #e4e4e4;
+    --display: #cbcbcb;
+    --body: #a3a3a3;
+    --subtext: #979797;
+    --accent: #808890;
+  }
+  :root.dark[data-season="winter"][data-time="evening"] {
+    --bg: #0b0d0f;
+    --surface: #121416;
+    --border: #1a1d20;
+    --title: #e0e2e4;
+    --display: #c5c8cb;
+    --body: #9ea4aa;
+    --subtext: #8e969d;
+    --accent: #6d7b8b;
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Scoped to AnimatedThemeToggler — the toggler sets the data-attribute and the variable only during a theme toggle. */
+html[data-magicui-theme-vt="active"]::view-transition-group(root) {
+  animation-duration: var(--magicui-theme-toggle-vt-duration);
+}
+
+@layer utilities {
+  .display-text {
+    color: var(--display);
+  }
+  .sub-text {
+    color: var(--subtext);
+  }
+  .border-theme {
+    border-color: var(--border);
+  }
+  .accent-theme {
+    color: var(--accent);
+  }
+  .bg-surface {
+    background-color: var(--surface);
+  }
+}
