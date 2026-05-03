@@ -119,7 +119,7 @@ export const ProjectsSection = () => {
 
   return (
     <section ref={containerRef} className="w-full mt-6 flex flex-col gap-2">
-      <div className="relative pb-2 mb-2">
+      <div className="relative pb-2 mb-2 flex items-baseline justify-between">
         <div
           ref={headerLineRef}
           className="absolute bottom-0 left-0 w-full h-px bg-(--border)"
@@ -133,6 +133,14 @@ export const ProjectsSection = () => {
             textColor="var(--body)"
           />
         </h2>
+        <span className="font-body-sm font-medium text-(--subtext)">
+          <DiaTextReveal
+            text={`0${projects.length}`}
+            delay={0.4}
+            duration={1.2}
+            textColor="var(--subtext)"
+          />
+        </span>
       </div>
 
       <div className="flex flex-col gap-2">
@@ -143,11 +151,21 @@ export const ProjectsSection = () => {
             index={index}
             onMouseEnter={() => onHover(index)}
             onMouseLeave={() => onLeave(index)}
-            itemsRef={(el) => { itemsRef.current[index] = el; }}
-            titleLinesRef={(el) => { titleLinesRef.current[index] = el; }}
-            pulseRefs={(el) => { pulseRefs.current[index] = el; }}
-            dividerLinesRef={(el) => { dividerLinesRef.current[index] = el; }}
-            dividerPulseRefs={(el) => { dividerPulseRefs.current[index] = el; }}
+            itemsRef={(el) => {
+              itemsRef.current[index] = el;
+            }}
+            titleLinesRef={(el) => {
+              titleLinesRef.current[index] = el;
+            }}
+            pulseRefs={(el) => {
+              pulseRefs.current[index] = el;
+            }}
+            dividerLinesRef={(el) => {
+              dividerLinesRef.current[index] = el;
+            }}
+            dividerPulseRefs={(el) => {
+              dividerPulseRefs.current[index] = el;
+            }}
           />
         ))}
       </div>

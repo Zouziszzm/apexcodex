@@ -22,7 +22,11 @@ export function useSound() {
       tickRef.current.volume.value = -35;
     }
 
-    tickRef.current.triggerAttackRelease("32n");
+    try {
+      tickRef.current.triggerAttackRelease("32n");
+    } catch (e) {
+      // Ignore overlapping sound errors
+    }
   }, []);
 
   useEffect(() => {

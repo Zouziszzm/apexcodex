@@ -78,10 +78,7 @@ export const ContactSection = () => {
   );
 
   return (
-    <section
-      ref={containerRef}
-      className="w-full mt-6 flex flex-col gap-6 pb-20"
-    >
+    <section ref={containerRef} className="w-full flex flex-col gap-2 ">
       <div className="relative pb-2 mb-2">
         <div
           ref={headerLineRef}
@@ -98,7 +95,7 @@ export const ContactSection = () => {
         </h2>
       </div>
 
-      <div className="flex flex-col gap-8 max-w-xl">
+      <div className="flex flex-col gap-2 max-w-xl">
         <p className="font-light text-[13px] text-(--subtext) leading-relaxed">
           <DiaTextReveal
             text="If something here resonates, please reach out! I'd love to connect :)"
