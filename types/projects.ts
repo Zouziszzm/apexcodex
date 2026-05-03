@@ -13,6 +13,6 @@ export interface Project {
   contribution: string;
   extent: string[];
   stack: string[];
-  category: "Personal" | "Commercial" | "Freelance";
+  category: "Personal" | "Commercial" | "Freelance" | "Professional";
   liveUrl?: string;
 }

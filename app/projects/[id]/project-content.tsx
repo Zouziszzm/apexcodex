@@ -143,40 +143,42 @@ export default function ProjectContent() {
           </div>
         </header>
 
-        <section
-          className="mt-6 w-full max-w-[800px] mx-auto group"
-          aria-label="Project Visual"
-        >
-          <div
-            ref={imageRef}
-            className="aspect-[1.6/1] border border-(--accent)/10 bg-(--accent)/5 flex items-center justify-center relative overflow-hidden transition-all duration-700 opacity-0"
+        {project.images.length > 0 && (
+          <section
+            className="mt-6 w-full max-w-[800px] mx-auto group"
+            aria-label="Project Visual"
           >
-            <Image
-              src={project.images[currentImageIndex]}
-              alt={`${project.title} screenshot ${currentImageIndex + 1}`}
-              fill
-              sizes="(max-width: 768px) 100vw, 800px"
-              className="object-cover opacity-90 transition-all duration-1000"
-              priority
-            />
             <div
-              className="absolute top-4 left-4 w-4 h-px bg-(--accent)/10"
-              aria-hidden="true"
-            ></div>
-            <div
-              className="absolute top-4 left-4 h-4 w-px bg-(--accent)/10"
-              aria-hidden="true"
-            ></div>
-            <div
-              className="absolute bottom-4 right-4 w-4 h-px bg-(--accent)/10"
-              aria-hidden="true"
-            ></div>
-            <div
-              className="absolute bottom-4 right-4 h-4 w-px bg-(--accent)/10"
-              aria-hidden="true"
-            ></div>
-          </div>
-        </section>
+              ref={imageRef}
+              className="aspect-[1.6/1] border border-(--accent)/10 bg-(--accent)/5 flex items-center justify-center relative overflow-hidden transition-all duration-700 opacity-0"
+            >
+              <Image
+                src={project.images[currentImageIndex]}
+                alt={`${project.title} screenshot ${currentImageIndex + 1}`}
+                fill
+                sizes="(max-width: 768px) 100vw, 800px"
+                className="object-cover opacity-90 transition-all duration-1000"
+                priority
+              />
+              <div
+                className="absolute top-4 left-4 w-4 h-px bg-(--accent)/10"
+                aria-hidden="true"
+              ></div>
+              <div
+                className="absolute top-4 left-4 h-4 w-px bg-(--accent)/10"
+                aria-hidden="true"
+              ></div>
+              <div
+                className="absolute bottom-4 right-4 w-4 h-px bg-(--accent)/10"
+                aria-hidden="true"
+              ></div>
+              <div
+                className="absolute bottom-4 right-4 h-4 w-px bg-(--accent)/10"
+                aria-hidden="true"
+              ></div>
+            </div>
+          </section>
+        )}
 
         {project.images.length > 1 && (
           <nav
@@ -221,20 +223,33 @@ export default function ProjectContent() {
             <DiaTextReveal delay={0.6} duration={1.5}>
               {project.description}
             </DiaTextReveal>
-            {project.github && (
+            {(project.github || project.liveUrl) && (
               <div
                 ref={githubRef}
-                className="flex justify-center mt-6 opacity-0"
+                className="flex justify-center gap-6 mt-6 opacity-0"
               >
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-caption font-light transition-opacity flex items-center gap-2 group/github border-b border-transparent hover:border-(--body)/20 pb-0.5 underline-offset-4"
-                >
-                  <ExternalLink size={12} className="opacity-100" />
-                  <DiaTextReveal text="GitHub" delay={0.8} />
-                </a>
+                {project.github && (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-body-sm font-light transition-opacity flex items-center gap-2 group/github border-b border-transparent hover:border-(--body)/20 pb-0.5 underline-offset-4"
+                  >
+                    <ExternalLink size={12} className="opacity-100" />
+                    <DiaTextReveal text="GitHub" delay={0.8} />
+                  </a>
+                )}
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-body-sm font-light transition-opacity flex items-center gap-2 group/live border-b border-transparent hover:border-(--body)/20 pb-0.5 underline-offset-4"
+                  >
+                    <ExternalLink size={12} className="opacity-100" />
+                    <DiaTextReveal text="Live Site" delay={0.8} />
+                  </a>
+                )}
               </div>
             )}
           </div>

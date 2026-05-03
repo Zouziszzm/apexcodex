@@ -25,7 +25,7 @@ export function AnimatedGradientText({
         } as React.CSSProperties
       }
       className={cn(
-        `inline bg-linear-to-r from-(--color-from) via-(--color-to) to-(--color-from) bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent transition-all duration-500 hover:animate-gradient`,
+        "inline transition-all duration-500 hover:animate-gradient hover:bg-linear-to-r hover:from-(--color-from) hover:via-(--color-to) hover:to-(--color-from) hover:bg-[length:var(--bg-size)_100%] hover:bg-clip-text hover:text-transparent cursor-default",
         className
       )}
       {...props}

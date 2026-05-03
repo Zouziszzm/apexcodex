@@ -342,7 +342,7 @@ export const ExperienceSection = () => {
                   ref={(el) => {
                     pulseRefs.current[0] = el;
                   }}
-                  className="absolute inset-0 bg-linear-to-r from-transparent via-white/90 to-transparent -translate-x-full"
+                  className="absolute inset-0 bg-linear-to-r from-transparent via-(--accent) to-transparent -translate-x-full"
                 />
               </div>
             </div>
@@ -476,7 +476,7 @@ export const ExperienceSection = () => {
                           ref={(el) => {
                             pulseRefs.current[index] = el;
                           }}
-                          className="absolute inset-0 bg-linear-to-r from-transparent via-white/90 to-transparent -translate-x-full"
+                          className="absolute inset-0 bg-linear-to-r from-transparent via-(--accent) to-transparent -translate-x-full"
                         />
                       </div>
                     </div>

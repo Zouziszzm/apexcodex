@@ -18,6 +18,7 @@ interface ProjectItemProps {
   pulseRefs: (el: HTMLDivElement | null) => void;
   dividerLinesRef: (el: HTMLDivElement | null) => void;
   dividerPulseRefs: (el: HTMLDivElement | null) => void;
+  noAnimation?: boolean;
 }
 
 export const ProjectItem = ({
@@ -30,12 +31,16 @@ export const ProjectItem = ({
   pulseRefs,
   dividerLinesRef,
   dividerPulseRefs,
+  noAnimation = false,
 }: ProjectItemProps) => {
   return (
     <div
       ref={itemsRef}
-      className="flex flex-col items-start group relative pb-4"
-      style={{ opacity: 0, transform: "translateY(30px)" }}
+      className="flex flex-col items-start group relative "
+      style={{
+        opacity: noAnimation ? 1 : 0,
+        transform: noAnimation ? "none" : "translateY(30px)",
+      }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -44,38 +49,54 @@ export const ProjectItem = ({
           href={`/projects/${project.id}`}
           className="font-body-sm font-medium transition-colors hover:text-(--accent)"
         >
-          <DiaTextReveal
-            text={project.title}
-            delay={0.4 + index * 0.1}
-            duration={1.2}
-            textColor="var(--body)"
-          />
+          {noAnimation ? (
+            <span className="text-(--body)">{project.title}</span>
+          ) : (
+            <DiaTextReveal
+              text={project.title}
+              delay={0.4 + index * 0.1}
+              duration={1.2}
+              textColor="var(--body)"
+            />
+          )}
         </TransitionLink>
         <div
           ref={titleLinesRef}
           className="w-full h-px bg-(--body) relative overflow-hidden"
-          style={{ transform: "scaleX(0)", transformOrigin: "left" }}
+          style={{
+            transform: noAnimation ? "scaleX(1)" : "scaleX(0)",
+            transformOrigin: "left",
+          }}
         >
           <div
             ref={pulseRefs}
-            className="absolute inset-0 bg-linear-to-r from-transparent via-white/90 to-transparent -translate-x-full"
+            className="absolute inset-0 bg-linear-to-r from-transparent via-(--accent) to-transparent -translate-x-full"
           />
         </div>
       </div>
 
-      <p className="font-light text-[13px] text-(--subtext)">
-        <DiaTextReveal
-          text={project.subtext}
-          delay={0.6 + index * 0.1}
-          duration={1.5}
-          textColor="var(--subtext)"
-        />
-      </p>
+      {noAnimation ? (
+        <p className="font-light text-[13px] text-(--subtext)">
+          {project.subtext}
+        </p>
+      ) : (
+        <p className="font-light text-[13px] text-(--subtext)">
+          <DiaTextReveal
+            text={project.subtext}
+            delay={0.6 + index * 0.1}
+            duration={1.5}
+            textColor="var(--subtext)"
+          />
+        </p>
+      )}
 
       <div
         ref={dividerLinesRef}
         className="absolute bottom-0 left-0 w-full h-px bg-(--border)/40 relative overflow-hidden"
-        style={{ transform: "scaleX(0)", transformOrigin: "left" }}
+        style={{
+          transform: noAnimation ? "scaleX(1)" : "scaleX(0)",
+          transformOrigin: "left",
+        }}
       >
         <div
           ref={dividerPulseRefs}
