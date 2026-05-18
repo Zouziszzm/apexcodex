@@ -4,7 +4,7 @@ export interface SocialLink {
 }
 
 export const socialLinks: SocialLink[] = [
-  { label: "Email", href: "mailto:farhumaid@gmail.com" },
+  { label: "Email", href: "mailto:farhaanmf136@gmail.com" },
   { label: "X", href: "https://x.com/zouziszzm/" },
   { label: "GitHub", href: "https://github.com/zouziszzm" },
 ];
