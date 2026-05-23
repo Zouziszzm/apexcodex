@@ -78,25 +78,6 @@ export const projects: Project[] = [
     category: "Professional",
   },
   {
-    id: "metaline-x-web",
-    title: "MetaLine-X Web",
-    subtext:
-      "A decentralized Web3 gaming ecosystem featuring 'Personal', 'Guild', and 'Game' editions with immersive 3D interfaces.",
-    date: "Dec 2023 - Nov 2024",
-    description:
-      "Contributed to the development of the MetaLine-X web ecosystem, which included the OpenSea Game, OpenSea Guild Edition, and OpenSea Personal Edition. This Ethereum-based Web3 platform allowed users to sail seas, discover islands, raise pets, and manage virtual shops. My work focused on the website architecture and integrating immersive 3D elements using Three.js and WebGL for a high-fidelity gaming experience. Note: These platforms were eventually taken down following an operational recalibration as outlined in the founder's open letter.",
-    devNotes:
-      "I do not own any right to this application / software but i have worked in making this.",
-    github: undefined,
-    liveUrl: undefined,
-    images: [],
-    tags: ["Web3", "Gaming", "3D"],
-    contribution: "Web Developer (Professional)",
-    extent: ["Web Development", "3D Integration"],
-    stack: ["Three.js", "Canvas", "WebGL", "React", "Web3.js"],
-    category: "Professional",
-  },
-  {
     id: "voxel-chunks",
     title: "Voxel Construct",
     subtext:

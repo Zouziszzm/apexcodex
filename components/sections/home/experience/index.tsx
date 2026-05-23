@@ -165,9 +165,29 @@ export const ExperienceSection = () => {
         gsap.fromTo(
           expandedRef.current,
           { height: 0, opacity: 0 },
-          { height: "auto", opacity: 1, duration: 0.8, ease: "expo.out" },
+          { 
+            height: "auto", 
+            opacity: 1, 
+            duration: 0.8, 
+            ease: "expo.out",
+            onComplete: () => {
+              // Expand all roles within past experience after outer container finishes expanding
+              jobs.slice(1).forEach((job, idx) => {
+                if (job.roles && job.roles.length > 1) {
+                  toggleJobRoles(idx + 1, true);
+                }
+              });
+            }
+          }
         );
       } else {
+        // Collapse all roles within past experience immediately before closing outer container
+        jobs.slice(1).forEach((job, idx) => {
+          if (job.roles && job.roles.length > 1) {
+            toggleJobRoles(idx + 1, false);
+          }
+        });
+        
         gsap.to(expandedRef.current, {
           height: 0,
           opacity: 0,
@@ -364,30 +384,45 @@ export const ExperienceSection = () => {
             )}
           </div>
 
-          <div className="w-full">
-            <RoleItem
-              role={jobs[0].roles![0]}
-              index={0}
-              total={jobs[0].roles!.length}
-              isMain={true}
-            />
-            <div
-              ref={(el) => {
-                rolesRefs.current[0] = el;
-              }}
-              className="overflow-hidden h-0 opacity-0 w-full"
-            >
-              {jobs[0].roles!.slice(1).map((role, rIdx) => (
-                <RoleItem
-                  key={rIdx + 1}
-                  role={role}
-                  index={rIdx + 1}
-                  total={jobs[0].roles!.length}
-                  isMain={false}
-                />
-              ))}
+          {jobs[0].roles ? (
+            <div className="w-full">
+              <RoleItem
+                role={jobs[0].roles[0]}
+                index={0}
+                total={jobs[0].roles.length}
+                isMain={true}
+              />
+              <div
+                ref={(el) => {
+                  rolesRefs.current[0] = el;
+                }}
+                className="overflow-hidden h-0 opacity-0 w-full"
+              >
+                {jobs[0].roles.slice(1).map((role, rIdx) => (
+                  <RoleItem
+                    key={rIdx + 1}
+                    role={role}
+                    index={rIdx + 1}
+                    total={jobs[0].roles!.length}
+                    isMain={false}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="w-full">
+              <RoleItem
+                role={{
+                  position: jobs[0].position!,
+                  duration: jobs[0].duration!,
+                  dateRange: jobs[0].dateRange!,
+                }}
+                index={0}
+                total={1}
+                isMain={true}
+              />
+            </div>
+          )}
 
           <div
             ref={(el) => {

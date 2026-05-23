@@ -2,6 +2,7 @@ export interface Role {
   position: string;
   duration: string;
   dateRange: string;
+  description?: string[];
 }
 
 export interface Job {
@@ -11,4 +12,5 @@ export interface Job {
   position?: string; // For single role jobs
   duration?: string;
   dateRange?: string;
+  description?: string[];
 }
