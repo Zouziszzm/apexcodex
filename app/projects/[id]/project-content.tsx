@@ -97,7 +97,7 @@ export default function ProjectContent() {
   return (
     <main
       ref={containerRef}
-      className="relative flex flex-col flex-1 pt-24 text-(--body) bg-(--bg)"
+      className="relative flex flex-col flex-1 pt-24 text-(--body)"
     >
       <nav
         className="absolute top-10 left-6 lg:left-12"

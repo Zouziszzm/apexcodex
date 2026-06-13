@@ -1,6 +1,9 @@
 import { DiaTextReveal } from "@/components/ui/dia-text-rv";
 import { Highlighter } from "@/components/ui/marker";
+import { IndieDevLink } from "@/components/home/indie-dev-link";
 import { VoxelDog } from "@/components/ui/voxel-dog";
+import { LifeTodosTrigger } from "@/components/home/life-todos";
+import { SpotifyNowPlaying } from "@/components/home/spotify-now-playing";
 import { ExperienceSection } from "@/components/sections/home/experience";
 import { ProjectsSection } from "@/components/sections/home/projects";
 import { ContactSection } from "@/components/sections/home/contact";
@@ -12,16 +15,27 @@ const HomePage = () => {
     <main className="max-w-[1440px] mx-auto flex flex-col flex-1 px-6 pb-0 w-full">
       <div className="flex justify-center w-full">
         <div className="flex flex-col gap-4 w-full max-w-3xl pt-[clamp(6rem,15vw,9rem)]">
-          <h1 className="font-body font-medium flex flex-col sm:flex-row sm:justify-between items-start sm:items-baseline gap-3 w-full">
-            <DiaTextReveal
-              text={["Alfarhaankhan Inamdar"]}
-              priority={true}
-              once={false}
-            />
-            <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
-              <LocalTime />
-              <AnimatedThemeToggler variant="circle" />
+          <h1 className="font-body font-medium flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-x-3 w-full min-w-0 overflow-visible">
+            <div className="flex items-center justify-between gap-3 w-full min-w-0 sm:contents">
+              <span className="flex items-center gap-x-2 shrink-0 overflow-visible sm:order-1">
+                <DiaTextReveal
+                  text={["Alfarhaankhan Inamdar"]}
+                  priority={true}
+                  once={false}
+                />
+                <span className="relative z-20 overflow-visible">
+                  <LifeTodosTrigger />
+                </span>
+              </span>
+              <div className="flex shrink-0 items-center gap-3 sm:order-3">
+                <LocalTime />
+                <AnimatedThemeToggler variant="circle" />
+              </div>
             </div>
+            <SpotifyNowPlaying
+              variant="inline"
+              className="w-full min-w-0 sm:order-2 sm:flex-1"
+            />
           </h1>
           <p className="font-body-sm font-light">
             <DiaTextReveal
@@ -89,6 +103,30 @@ const HomePage = () => {
                 Open to creative{" "}
                 <span className="font-normal">frontend</span> and{" "}
                 <span className="font-normal">full-stack</span> opportunities.
+              </>
+            </DiaTextReveal>
+          </p>
+          <p className="font-body-sm font-light">
+            <DiaTextReveal
+              textColor="var(--subtext)"
+              lineHeightGap="1"
+              delay={1.0}
+              duration={1.5}
+              priority={true}
+            >
+              <>
+                As an <IndieDevLink />
+                , I&apos;m looking for a change in environment and open to{" "}
+                <Highlighter
+                  action="underline"
+                  color="#d8c7f2"
+                  strokeWidth={2}
+                  delay={2400}
+                  padding={5}
+                >
+                  international opportunities
+                </Highlighter>
+                — remote or relocation.
               </>
             </DiaTextReveal>
           </p>
