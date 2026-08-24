@@ -10,8 +10,9 @@ import { useGSAP } from "@gsap/react";
 
 import { usePathname } from "next/navigation";
 
-import { usePathname } from "next/navigation";
-import { useSound } from "@/hooks/use-sound";
+function easeOutCirc(x: number) {
+  return Math.sqrt(1 - Math.pow(x - 1, 4));
+}
 
 export const VoxelDog = () => {
   const refContainer = useRef<HTMLDivElement>(null);
@@ -115,16 +116,10 @@ export const VoxelDog = () => {
       }).then(() => {
         animate();
         setLoading(false);
-        if (container) {
-          gsap.to(container, {
-            opacity: 1,
-            duration: 1.2,
-            ease: "power2.out"
-          });
-        }
       });
 
       let req: number;
+      let frame = 0;
       const animate = () => {
         req = requestAnimationFrame(animate);
 
@@ -153,10 +148,9 @@ export const VoxelDog = () => {
           renderer.domElement.remove();
         }
         renderer.dispose();
-        refRenderer.current = null;
       };
     }
-  }, [pathname]);
+  }, []);
 
   useEffect(() => {
     window.addEventListener("resize", handleWindowResize, false);
@@ -164,8 +158,6 @@ export const VoxelDog = () => {
       window.removeEventListener("resize", handleWindowResize, false);
     };
   }, [handleWindowResize]);
-
-  const { playTick } = useSound();
 
   return (
     <div
