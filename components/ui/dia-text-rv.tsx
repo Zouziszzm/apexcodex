@@ -80,7 +80,7 @@ export function DiaTextReveal({
   delay = 0,
   repeat = false,
   repeatDelay = 0.5,
-  startOnView = true,
+  startOnView = false,
   once = true,
   className,
   fixedWidth = false,
@@ -91,14 +91,6 @@ export function DiaTextReveal({
   const isMulti = texts.length > 1
 
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
-  useEffect(() => {
-    const mql = window.matchMedia("(prefers-reduced-motion: reduce)")
-    setPrefersReducedMotion(mql.matches)
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
-    mql.addEventListener("change", handler)
-    return () => mql.removeEventListener("change", handler)
-  }, [])
-
   const spanRef = useRef<HTMLSpanElement>(null)
   const optsRef = useRef({
     colors,
@@ -118,6 +110,34 @@ export function DiaTextReveal({
     repeatDelay,
     texts,
   }
+
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)")
+    setPrefersReducedMotion(mql.matches)
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
+    mql.addEventListener("change", handler)
+    return () => mql.removeEventListener("change", handler)
+  }, [])
+
+  useEffect(() => {
+    const snapVisible = () => {
+      const el = spanRef.current
+      if (!el) return
+      el.style.backgroundImage = buildGradient(
+        SWEEP_END,
+        optsRef.current.colors,
+        optsRef.current.textColor,
+      )
+    }
+
+    const observer = new MutationObserver(snapVisible)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    })
+
+    return () => observer.disconnect()
+  }, [])
 
   const indexRef = useRef(0)
   const hasPlayedRef = useRef(false)
@@ -211,6 +231,7 @@ export function DiaTextReveal({
     return () => {
       if (tweenRef.current) tweenRef.current.kill()
       clearTimeout(timerRef.current)
+      hasPlayedRef.current = false
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInView, startOnView, once, prefersReducedMotion])

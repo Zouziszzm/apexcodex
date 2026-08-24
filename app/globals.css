@@ -55,6 +55,40 @@
   --spacing-fluid-lg: clamp(1.5rem, 3vw, 5rem);
   --spacing-fluid-xl: clamp(2rem, 5vw, 8rem);
   --spacing-fluid-2xl: clamp(3rem, 8vw, 12rem);
+<<<<<<< Updated upstream
+=======
+
+  /* Animations */
+  --animate-gradient: gradient 8s linear infinite;
+
+  @keyframes gradient {
+    to {
+      background-position: var(--bg-size, 300%) 0;
+    }
+  }
+}
+
+.company-reveal {
+  transition: all 0.7s ease-in-out;
+}
+
+.song-waveform {
+  display: block;
+  width: 100%;
+  height: 6px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.song-waveform-path {
+  fill: none;
+  stroke: color-mix(in srgb, var(--body) 72%, var(--accent));
+  stroke-width: 0.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 1;
+>>>>>>> Stashed changes
 }
 
 @layer base {
@@ -78,12 +112,32 @@
     --ls-title: -0.01em;
     --ls-subtitle: -0.005em;
 
+    --line-pulse-via: rgba(0, 0, 0, 0.7);
+
     transition:
       background-color 0.8s ease,
       color 0.8s ease,
       border-color 0.8s ease;
   }
 
+<<<<<<< Updated upstream
+=======
+  :root.dark {
+    --line-pulse-via: rgba(255, 255, 255, 0.9);
+  }
+
+  html,
+  body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+>>>>>>> Stashed changes
   body {
     font-family: var(--font-sans);
     font-size: var(--font-body);
@@ -95,7 +149,139 @@
     cursor: default;
   }
 
+<<<<<<< Updated upstream
   a, button {
+=======
+  body::before {
+    content: "";
+    position: fixed;
+    inset: -15%;
+    width: 130%;
+    height: 130%;
+    z-index: -2;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        ellipse 80% 60% at 12% 18%,
+        color-mix(in srgb, #9fc0de 32%, transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        ellipse 72% 52% at 88% 78%,
+        color-mix(in srgb, #c4aed9 29%, transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        ellipse 64% 68% at 52% 48%,
+        color-mix(in srgb, #dab3b3 26%, transparent),
+        transparent 64%
+      ),
+      radial-gradient(
+        ellipse 76% 54% at 72% 12%,
+        color-mix(in srgb, #b5d4b5 28%, transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        ellipse 60% 58% at 28% 82%,
+        color-mix(in srgb, #dbc9a8 25%, transparent),
+        transparent 62%
+      );
+    animation: bg-pastel-wander 52s ease-in-out infinite;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.058;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    mix-blend-mode: soft-light;
+  }
+
+  :root.dark body::before {
+    background:
+      radial-gradient(
+        ellipse 80% 60% at 12% 18%,
+        color-mix(in srgb, #5a7a94 16%, transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        ellipse 72% 52% at 88% 78%,
+        color-mix(in srgb, #6a5a82 14%, transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        ellipse 64% 68% at 52% 48%,
+        color-mix(in srgb, #825a5a 13%, transparent),
+        transparent 64%
+      ),
+      radial-gradient(
+        ellipse 76% 54% at 72% 12%,
+        color-mix(in srgb, #5a7a5a 14%, transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        ellipse 60% 58% at 28% 82%,
+        color-mix(in srgb, #827a5a 12%, transparent),
+        transparent 62%
+      );
+    opacity: 0.38;
+    filter: saturate(0.9) brightness(0.95);
+    animation: bg-pastel-wander 52s ease-in-out infinite;
+  }
+
+  :root.dark body::after {
+    opacity: 0.045;
+    mix-blend-mode: soft-light;
+  }
+
+  @keyframes bg-pastel-wander {
+    0% {
+      transform: translate(0%, 0%) scale(1) rotate(0deg);
+      filter: hue-rotate(0deg);
+    }
+    12% {
+      transform: translate(6%, -4%) scale(1.04) rotate(0.4deg);
+      filter: hue-rotate(8deg);
+    }
+    27% {
+      transform: translate(-5%, 7%) scale(1.02) rotate(-0.3deg);
+      filter: hue-rotate(-5deg);
+    }
+    41% {
+      transform: translate(8%, 3%) scale(1.06) rotate(0.6deg);
+      filter: hue-rotate(12deg);
+    }
+    55% {
+      transform: translate(-7%, -5%) scale(1.03) rotate(-0.5deg);
+      filter: hue-rotate(-8deg);
+    }
+    68% {
+      transform: translate(4%, 8%) scale(1.05) rotate(0.2deg);
+      filter: hue-rotate(6deg);
+    }
+    82% {
+      transform: translate(-6%, 2%) scale(1.01) rotate(-0.4deg);
+      filter: hue-rotate(-10deg);
+    }
+    100% {
+      transform: translate(0%, 0%) scale(1) rotate(0deg);
+      filter: hue-rotate(0deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body::before {
+      animation: none;
+    }
+  }
+
+  a,
+  button {
+>>>>>>> Stashed changes
     cursor: pointer;
   }
 
@@ -398,6 +584,318 @@
     --subtext: #788592;
     --accent: #8fa1b5;
   }
+<<<<<<< Updated upstream
+=======
+
+  /* DARK MODE SEASONS */
+  /* Spring Dark */
+  :root.dark[data-season="spring"][data-time="night-00"] {
+    --bg: #0b0c0d;
+    --surface: #121416;
+    --border: #1a1d20;
+    --title: #e0e2e4;
+    --display: #c5c8cb;
+    --body: #9ea4aa;
+    --subtext: #8e969d;
+    --accent: #6d7d7c;
+  }
+  :root.dark[data-season="spring"][data-time="dawn"] {
+    --bg: #0f0d0c;
+    --surface: #181514;
+    --border: #221e1c;
+    --title: #f0e6e2;
+    --display: #d6c8c3;
+    --body: #b09f98;
+    --subtext: #a4948e;
+    --accent: #9b8178;
+  }
+  :root.dark[data-season="spring"][data-time="morning"] {
+    --bg: #0d0e0d;
+    --surface: #151715;
+    --border: #1d211d;
+    --title: #e2e6e2;
+    --display: #c8ccc8;
+    --body: #9fa59f;
+    --subtext: #909790;
+    --accent: #7e8d83;
+  }
+  :root.dark[data-season="spring"][data-time="noon"] {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --border: #202020;
+    --title: #e8e8e8;
+    --display: #d0d0d0;
+    --body: #a8a8a8;
+    --subtext: #999999;
+    --accent: #8ba08a;
+  }
+  :root.dark[data-season="spring"][data-time="afternoon"] {
+    --bg: #0e0e0d;
+    --surface: #161615;
+    --border: #20201d;
+    --title: #e6e5e0;
+    --display: #cccbc6;
+    --body: #a6a5a0;
+    --subtext: #999893;
+    --accent: #90958a;
+  }
+  :root.dark[data-season="spring"][data-time="dusk"] {
+    --bg: #0e0d0d;
+    --surface: #161414;
+    --border: #201c1c;
+    --title: #e8e0e2;
+    --display: #ccc5c7;
+    --body: #a89fa1;
+    --subtext: #998f91;
+    --accent: #9b848a;
+  }
+  :root.dark[data-season="spring"][data-time="evening"] {
+    --bg: #0c0d0f;
+    --surface: #141618;
+    --border: #1c1e22;
+    --title: #e2e4e8;
+    --display: #c7cbd0;
+    --body: #a0a5aa;
+    --subtext: #91979e;
+    --accent: #7a8ba1;
+  }
+
+  /* Summer Dark */
+  :root.dark[data-season="summer"][data-time="night-00"] {
+    --bg: #0d0d0e;
+    --surface: #161617;
+    --border: #1e1e20;
+    --title: #e2e2e4;
+    --display: #c8c8cb;
+    --body: #a1a1a6;
+    --subtext: #94949a;
+    --accent: #7d848c;
+  }
+  :root.dark[data-season="summer"][data-time="dawn"] {
+    --bg: #110e0d;
+    --surface: #1a1514;
+    --border: #241e1b;
+    --title: #f4e8e2;
+    --display: #dbccbc;
+    --body: #b5a193;
+    --subtext: #a89588;
+    --accent: #aa8d7a;
+  }
+  :root.dark[data-season="summer"][data-time="morning"] {
+    --bg: #11100d;
+    --surface: #1a1814;
+    --border: #24221b;
+    --title: #f2ede2;
+    --display: #d8d0bc;
+    --body: #b2aa93;
+    --subtext: #a49e88;
+    --accent: #a59b7a;
+  }
+  :root.dark[data-season="summer"][data-time="noon"] {
+    --bg: #12110e;
+    --surface: #1b1a16;
+    --border: #26241d;
+    --title: #f5f0e6;
+    --display: #dbd4c4;
+    --body: #b5ae9c;
+    --subtext: #a6a091;
+    --accent: #b2a184;
+  }
+  :root.dark[data-season="summer"][data-time="afternoon"] {
+    --bg: #100f0d;
+    --surface: #181714;
+    --border: #22201b;
+    --title: #f0ebe2;
+    --display: #d6cfbc;
+    --body: #aea793;
+    --subtext: #a09a88;
+    --accent: #a3937a;
+  }
+  :root.dark[data-season="summer"][data-time="dusk"] {
+    --bg: #100e0d;
+    --surface: #181514;
+    --border: #221d1b;
+    --title: #f0e6e2;
+    --display: #d6ccbc;
+    --body: #ae9f93;
+    --subtext: #a09388;
+    --accent: #a3897a;
+  }
+  :root.dark[data-season="summer"][data-time="evening"] {
+    --bg: #0e0f10;
+    --surface: #161718;
+    --border: #202122;
+    --title: #e6e8e9;
+    --display: #cbd0d2;
+    --body: #a2a7a9;
+    --subtext: #94999b;
+    --accent: #868f9a;
+  }
+
+  /* Autumn Dark */
+  :root.dark[data-season="autumn"][data-time="night-00"] {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --border: #202020;
+    --title: #e4e4e4;
+    --display: #cbcbcb;
+    --body: #a3a3a3;
+    --subtext: #979797;
+    --accent: #7d808a;
+  }
+  :root.dark[data-season="autumn"][data-time="dawn"] {
+    --bg: #100e0d;
+    --surface: #181514;
+    --border: #221e1c;
+    --title: #f2e9e4;
+    --display: #d9ccc5;
+    --body: #b3a198;
+    --subtext: #a6958d;
+    --accent: #a38576;
+  }
+  :root.dark[data-season="autumn"][data-time="morning"] {
+    --bg: #100f0e;
+    --surface: #181715;
+    --border: #22201d;
+    --title: #f0ede6;
+    --display: #d6d1c5;
+    --body: #aeaa9d;
+    --subtext: #a09d92;
+    --accent: #9b8a78;
+  }
+  :root.dark[data-season="autumn"][data-time="noon"] {
+    --bg: #11100e;
+    --surface: #1a1815;
+    --border: #24221d;
+    --title: #f2f0e8;
+    --display: #d8d4c8;
+    --body: #b2ae9f;
+    --subtext: #a4a093;
+    --accent: #a89884;
+  }
+  :root.dark[data-season="autumn"][data-time="afternoon"] {
+    --bg: #0f0e0d;
+    --surface: #171514;
+    --border: #201d1c;
+    --title: #ede9e2;
+    --display: #d4cfc5;
+    --body: #aa9d93;
+    --subtext: #746a64;
+    --accent: #96816d;
+  }
+  :root.dark[data-season="autumn"][data-time="dusk"] {
+    --bg: #0f0d0d;
+    --surface: #171414;
+    --border: #201c1c;
+    --title: #ede4e2;
+    --display: #d4ccc5;
+    --body: #aa9f98;
+    --subtext: #9d938d;
+    --accent: #967d74;
+  }
+  :root.dark[data-season="autumn"][data-time="evening"] {
+    --bg: #0e0e10;
+    --surface: #161618;
+    --border: #202022;
+    --title: #e6e6e9;
+    --display: #cbcbd2;
+    --body: #a2a2a9;
+    --subtext: #94949b;
+    --accent: #868a9a;
+  }
+
+  /* Winter Dark */
+  :root.dark[data-season="winter"][data-time="night-00"] {
+    --bg: #0b0d0f;
+    --surface: #121416;
+    --border: #1a1d20;
+    --title: #e0e2e4;
+    --display: #c5c8cb;
+    --body: #9ea4aa;
+    --subtext: #8e969d;
+    --accent: #6d7b8c;
+  }
+  :root.dark[data-season="winter"][data-time="dawn"] {
+    --bg: #0d0d0e;
+    --surface: #151517;
+    --border: #1d1d20;
+    --title: #e6e6e9;
+    --display: #cccce2;
+    --body: #a5a5b0;
+    --subtext: #9797a1;
+    --accent: #81839a;
+  }
+  :root.dark[data-season="winter"][data-time="morning"] {
+    --bg: #0d0f11;
+    --surface: #14171a;
+    --border: #1c2024;
+    --title: #e2e6e9;
+    --display: #c8ced4;
+    --body: #a0a7af;
+    --subtext: #68717b;
+    --accent: #8195a8;
+  }
+  :root.dark[data-season="winter"][data-time="noon"] {
+    --bg: #0e1012;
+    --surface: #15181b;
+    --border: #1d2126;
+    --title: #e6e9ed;
+    --display: #ccd2d8;
+    --body: #a3aab2;
+    --subtext: #949aa4;
+    --accent: #8ea1b2;
+  }
+  :root.dark[data-season="winter"][data-time="afternoon"] {
+    --bg: #0d0f11;
+    --surface: #14171a;
+    --border: #1c2024;
+    --title: #e2e6e9;
+    --display: #c8ced4;
+    --body: #a0a7af;
+    --subtext: #919aa4;
+    --accent: #8195a1;
+  }
+  :root.dark[data-season="winter"][data-time="dusk"] {
+    --bg: #0c0c0c;
+    --surface: #141414;
+    --border: #1c1c1c;
+    --title: #e4e4e4;
+    --display: #cbcbcb;
+    --body: #a3a3a3;
+    --subtext: #979797;
+    --accent: #808890;
+  }
+  :root.dark[data-season="winter"][data-time="evening"] {
+    --bg: #0b0d0f;
+    --surface: #121416;
+    --border: #1a1d20;
+    --title: #e0e2e4;
+    --display: #c5c8cb;
+    --body: #9ea4aa;
+    --subtext: #8e969d;
+    --accent: #6d7b8b;
+  }
+
+}
+
+::view-transition-old(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  /* Keep old snapshot frozen in place */
+  z-index: 0;
+}
+
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  /* New snapshot sits on top — the clip-path animation reveals it */
+  z-index: 1;
+}
+
+/* Scoped to AnimatedThemeToggler — the toggler sets the data-attribute and the variable only during a theme toggle. */
+html[data-magicui-theme-vt="active"]::view-transition-group(root) {
+  animation-duration: var(--magicui-theme-toggle-vt-duration);
+>>>>>>> Stashed changes
 }
 
 @layer utilities {
@@ -416,4 +914,52 @@
   .bg-surface {
     background-color: var(--surface);
   }
+  .code-block-scroll {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+  }
+  .code-block-scroll pre {
+    margin: 0;
+    padding: 1rem;
+    white-space: pre;
+    width: max-content;
+    min-width: 100%;
+    box-sizing: border-box;
+  }
+  @media (min-width: 1024px) {
+    .code-block-scroll pre {
+      padding: 1.35rem 1.5rem;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+  }
+  .code-block-scroll code {
+    display: block;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+}
+
+/* Line hover pulse — plain CSS for Safari; GSAP animates transform x */
+.line-pulse {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  translate: none;
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    var(--line-pulse-via),
+    rgba(0, 0, 0, 0)
+  );
 }

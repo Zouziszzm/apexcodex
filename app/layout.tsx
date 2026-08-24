@@ -1,6 +1,11 @@
 import Script from "next/script";
 import type { Metadata } from "next";
 import { ThemeProvider } from "./contexts/ThemeContext";
+<<<<<<< Updated upstream
+=======
+import { TransitionProvider } from "@/components/providers/transition-provider";
+import { AmbientSoundProvider } from "@/components/providers/ambient-sound-provider";
+>>>>>>> Stashed changes
 import { hankenGrotesk } from "./font";
 import "./globals.css";
 
@@ -53,7 +58,26 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <Script id="theme-script" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeScript }} />
         <ThemeProvider>
+<<<<<<< Updated upstream
           {children}
+=======
+          <AmbientSoundProvider>
+          <ClickSpark
+            sparkColor="var(--title)"
+            sparkSize={7}
+            sparkRadius={7}
+            sparkCount={7}
+            duration={300}
+            sparkLineWidth={1}
+          >
+            <DevToolbar />
+            <TransitionProvider>
+              {children}
+              <Footer />
+            </TransitionProvider>
+          </ClickSpark>
+          </AmbientSoundProvider>
+>>>>>>> Stashed changes
         </ThemeProvider>
       </body>
     </html>

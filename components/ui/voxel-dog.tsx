@@ -6,6 +6,12 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { loadGLTFModel } from "@/lib/model";
 import { Disc, Disc3 } from "lucide-react";
 import { gsap } from "gsap";
+<<<<<<< Updated upstream
+=======
+import { useGSAP } from "@gsap/react";
+
+import { usePathname } from "next/navigation";
+>>>>>>> Stashed changes
 
 function easeOutCirc(x: number) {
   return Math.sqrt(1 - Math.pow(x - 1, 4));
@@ -162,7 +168,13 @@ export const VoxelDog = () => {
       className="voxel-dog relative w-full h-full border border-(--accent) group opacity-0"
     >
       <button
+<<<<<<< Updated upstream
         onClick={() => setIsRotating(!isRotating)}
+=======
+        onClick={() => {
+          setIsRotating(!isRotating);
+        }}
+>>>>>>> Stashed changes
         className="absolute top-2 right-2 p-2 bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] hover:bg-[color-mix(in_srgb,var(--accent)_40%,transparent)] rounded-[4px] opacity-0 group-hover:opacity-100 transition-all z-10"
         title={isRotating ? "Pause Rotation" : "Resume Rotation"}
       >
