@@ -6,7 +6,6 @@ import { flushSync } from "react-dom"
 import { gsap } from "gsap"
 
 import { cn } from "@/lib/utils"
-import { useSound } from "@/hooks/use-sound"
 
 export type TransitionVariant =
   | "circle"
@@ -153,15 +152,7 @@ export const AnimatedThemeToggler = ({
       attributeFilter: ["class"],
     })
 
-    // Initial button fade in
-    if (buttonRef.current) {
-      gsap.fromTo(
-        buttonRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.5, delay: 1.2, ease: "power2.out" }
-      )
-    }
-
+    // Theme button is visible immediately; icon animates on theme change.
     return () => observer.disconnect()
   }, [])
 
@@ -176,13 +167,9 @@ export const AnimatedThemeToggler = ({
     }
   }, [isDark])
 
-  const { playChime } = useSound()
-
   const toggleTheme = useCallback(() => {
     const button = buttonRef.current
     if (!button) return
-
-    playChime()
 
     const viewportWidth = window.visualViewport?.width ?? window.innerWidth
     const viewportHeight = window.visualViewport?.height ?? window.innerHeight
@@ -206,8 +193,9 @@ export const AnimatedThemeToggler = ({
     const applyTheme = () => {
       const newTheme = !isDark
       setIsDark(newTheme)
-      document.documentElement.classList.toggle("dark")
-      localStorage.setItem("theme", newTheme ? "dark" : "light")
+      // Use explicit boolean to avoid desync in Chrome/Brave startViewTransition
+      document.documentElement.classList.toggle("dark", newTheme)
+      try { localStorage.setItem("theme", newTheme ? "dark" : "light") } catch {}
     }
 
     if (typeof document.startViewTransition !== "function") {
@@ -271,7 +259,7 @@ export const AnimatedThemeToggler = ({
       title={isDark ? "Toggle Light Mode" : "Toggle Dark Mode"}
       aria-pressed={isDark}
       className={cn(
-        "p-2 border border-theme bg-surface hover:bg-theme/10 transition-colors flex items-center justify-center opacity-0",
+        "p-2 border border-theme bg-surface hover:bg-theme/10 transition-colors flex items-center justify-center",
         className
       )}
       {...props}

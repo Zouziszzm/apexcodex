@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { TransitionProvider } from "@/components/providers/transition-provider";
+import { AmbientSoundProvider } from "@/components/providers/ambient-sound-provider";
 import { hankenGrotesk } from "./font";
 import { Footer } from "@/components/ui/footer";
 import { DevToolbar } from "@/components/ui/dev-toolbar";
@@ -74,20 +75,22 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <ClickSpark
-            sparkColor="var(--title)"
-            sparkSize={7}
-            sparkRadius={7}
-            sparkCount={7}
-            duration={300}
-            sparkLineWidth={1}
-          >
-            <DevToolbar />
-            <TransitionProvider>
-              {children}
-              <Footer />
-            </TransitionProvider>
-          </ClickSpark>
+          <AmbientSoundProvider>
+            <ClickSpark
+              sparkColor="var(--title)"
+              sparkSize={7}
+              sparkRadius={7}
+              sparkCount={7}
+              duration={300}
+              sparkLineWidth={1}
+            >
+              <DevToolbar />
+              <TransitionProvider>
+                {children}
+                <Footer />
+              </TransitionProvider>
+            </ClickSpark>
+          </AmbientSoundProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,7 +1,8 @@
 "use client"
 
-import { useLayoutEffect, useRef, useState, useEffect } from "react"
+import { useLayoutEffect, useRef } from "react"
 import type React from "react"
+import { useInView } from "motion/react"
 import { annotate } from "rough-notation"
 import { type RoughAnnotation } from "rough-notation/lib/model"
 
@@ -40,30 +41,11 @@ export function Highlighter({
   delay = 0,
 }: HighlighterProps) {
   const elementRef = useRef<HTMLSpanElement>(null)
-  const [isInView, setIsInView] = useState(false)
 
-  useEffect(() => {
-    if (!isView) {
-      setIsInView(true)
-      return
-    }
-
-    const element = elementRef.current
-    if (!element) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1, rootMargin: "-10%" }
-    )
-
-    observer.observe(element)
-    return () => observer.disconnect()
-  }, [isView])
+  const isInView = useInView(elementRef, {
+    once: true,
+    margin: "-10%",
+  })
 
   // If isView is false, always show. If isView is true, wait for inView
   const shouldShow = !isView || isInView
@@ -102,6 +84,7 @@ export function Highlighter({
       })
 
       resizeObserver.observe(element)
+      resizeObserver.observe(document.body)
     }
 
     return () => {

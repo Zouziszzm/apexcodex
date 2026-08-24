@@ -6,7 +6,6 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { DiaTextReveal } from "@/components/ui/dia-text-rv";
-import { useSound } from "@/hooks/use-sound";
 import { socialLinks } from "@/data/socials";
 
 if (typeof window !== "undefined") {
@@ -18,7 +17,6 @@ export const ContactSection = () => {
   const headerLineRef = useRef<HTMLDivElement>(null);
   const linkLinesRef = useRef<(HTMLDivElement | null)[]>([]);
   const pulseRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const { playClick } = useSound();
 
   const { contextSafe } = useGSAP({ scope: containerRef });
 
@@ -117,7 +115,6 @@ export const ContactSection = () => {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => playClick()}
                 className="font-body-sm font-medium text-(--body) hover:text-(--accent) transition-colors pb-1 block"
               >
                 <DiaTextReveal
@@ -138,7 +135,7 @@ export const ContactSection = () => {
                   ref={(el) => {
                     pulseRefs.current[index] = el;
                   }}
-                  className="absolute inset-0 bg-linear-to-r from-transparent via-white/90 to-transparent -translate-x-full"
+                  className="line-pulse"
                 />
               </div>
             </div>

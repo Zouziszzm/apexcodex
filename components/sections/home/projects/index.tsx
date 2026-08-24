@@ -5,47 +5,51 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { DiaTextReveal } from "@/components/ui/dia-text-rv";
-import { projects } from "@/data/projects";
+import type { Project } from "@/types/projects";
 import { ProjectItem } from "./project-item";
 import { ChevronDown } from "lucide-react";
+import { setAccordionOpen } from "@/lib/animate-accordion";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export const ProjectsSection = () => {
+interface ProjectsSectionProps {
+  projects: Project[];
+}
+
+function formatGroupLabel(group: string): string {
+  return group.charAt(0).toUpperCase() + group.slice(1);
+}
+
+export const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const headerLineRef = useRef<HTMLDivElement>(null);
-  const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const itemsRef = useRef<(HTMLElement | null)[]>([]);
   const titleLinesRef = useRef<(HTMLDivElement | null)[]>([]);
   const dividerLinesRef = useRef<(HTMLDivElement | null)[]>([]);
-  const pulseRefs = useRef<(HTMLDivElement | null)[]>([]);
   const dividerPulseRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const expandedRef = useRef<HTMLDivElement>(null);
-  const chevronRef = useRef<HTMLDivElement>(null);
+  const expandedRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const chevronRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [expandedGroups, setExpandedGroups] = React.useState<
+    Record<string, boolean>
+  >({});
+  const expandedGroupsRef = useRef<Record<string, boolean>>({});
 
   const { contextSafe } = useGSAP({ scope: containerRef });
 
-  const onHover = contextSafe((index: number) => {
-    const pulse = pulseRefs.current[index];
-    const dividerPulse = dividerPulseRefs.current[index];
+  const topLevelProjects = projects.filter((project) => !project.group);
+  const groupNames = [
+    ...new Set(
+      projects
+        .map((project) => project.group)
+        .filter((group): group is string => Boolean(group)),
+    ),
+  ];
 
-    if (pulse) {
-      gsap.fromTo(
-        pulse,
-        { x: "-100%", opacity: 0 },
-        {
-          x: "100%",
-          opacity: 1,
-          duration: 1,
-          repeat: -1,
-          repeatDelay: 0.2,
-          ease: "power2.inOut",
-        },
-      );
-    }
+  const onHover = contextSafe((index: number) => {
+    const dividerPulse = dividerPulseRefs.current[index];
 
     if (dividerPulse) {
       gsap.fromTo(
@@ -64,13 +68,7 @@ export const ProjectsSection = () => {
   });
 
   const onLeave = contextSafe((index: number) => {
-    const pulse = pulseRefs.current[index];
     const dividerPulse = dividerPulseRefs.current[index];
-
-    if (pulse) {
-      gsap.killTweensOf(pulse);
-      gsap.set(pulse, { x: "-100%", opacity: 0 });
-    }
 
     if (dividerPulse) {
       gsap.killTweensOf(dividerPulse);
@@ -78,26 +76,15 @@ export const ProjectsSection = () => {
     }
   });
 
-  const toggleAccordion = contextSafe(() => {
-    const nextState = !isExpanded;
-    setIsExpanded(nextState);
+  const toggleGroup = contextSafe((group: string) => {
+    const nextState = !expandedGroupsRef.current[group];
+    const expandedEl = expandedRefs.current[group];
 
-    if (expandedRef.current) {
-      if (nextState) {
-        gsap.fromTo(
-          expandedRef.current,
-          { height: 0, opacity: 0 },
-          { height: "auto", opacity: 1, duration: 0.8, ease: "expo.out" },
-        );
-      } else {
-        gsap.to(expandedRef.current, {
-          height: 0,
-          opacity: 0,
-          duration: 1,
-          ease: "expo.inOut",
-        });
-      }
-    }
+    if (!expandedEl) return;
+
+    expandedGroupsRef.current[group] = nextState;
+    setExpandedGroups((current) => ({ ...current, [group]: nextState }));
+    setAccordionOpen(expandedEl, nextState);
   });
 
   useGSAP(
@@ -131,11 +118,11 @@ export const ProjectsSection = () => {
         );
       }
 
-      // Initial visible items lines
       const initialLines = [
-        ...titleLines.slice(0, 2),
-        ...dividerLines.slice(0, 2),
+        ...titleLines.slice(0, topLevelProjects.length + groupNames.length),
+        ...dividerLines.slice(0, topLevelProjects.length + groupNames.length),
       ];
+
       if (initialLines.length > 0) {
         tl.fromTo(
           initialLines,
@@ -145,18 +132,55 @@ export const ProjectsSection = () => {
         );
       }
 
-      tl.fromTo(
-        chevronRef.current,
-        { opacity: 0, x: -10 },
-        { opacity: 1, x: 0, duration: 1, ease: "power2.out" },
-        "-=0.6",
-      );
+      groupNames.forEach((group) => {
+        tl.fromTo(
+          chevronRefs.current[group],
+          { opacity: 0, x: -10 },
+          { opacity: 1, x: 0, duration: 1, ease: "power2.out" },
+          "-=0.6",
+        );
+      });
     },
-    { scope: containerRef },
+    { scope: containerRef, dependencies: [topLevelProjects.length, groupNames.length] },
   );
 
-  const latestProjects = projects.slice(0, 2);
-  const pastProjects = projects.slice(2);
+  let itemIndex = 0;
+
+  const renderProjectItem = (
+    project: Project,
+    options: {
+      noAnimation?: boolean;
+      animationIndex?: number;
+      nested?: boolean;
+    } = {},
+  ) => {
+    const index = itemIndex++;
+    const animationIndex = options.animationIndex ?? index;
+
+    return (
+      <ProjectItem
+        key={project.id}
+        project={project}
+        index={animationIndex}
+        noAnimation={options.noAnimation}
+        nested={options.nested}
+        onMouseEnter={() => onHover(index)}
+        onMouseLeave={() => onLeave(index)}
+        itemsRef={(el) => {
+          itemsRef.current[index] = el;
+        }}
+        titleLinesRef={(el) => {
+          titleLinesRef.current[index] = el;
+        }}
+        dividerLinesRef={(el) => {
+          dividerLinesRef.current[index] = el;
+        }}
+        dividerPulseRefs={(el) => {
+          dividerPulseRefs.current[index] = el;
+        }}
+      />
+    );
+  };
 
   return (
     <section ref={containerRef} className="w-full flex flex-col gap-2">
@@ -185,91 +209,103 @@ export const ProjectsSection = () => {
       </div>
 
       <div className="flex flex-col gap-2">
-        {latestProjects.map((project, index) => (
-          <ProjectItem
-            key={project.id}
-            project={project}
-            index={index}
-            onMouseEnter={() => onHover(index)}
-            onMouseLeave={() => onLeave(index)}
-            itemsRef={(el) => {
-              itemsRef.current[index] = el;
-            }}
-            titleLinesRef={(el) => {
-              titleLinesRef.current[index] = el;
-            }}
-            pulseRefs={(el) => {
-              pulseRefs.current[index] = el;
-            }}
-            dividerLinesRef={(el) => {
-              dividerLinesRef.current[index] = el;
-            }}
-            dividerPulseRefs={(el) => {
-              dividerPulseRefs.current[index] = el;
-            }}
-          />
-        ))}
-
-        {pastProjects.length > 0 && (
-          <div className="flex flex-col gap-2 w-full ">
-            <button
-              ref={(el) => {
-                itemsRef.current[2] = el as any;
-              }}
-              onClick={toggleAccordion}
-              className="flex items-center gap-2 text-[12px] font-medium text-(--subtext) hover:text-(--body) transition-colors group/toggle w-fit"
-              style={{ opacity: 0, transform: "translateY(30px)" }}
-              aria-expanded={isExpanded}
-            >
-              <DiaTextReveal
-                text="Archived Projects"
-                delay={0.8}
-                duration={1.2}
-                textColor="var(--subtext)"
-              />
-              <div ref={chevronRef} className="opacity-0">
-                <ChevronDown
-                  size={14}
-                  className={`transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
-                />
-              </div>
-            </button>
-
-            <div
-              ref={expandedRef}
-              className="overflow-hidden h-0 opacity-0 flex flex-col gap-2 w-full"
-            >
-              {pastProjects.map((project, idx) => {
-                const index = idx + 3; // Start from 3 to avoid collision with button at index 2
-                return (
-                  <ProjectItem
-                    key={project.id}
-                    project={project}
-                    index={index}
-                    noAnimation={true}
-                    onMouseEnter={() => onHover(index)}
-                    onMouseLeave={() => onLeave(index)}
-                    itemsRef={(el) => {
-                      itemsRef.current[index] = el;
-                    }}
-                    titleLinesRef={(el) => {
-                      titleLinesRef.current[index] = el;
-                    }}
-                    pulseRefs={(el) => {
-                      pulseRefs.current[index] = el;
-                    }}
-                    dividerLinesRef={(el) => {
-                      dividerLinesRef.current[index] = el;
-                    }}
-                    dividerPulseRefs={(el) => {
-                      dividerPulseRefs.current[index] = el;
-                    }}
-                  />
-                );
-              })}
-            </div>
-          </div>
+        {topLevelProjects.map((project, index) =>
+          renderProjectItem(project, { animationIndex: index }),
         )}
+
+        {groupNames.map((group, groupIndex) => {
+          const groupProjects = projects
+            .filter((project) => project.group === group)
+            .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+          const toggleIndex = itemIndex++;
+          const isExpanded = expandedGroups[group] ?? false;
+
+          return (
+            <div key={group} className="flex flex-col gap-2 w-full">
+              <div
+                ref={(el) => {
+                  itemsRef.current[toggleIndex] = el;
+                }}
+                className="flex flex-col items-start group/toggle relative w-full"
+                style={{ opacity: 0, transform: "translateY(30px)" }}
+                onMouseEnter={() => onHover(toggleIndex)}
+                onMouseLeave={() => onLeave(toggleIndex)}
+              >
+                <div className="mb-2 flex w-full items-baseline justify-between gap-4">
+                  <button
+                    onClick={() => toggleGroup(group)}
+                    className="group/toggle-btn flex items-center gap-1.5 text-left"
+                    aria-expanded={isExpanded}
+                  >
+                    <span className="flex flex-col items-start gap-1">
+                      <span className="font-body-sm font-medium text-(--subtext) transition-colors group-hover/toggle:text-(--body) group-hover/toggle-btn:text-(--accent)">
+                        <DiaTextReveal
+                          text={formatGroupLabel(group)}
+                          delay={0.6 + groupIndex * 0.1}
+                          duration={1.2}
+                          textColor="var(--subtext)"
+                        />
+                      </span>
+                      <div
+                        ref={(el) => {
+                          titleLinesRef.current[toggleIndex] = el;
+                        }}
+                        className="w-full h-px bg-(--body) relative overflow-hidden"
+                        style={{
+                          transform: "scaleX(0)",
+                          transformOrigin: "left",
+                        }}
+                      />
+                    </span>
+                    <div
+                      ref={(el) => {
+                        chevronRefs.current[group] = el;
+                      }}
+                      className="shrink-0 opacity-70 transition-opacity group-hover/toggle:opacity-100"
+                    >
+                      <ChevronDown
+                        size={14}
+                        className={`transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
+                      />
+                    </div>
+                  </button>
+                  <span className="shrink-0 font-body-sm font-medium text-(--subtext)">
+                    {String(groupProjects.length).padStart(2, "0")}
+                  </span>
+                </div>
+
+                <div
+                  ref={(el) => {
+                    dividerLinesRef.current[toggleIndex] = el;
+                  }}
+                  className="absolute bottom-0 left-0 w-full h-px overflow-hidden bg-(--border)/40"
+                >
+                  <div
+                    ref={(el) => {
+                      dividerPulseRefs.current[toggleIndex] = el;
+                    }}
+                    className="line-pulse"
+                  />
+                </div>
+              </div>
+
+              <div
+                ref={(el) => {
+                  expandedRefs.current[group] = el;
+                }}
+                className="overflow-hidden flex flex-col gap-2 w-full pl-1"
+                style={{ height: 0, opacity: 0 }}
+              >
+                {groupProjects.map((project) =>
+                  renderProjectItem(project, {
+                    noAnimation: true,
+                    nested: true,
+                  }),
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

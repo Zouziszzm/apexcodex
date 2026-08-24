@@ -7,7 +7,7 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { DiaTextReveal } from "@/components/ui/dia-text-rv";
 import { ChevronDown } from "lucide-react";
-import { useSound } from "@/hooks/use-sound";
+import { setAccordionOpen } from "@/lib/animate-accordion";
 import { jobs, companySpans } from "@/data/experience";
 import { RoleItem } from "./role-item";
 
@@ -21,7 +21,6 @@ export const ExperienceSection = () => {
   const itemsRef = useRef<(HTMLElement | null)[]>([]);
   const titleLinesRef = useRef<(HTMLElement | null)[]>([]);
   const dividerLinesRef = useRef<(HTMLElement | null)[]>([]);
-  const pulseRefs = useRef<(HTMLElement | null)[]>([]);
   const dividerPulseRefs = useRef<(HTMLElement | null)[]>([]);
   const rolesRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -31,6 +30,8 @@ export const ExperienceSection = () => {
   const [expandedJobIndices, setExpandedJobIndices] = useState<
     Record<number, boolean>
   >({});
+  const expandedJobIndicesRef = useRef<Record<number, boolean>>({});
+  const isExpandedRef = useRef(false);
 
   const totalMonths = companySpans.reduce((acc, span) => {
     const startDate = new Date(span.start);
@@ -46,41 +47,30 @@ export const ExperienceSection = () => {
   const autoCloseTimers = useRef<Record<number, NodeJS.Timeout>>({});
   const pastExpTimer = useRef<NodeJS.Timeout | null>(null);
 
-  const { playTick } = useSound();
-
   const { contextSafe } = useGSAP({ scope: containerRef });
 
   const toggleJobRoles = contextSafe((index: number, forcedState?: boolean) => {
+    const rolesContainer = rolesRefs.current[index];
+    if (!rolesContainer) return;
+
     const isNowExpanded =
-      forcedState !== undefined ? forcedState : !expandedJobIndices[index];
+      forcedState !== undefined
+        ? forcedState
+        : !expandedJobIndicesRef.current[index];
 
-    // Skip if already in the desired state
-    if (expandedJobIndices[index] === isNowExpanded) return;
+    if (
+      forcedState !== undefined &&
+      expandedJobIndicesRef.current[index] === isNowExpanded
+    ) {
+      return;
+    }
 
-    playTick();
-
+    expandedJobIndicesRef.current[index] = isNowExpanded;
     setExpandedJobIndices((prev) => ({ ...prev, [index]: isNowExpanded }));
 
-    const rolesContainer = rolesRefs.current[index];
-    if (rolesContainer) {
-      if (isNowExpanded) {
-        gsap.to(rolesContainer, {
-          height: "auto",
-          opacity: 1,
-          marginTop: 12,
-          duration: 0.8,
-          ease: "expo.out",
-        });
-      } else {
-        gsap.to(rolesContainer, {
-          height: 0,
-          opacity: 0,
-          marginTop: 0,
-          duration: 1,
-          ease: "expo.inOut",
-        });
-      }
-    }
+    setAccordionOpen(rolesContainer, isNowExpanded, {
+      marginTop: isNowExpanded ? 12 : 0,
+    });
   });
 
   const onJobHover = contextSafe((index: number) => {
@@ -89,22 +79,7 @@ export const ExperienceSection = () => {
       delete autoCloseTimers.current[index];
     }
 
-    const pulse = pulseRefs.current[index];
     const dividerPulse = dividerPulseRefs.current[index];
-    if (pulse) {
-      gsap.fromTo(
-        pulse,
-        { x: "-100%", opacity: 0 },
-        {
-          x: "100%",
-          opacity: 1,
-          duration: 1,
-          repeat: -1,
-          repeatDelay: 0.2,
-          ease: "power2.inOut",
-        },
-      );
-    }
     if (dividerPulse) {
       gsap.fromTo(
         dividerPulse,
@@ -122,18 +97,13 @@ export const ExperienceSection = () => {
   });
 
   const onJobLeave = contextSafe((index: number) => {
-    const pulse = pulseRefs.current[index];
     const dividerPulse = dividerPulseRefs.current[index];
-    if (pulse) {
-      gsap.killTweensOf(pulse);
-      gsap.set(pulse, { x: "-100%", opacity: 0 });
-    }
     if (dividerPulse) {
       gsap.killTweensOf(dividerPulse);
       gsap.set(dividerPulse, { x: "-100%", opacity: 0 });
     }
 
-    if (expandedJobIndices[index]) {
+    if (expandedJobIndicesRef.current[index]) {
       autoCloseTimers.current[index] = setTimeout(() => {
         toggleJobRoles(index);
         delete autoCloseTimers.current[index];
@@ -142,13 +112,14 @@ export const ExperienceSection = () => {
   });
 
   const togglePastExperience = contextSafe((forcedState?: boolean) => {
-    const nextState = forcedState !== undefined ? forcedState : !isExpanded;
+    const nextState =
+      forcedState !== undefined ? forcedState : !isExpandedRef.current;
 
-    // Skip if already in the desired state
-    if (isExpanded === nextState) return;
+    if (forcedState !== undefined && isExpandedRef.current === nextState) {
+      return;
+    }
 
-    playTick();
-
+    isExpandedRef.current = nextState;
     setIsExpanded(nextState);
 
     // Clear hash from URL when closing the section
@@ -162,38 +133,23 @@ export const ExperienceSection = () => {
 
     if (expandedRef.current) {
       if (nextState) {
-        gsap.fromTo(
-          expandedRef.current,
-          { height: 0, opacity: 0 },
-          { 
-            height: "auto", 
-            opacity: 1, 
-            duration: 0.8, 
-            ease: "expo.out",
-            onComplete: () => {
-              // Expand all roles within past experience after outer container finishes expanding
-              jobs.slice(1).forEach((job, idx) => {
-                if (job.roles && job.roles.length > 1) {
-                  toggleJobRoles(idx + 1, true);
-                }
-              });
-            }
-          }
-        );
+        setAccordionOpen(expandedRef.current, true, {
+          onComplete: () => {
+            jobs.slice(1).forEach((job, idx) => {
+              if (job.roles && job.roles.length > 1) {
+                toggleJobRoles(idx + 1, true);
+              }
+            });
+          },
+        });
       } else {
-        // Collapse all roles within past experience immediately before closing outer container
         jobs.slice(1).forEach((job, idx) => {
           if (job.roles && job.roles.length > 1) {
             toggleJobRoles(idx + 1, false);
           }
         });
-        
-        gsap.to(expandedRef.current, {
-          height: 0,
-          opacity: 0,
-          duration: 1,
-          ease: "expo.inOut",
-        });
+
+        setAccordionOpen(expandedRef.current, false);
       }
     }
   });
@@ -206,7 +162,7 @@ export const ExperienceSection = () => {
   });
 
   const onPastExpLeave = contextSafe(() => {
-    if (isExpanded) {
+    if (isExpandedRef.current) {
       pastExpTimer.current = setTimeout(() => {
         togglePastExperience(false);
         pastExpTimer.current = null;
@@ -334,7 +290,7 @@ export const ExperienceSection = () => {
                 href={jobs[0].href!}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-body-sm font-medium text-(--body) hover:text-(--accent) transition-colors flex items-center gap-2 reveal-link"
+                className="font-body-sm font-medium text-(--body) transition-colors flex items-center gap-2"
               >
                 <DiaTextReveal
                   text={`0${jobs.length}`}
@@ -357,14 +313,7 @@ export const ExperienceSection = () => {
                 }}
                 className="w-full h-px bg-(--body) relative overflow-hidden"
                 style={{ transform: "scaleX(0)", transformOrigin: "left" }}
-              >
-                <div
-                  ref={(el) => {
-                    pulseRefs.current[0] = el;
-                  }}
-                  className="absolute inset-0 bg-linear-to-r from-transparent via-(--accent) to-transparent -translate-x-full"
-                />
-              </div>
+              />
             </div>
             {jobs[0].roles && (
               <button
@@ -396,7 +345,8 @@ export const ExperienceSection = () => {
                 ref={(el) => {
                   rolesRefs.current[0] = el;
                 }}
-                className="overflow-hidden h-0 opacity-0 w-full"
+                className="overflow-hidden w-full"
+                style={{ height: 0, opacity: 0 }}
               >
                 {jobs[0].roles.slice(1).map((role, rIdx) => (
                   <RoleItem
@@ -428,14 +378,14 @@ export const ExperienceSection = () => {
             ref={(el) => {
               dividerLinesRef.current[0] = el;
             }}
-            className="absolute bottom-0 left-0 w-full h-px bg-(--border)/40 relative overflow-hidden"
+            className="absolute bottom-0 left-0 w-full h-px overflow-hidden bg-(--border)/40"
             style={{ transform: "scaleX(0)", transformOrigin: "left" }}
           >
             <div
               ref={(el) => {
                 dividerPulseRefs.current[0] = el;
               }}
-              className="absolute inset-0 bg-linear-to-r from-transparent via-white/90 to-transparent -translate-x-full"
+              className="line-pulse"
             />
           </div>
         </div>
@@ -477,7 +427,8 @@ export const ExperienceSection = () => {
 
           <div
             ref={expandedRef}
-            className="overflow-hidden h-0 opacity-0 flex flex-col gap-2 w-full"
+            className="overflow-hidden flex flex-col gap-2 w-full"
+            style={{ height: 0, opacity: 0 }}
           >
             {jobs.slice(1).map((job, idx) => {
               const index = idx + 1;
@@ -490,30 +441,32 @@ export const ExperienceSection = () => {
                 >
                   <div className="flex items-center justify-between w-full">
                     <div className="flex flex-col items-start gap-1 w-fit mb-2">
-                      <Link
-                        href={job.href!}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-body-sm font-medium text-(--body) hover:text-(--accent) transition-colors flex items-center gap-2 reveal-link"
-                      >
-                        <span className="opacity-40 text-(--subtext)">
-                          0{jobs.length - index}
-                        </span>
-                        {job.company}
-                      </Link>
+                      {job.href ? (
+                        <Link
+                          href={job.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-body-sm font-medium text-(--body) transition-colors flex items-center gap-2"
+                        >
+                          <span className="opacity-40 text-(--subtext)">
+                            0{jobs.length - index}
+                          </span>
+                          {job.company}
+                        </Link>
+                      ) : (
+                        <div className="font-body-sm font-medium text-(--body) flex items-center gap-2">
+                          <span className="opacity-40 text-(--subtext)">
+                            0{jobs.length - index}
+                          </span>
+                          {job.company}
+                        </div>
+                      )}
                       <div
                         ref={(el) => {
                           titleLinesRef.current[index] = el;
                         }}
                         className="w-full h-px bg-(--body) relative overflow-hidden"
-                      >
-                        <div
-                          ref={(el) => {
-                            pulseRefs.current[index] = el;
-                          }}
-                          className="absolute inset-0 bg-linear-to-r from-transparent via-(--accent) to-transparent -translate-x-full"
-                        />
-                      </div>
+                      />
                     </div>
                     {job.roles && (
                       <button
@@ -546,7 +499,8 @@ export const ExperienceSection = () => {
                         ref={(el) => {
                           rolesRefs.current[index] = el;
                         }}
-                        className="overflow-hidden h-0 opacity-0 w-full"
+                        className="overflow-hidden w-full"
+                style={{ height: 0, opacity: 0 }}
                       >
                         {job.roles.slice(1).map((role, rIdx) => (
                           <RoleItem
@@ -577,13 +531,13 @@ export const ExperienceSection = () => {
                     ref={(el) => {
                       dividerLinesRef.current[index] = el;
                     }}
-                    className="absolute bottom-0 left-0 w-full h-px bg-(--border)/40 relative overflow-hidden"
+                    className="absolute bottom-0 left-0 w-full h-px overflow-hidden bg-(--border)/40"
                   >
                     <div
                       ref={(el) => {
                         dividerPulseRefs.current[index] = el;
                       }}
-                      className="absolute inset-0 bg-linear-to-r from-transparent via-white/90 to-transparent -translate-x-full"
+                      className="line-pulse"
                     />
                   </div>
                 </div>

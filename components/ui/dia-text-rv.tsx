@@ -66,9 +66,9 @@ export interface DiaTextRevealProps extends Omit<
   repeatDelay?: number
   startOnView?: boolean
   once?: boolean
+  className?: string
   fixedWidth?: boolean
   lineHeightGap?: string | number
-  priority?: boolean
 }
 
 export function DiaTextReveal({
@@ -80,26 +80,17 @@ export function DiaTextReveal({
   delay = 0,
   repeat = false,
   repeatDelay = 0.5,
-  startOnView = true,
+  startOnView = false,
   once = true,
   className,
   fixedWidth = false,
   lineHeightGap,
-  priority = false,
   ...props
 }: DiaTextRevealProps) {
   const texts = Array.isArray(text) ? text : [text]
   const isMulti = texts.length > 1
 
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
-  useEffect(() => {
-    const mql = window.matchMedia("(prefers-reduced-motion: reduce)")
-    setPrefersReducedMotion(mql.matches)
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
-    mql.addEventListener("change", handler)
-    return () => mql.removeEventListener("change", handler)
-  }, [])
-
   const spanRef = useRef<HTMLSpanElement>(null)
   const optsRef = useRef({
     colors,
@@ -120,6 +111,34 @@ export function DiaTextReveal({
     texts,
   }
 
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)")
+    setPrefersReducedMotion(mql.matches)
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
+    mql.addEventListener("change", handler)
+    return () => mql.removeEventListener("change", handler)
+  }, [])
+
+  useEffect(() => {
+    const snapVisible = () => {
+      const el = spanRef.current
+      if (!el) return
+      el.style.backgroundImage = buildGradient(
+        SWEEP_END,
+        optsRef.current.colors,
+        optsRef.current.textColor,
+      )
+    }
+
+    const observer = new MutationObserver(snapVisible)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    })
+
+    return () => observer.disconnect()
+  }, [])
+
   const indexRef = useRef(0)
   const hasPlayedRef = useRef(false)
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
@@ -127,10 +146,10 @@ export function DiaTextReveal({
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [measuredWidths, setMeasuredWidths] = useState<number[]>([])
-  const [isInView, setIsInView] = useState(priority || !startOnView)
+  const [isInView, setIsInView] = useState(!startOnView)
 
   useEffect(() => {
-    if (!startOnView || priority) return
+    if (!startOnView) return
     const el = spanRef.current
     if (!el) return
 
@@ -212,6 +231,7 @@ export function DiaTextReveal({
     return () => {
       if (tweenRef.current) tweenRef.current.kill()
       clearTimeout(timerRef.current)
+      hasPlayedRef.current = false
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInView, startOnView, once, prefersReducedMotion])

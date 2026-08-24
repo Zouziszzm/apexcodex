@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useTransition } from "@/components/providers/transition-provider";
-import { useSound } from "@/hooks/use-sound";
 
 interface TransitionLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
@@ -11,11 +10,9 @@ interface TransitionLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorEleme
 
 export const TransitionLink = ({ href, children, className, ...props }: TransitionLinkProps) => {
   const { navigate } = useTransition();
-  const { playClick } = useSound();
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    playClick();
     navigate(href);
   };
 

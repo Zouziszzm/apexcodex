@@ -1,14 +1,17 @@
 import HomePage from "@/components/home/home-page";
+import { getProjects } from "@/lib/projects";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Index | Alfarhaankhan",
-  description: "I create cross-platform experiences for web, mobile, and desktop with a focus on interaction, motion, and performance.",
+  description:
+    "I create cross-platform experiences for web, mobile, and desktop with a focus on interaction, motion, and performance.",
   openGraph: {
     title: "Index | Alfarhaankhan",
-    description: "I create cross-platform experiences for web, mobile, and desktop with a focus on interaction, motion, and performance.",
+    description:
+      "I create cross-platform experiences for web, mobile, and desktop with a focus on interaction, motion, and performance.",
     type: "website",
-    url: "https://alfarhaankhan.com", // Placeholder
+    url: "https://alfarhaankhan.com",
     images: [
       {
         url: "/meta/card.png",
@@ -21,11 +24,15 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Index | Alfarhaankhan",
-    description: "I create cross-platform experiences for web, mobile, and desktop with a focus on interaction, motion, and performance.",
+    description:
+      "I create cross-platform experiences for web, mobile, and desktop with a focus on interaction, motion, and performance.",
     images: ["/meta/card.png"],
   },
 };
 
-export default function Home() {
-  return <HomePage />;
+export const revalidate = 3600;
+
+export default async function Home() {
+  const projects = await getProjects();
+  return <HomePage projects={projects} />;
 }

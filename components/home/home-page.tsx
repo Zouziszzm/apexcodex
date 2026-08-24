@@ -8,40 +8,48 @@ import { ExperienceSection } from "@/components/sections/home/experience";
 import { ProjectsSection } from "@/components/sections/home/projects";
 import { ContactSection } from "@/components/sections/home/contact";
 import { LocalTime } from "@/components/ui/local-time";
-import { AnimatedThemeToggler } from "@/components/ui/theme-toggler";
+import { HeaderControls } from "@/components/home/header-controls";
+import type { Project } from "@/types/projects";
 
-const HomePage = () => {
+interface HomePageProps {
+  projects: Project[];
+}
+
+const HomePage = ({ projects }: HomePageProps) => {
   return (
     <main className="max-w-[1440px] mx-auto flex flex-col flex-1 px-6 pb-0 w-full">
       <div className="flex justify-center w-full">
         <div className="flex flex-col gap-4 w-full max-w-3xl pt-[clamp(6rem,15vw,9rem)]">
-          <h1 className="font-body font-medium flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-x-3 w-full min-w-0 overflow-visible">
-            <div className="flex items-center justify-between gap-3 w-full min-w-0 sm:contents">
-              <span className="flex items-center gap-x-2 shrink-0 overflow-visible sm:order-1">
+          <h1 className="font-body font-medium flex flex-col gap-2 w-full min-w-0 overflow-visible lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-x-3">
+            <span className="flex items-center justify-between gap-3 min-w-0 lg:col-start-1 lg:justify-self-start">
+              <span className="flex items-center gap-x-2 min-w-0 shrink-0 overflow-visible">
                 <DiaTextReveal
                   text={["Alfarhaankhan Inamdar"]}
-                  priority={true}
                   once={false}
                 />
                 <span className="relative z-20 overflow-visible">
                   <LifeTodosTrigger />
                 </span>
               </span>
-              <div className="flex shrink-0 items-center gap-3 sm:order-3">
-                <LocalTime />
-                <AnimatedThemeToggler variant="circle" />
-              </div>
-            </div>
+              <HeaderControls className="lg:hidden" />
+            </span>
+
+            <LocalTime className="lg:hidden" />
+
             <SpotifyNowPlaying
               variant="inline"
-              className="w-full min-w-0 sm:order-2 sm:flex-1"
+              className="w-full min-w-0 lg:col-start-2 lg:row-start-1 lg:self-center"
             />
+
+            <div className="hidden lg:flex items-center gap-2 shrink-0 lg:col-start-3 lg:justify-self-end">
+              <LocalTime />
+              <HeaderControls />
+            </div>
           </h1>
           <p className="font-body-sm font-light">
             <DiaTextReveal
               textColor="var(--body)"
               lineHeightGap="1"
-              priority={true}
               once={false}
             >
               <>
@@ -112,7 +120,6 @@ const HomePage = () => {
               lineHeightGap="1"
               delay={1.0}
               duration={1.5}
-              priority={true}
             >
               <>
                 As an <IndieDevLink />
@@ -149,7 +156,7 @@ const HomePage = () => {
           </div>
 
           <ExperienceSection />
-          <ProjectsSection />
+          <ProjectsSection projects={projects} />
           <ContactSection />
         </div>
       </div>

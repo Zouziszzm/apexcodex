@@ -1,26 +1,86 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { useParams } from "next/navigation";
 import { TransitionLink } from "@/components/ui/transition-link";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { projects } from "@/data/projects";
+import type { Project } from "@/types/projects";
+import { PortfolioMarkdown } from "@/components/projects/portfolio-markdown";
 import { DiaTextReveal } from "@/components/ui/dia-text-rv";
-import { ArrowLeft, ExternalLink } from "lucide-react";
-import { useSound } from "@/hooks/use-sound";
+import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { formatProjectTitle } from "@/lib/format-project-title";
 
-export default function ProjectContent() {
-  const { id } = useParams();
-  const project = projects.find((p) => p.id === id);
+interface ProjectContentProps {
+  project: Project;
+  prevProject?: Project;
+  nextProject?: Project;
+}
+
+function ProjectNavLink({
+  href,
+  label,
+  direction,
+}: {
+  href: string;
+  label: string;
+  direction: "prev" | "next";
+}) {
+  const Icon = direction === "prev" ? ChevronLeft : ChevronRight;
+  const shortLabel = direction === "prev" ? "Previous" : "Next";
+
+  return (
+    <TransitionLink
+      href={href}
+      aria-label={
+        direction === "prev" ? `Previous project: ${label}` : `Next project: ${label}`
+      }
+      className="group inline-flex max-w-full shrink-0 items-center gap-1.5 whitespace-nowrap text-[var(--font-body-sm)] transition-all duration-500"
+    >
+      {direction === "prev" ? (
+        <>
+          <Icon
+            size={14}
+            className="shrink-0 opacity-40 transition-all group-hover:-translate-x-0.5 group-hover:opacity-100"
+            aria-hidden="true"
+          />
+          <span className="font-medium text-caption opacity-100 lg:hidden">
+            {shortLabel}
+          </span>
+          <span className="hidden truncate font-medium text-caption opacity-100 lg:inline">
+            {label}
+          </span>
+        </>
+      ) : (
+        <>
+          <span className="font-medium text-caption opacity-100 lg:hidden">
+            {shortLabel}
+          </span>
+          <span className="hidden truncate font-medium text-caption opacity-100 lg:inline">
+            {label}
+          </span>
+          <Icon
+            size={14}
+            className="shrink-0 opacity-40 transition-all group-hover:translate-x-0.5 group-hover:opacity-100"
+            aria-hidden="true"
+          />
+        </>
+      )}
+    </TransitionLink>
+  );
+}
+
+export default function ProjectContent({
+  project,
+  prevProject,
+  nextProject,
+}: ProjectContentProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const imageRef = useRef<HTMLDivElement>(null);
   const thumbsRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const devNotesBgRef = useRef<HTMLDivElement>(null);
   const githubRef = useRef<HTMLDivElement>(null);
-  const { playClick } = useSound();
+  const displayTitle = formatProjectTitle(project.title);
 
   useGSAP(
     () => {
@@ -50,19 +110,6 @@ export default function ProjectContent() {
           },
         );
       }
-      if (devNotesBgRef.current) {
-        gsap.fromTo(
-          devNotesBgRef.current,
-          { opacity: 0, x: -10 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 1.2,
-            ease: "power2.out",
-            delay: 1.0,
-          },
-        );
-      }
       if (githubRef.current) {
         gsap.fromTo(
           githubRef.current,
@@ -80,24 +127,15 @@ export default function ProjectContent() {
     { scope: containerRef, dependencies: [project] },
   );
 
-  if (!project) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center font-body-sm bg-(--bg) text-(--body)">
-        <p className="mb-4">Project not found.</p>
-        <TransitionLink
-          href="/"
-          className="underline opacity-60 hover:opacity-100 transition-opacity"
-        >
-          Return Home
-        </TransitionLink>
-      </div>
-    );
-  }
+  const description =
+    typeof project.description === "string" ? project.description.trim() : "";
+  const showDescription = description.length > 0;
+  const showTechnicalDetails = Boolean(project.technicalDetails);
 
   return (
     <main
       ref={containerRef}
-      className="relative flex flex-col flex-1 pt-24 text-(--body)"
+      className="relative mx-auto flex w-full max-w-[1440px] flex-1 flex-col overflow-x-hidden px-6 pt-24 text-(--body)"
     >
       <nav
         className="absolute top-10 left-6 lg:left-12"
@@ -109,19 +147,11 @@ export default function ProjectContent() {
             aria-label="Back to Home"
             className="flex items-center gap-3"
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              transform="rotate(0)matrix(1, 0, 0, -1, 0, 0)"
-              className="w-4 h-4 opacity-40 group-hover:opacity-100 group-hover:-translate-x-1 transition-all"
+            <ChevronLeft
+              size={14}
+              className="shrink-0 opacity-40 transition-all group-hover:-translate-x-0.5 group-hover:opacity-100"
               aria-hidden="true"
-            >
-              <path
-                d="M4 10L3.29289 10.7071L2.58579 10L3.29289 9.29289L4 10ZM21 18C21 18.5523 20.5523 19 20 19C19.4477 19 19 18.5523 19 18L21 18ZM8.29289 15.7071L3.29289 10.7071L4.70711 9.29289L9.70711 14.2929L8.29289 15.7071ZM3.29289 9.29289L8.29289 4.29289L9.70711 5.70711L4.70711 10.7071L3.29289 9.29289ZM4 9L14 9L14 11L4 11L4 9ZM21 16L21 18L19 18L19 16L21 16ZM14 9C17.866 9 21 12.134 21 16L19 16C19 13.2386 16.7614 11 14 11L14 9Z"
-                fill="currentColor"
-              />
-            </svg>
+            />
             <span className="font-medium text-caption opacity-100">Home</span>
           </TransitionLink>
           <span className="opacity-20" aria-hidden="true">
@@ -133,19 +163,49 @@ export default function ProjectContent() {
         </div>
       </nav>
 
-      <div className="max-w-2xl mx-auto px-6 flex flex-col items-center">
-        <header className="flex flex-col items-center gap-1 text-center mt-4">
-          <h1 className="font-medium text-[var(--font-body-sm)]">
-            <DiaTextReveal text={project.title} delay={0.2} duration={1.2} />
-          </h1>
-          <div className="text-(--subtext) text-[10px] font-medium opacity-40">
-            <DiaTextReveal text={project.date} delay={0.4} duration={1.2} />
+      <div className="mx-auto flex w-full min-w-0 max-w-3xl flex-col">
+        <header className="mt-4 flex w-full flex-col items-center gap-3">
+          <nav
+            className="flex w-full items-center justify-between gap-4"
+            aria-label="Project navigation"
+          >
+            <div className="min-w-0">
+              {prevProject ? (
+                <ProjectNavLink
+                  href={`/projects/${prevProject.id}`}
+                  label={formatProjectTitle(prevProject.title)}
+                  direction="prev"
+                />
+              ) : (
+                <span aria-hidden="true" />
+              )}
+            </div>
+            <div className="min-w-0">
+              {nextProject ? (
+                <ProjectNavLink
+                  href={`/projects/${nextProject.id}`}
+                  label={formatProjectTitle(nextProject.title)}
+                  direction="next"
+                />
+              ) : (
+                <span aria-hidden="true" />
+              )}
+            </div>
+          </nav>
+
+          <div className="text-center">
+            <h1 className="font-medium text-[var(--font-body-sm)]">
+              <DiaTextReveal text={displayTitle} delay={0.2} duration={1.2} />
+            </h1>
+            <div className="text-(--subtext) text-[10px] font-medium opacity-40">
+              <DiaTextReveal text={project.date} delay={0.4} duration={1.2} />
+            </div>
           </div>
         </header>
 
         {project.images.length > 0 && (
           <section
-            className="mt-6 w-full max-w-[800px] mx-auto group"
+            className="mt-6 w-full group"
             aria-label="Project Visual"
           >
             <div
@@ -154,28 +214,12 @@ export default function ProjectContent() {
             >
               <Image
                 src={project.images[currentImageIndex]}
-                alt={`${project.title} screenshot ${currentImageIndex + 1}`}
+                alt={`${displayTitle} screenshot ${currentImageIndex + 1}`}
                 fill
-                sizes="(max-width: 768px) 100vw, 800px"
+                sizes="(max-width: 768px) 100vw, 72rem"
                 className="object-cover opacity-90 transition-all duration-1000"
                 priority
               />
-              <div
-                className="absolute top-4 left-4 w-4 h-px bg-(--accent)/10"
-                aria-hidden="true"
-              ></div>
-              <div
-                className="absolute top-4 left-4 h-4 w-px bg-(--accent)/10"
-                aria-hidden="true"
-              ></div>
-              <div
-                className="absolute bottom-4 right-4 w-4 h-px bg-(--accent)/10"
-                aria-hidden="true"
-              ></div>
-              <div
-                className="absolute bottom-4 right-4 h-4 w-px bg-(--accent)/10"
-                aria-hidden="true"
-              ></div>
             </div>
           </section>
         )}
@@ -191,7 +235,6 @@ export default function ProjectContent() {
                 key={i}
                 onClick={() => {
                   setCurrentImageIndex(i);
-                  playClick();
                 }}
                 aria-label={`Show visual ${i + 1}`}
                 aria-pressed={currentImageIndex === i}
@@ -216,45 +259,52 @@ export default function ProjectContent() {
         )}
 
         <section
-          className="mt-12 w-full flex flex-col gap-8"
+          className="mt-12 flex w-full min-w-0 flex-col gap-8"
           aria-label="Project Details"
         >
-          <div className="font-light text-body-sm leading-relaxed text-justify">
-            <DiaTextReveal delay={0.6} duration={1.5}>
-              {project.description}
-            </DiaTextReveal>
-            {(project.github || project.liveUrl) && (
-              <div
-                ref={githubRef}
-                className="flex justify-center gap-6 mt-6 opacity-0"
-              >
-                {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-body-sm font-light transition-opacity flex items-center gap-2 group/github border-b border-transparent hover:border-(--body)/20 pb-0.5 underline-offset-4"
-                  >
-                    <ExternalLink size={12} className="opacity-100" />
-                    <DiaTextReveal text="GitHub" delay={0.8} />
-                  </a>
-                )}
-                {project.liveUrl && (
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-body-sm font-light transition-opacity flex items-center gap-2 group/live border-b border-transparent hover:border-(--body)/20 pb-0.5 underline-offset-4"
-                  >
-                    <ExternalLink size={12} className="opacity-100" />
-                    <DiaTextReveal text="Live Site" delay={0.8} />
-                  </a>
-                )}
-              </div>
-            )}
-          </div>
+          {showDescription && (
+            <div className="w-full min-w-0 font-light text-body-sm leading-relaxed text-left">
+              {project.markdown ? (
+                <PortfolioMarkdown content={description} animate baseDelay={0.6} />
+              ) : (
+                <DiaTextReveal delay={0.6} duration={1.5}>
+                  {project.description}
+                </DiaTextReveal>
+              )}
+            </div>
+          )}
 
-          <div className="flex flex-col gap-0 mt-4">
+          {(project.github || project.liveUrl) && (
+            <div
+              ref={githubRef}
+              className="flex justify-center gap-6 opacity-0"
+            >
+              {project.github && (
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-body-sm font-light transition-opacity flex items-center gap-2 border-b border-transparent hover:border-(--body)/20 pb-0.5 underline-offset-4"
+                >
+                  <ExternalLink size={12} className="opacity-100" />
+                  <DiaTextReveal text="GitHub" delay={0.8} />
+                </a>
+              )}
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-body-sm font-light transition-opacity flex items-center gap-2 border-b border-transparent hover:border-(--body)/20 pb-0.5 underline-offset-4"
+                >
+                  <ExternalLink size={12} className="opacity-100" />
+                  <DiaTextReveal text="Live Site" delay={0.8} />
+                </a>
+              )}
+            </div>
+          )}
+
+          <div className="mt-2 flex w-full min-w-0 flex-col gap-0">
             <div className="flex justify-between items-center py-3.5">
               <span className="text-caption font-light opacity-40 ">
                 <DiaTextReveal text="Date" delay={0.7} />
@@ -289,24 +339,22 @@ export default function ProjectContent() {
             </div>
           </div>
 
-          {project.devNotes && (
-            <div className="flex flex-col gap-4 mt-8">
-              <h2 className="text-caption font-light opacity-50">
-                <DiaTextReveal text="Dev Notes" delay={1.0} duration={1.2} />
-              </h2>
-              <div
-                ref={devNotesBgRef}
-                className="font-light text-caption bg-(--body)/5 p-4 border-l-2 border-(--accent)/20"
-              >
-                <DiaTextReveal
-                  delay={1.2}
-                  duration={1.5}
-                  textColor="var(--body)"
-                >
-                  {project.devNotes}
-                </DiaTextReveal>
+          {showTechnicalDetails && project.technicalDetails && (
+            <details
+              className="w-full border border-(--accent)/10 bg-(--body)/5"
+              open={!project.detailsCollapsed}
+            >
+              <summary className="cursor-pointer px-4 py-3 text-caption font-light opacity-60 hover:opacity-100 transition-opacity">
+                Technical details
+              </summary>
+              <div className="px-4 pb-4">
+                <PortfolioMarkdown
+                  content={project.technicalDetails}
+                  animate
+                  baseDelay={0.9}
+                />
               </div>
-            </div>
+            </details>
           )}
         </section>
       </div>

@@ -3,6 +3,7 @@
 import React from "react";
 import { TransitionLink } from "@/components/ui/transition-link";
 import { DiaTextReveal } from "@/components/ui/dia-text-rv";
+import { formatProjectTitle } from "@/lib/format-project-title";
 
 interface ProjectItemProps {
   project: {
@@ -15,10 +16,10 @@ interface ProjectItemProps {
   onMouseLeave: () => void;
   itemsRef: (el: HTMLDivElement | null) => void;
   titleLinesRef: (el: HTMLDivElement | null) => void;
-  pulseRefs: (el: HTMLDivElement | null) => void;
   dividerLinesRef: (el: HTMLDivElement | null) => void;
   dividerPulseRefs: (el: HTMLDivElement | null) => void;
   noAnimation?: boolean;
+  nested?: boolean;
 }
 
 export const ProjectItem = ({
@@ -28,11 +29,14 @@ export const ProjectItem = ({
   onMouseLeave,
   itemsRef,
   titleLinesRef,
-  pulseRefs,
   dividerLinesRef,
   dividerPulseRefs,
   noAnimation = false,
+  nested = false,
 }: ProjectItemProps) => {
+  const titleClass = nested ? "text-[13px]" : "";
+  const subtextClass = nested ? "text-[11px]" : "text-[13px]";
+
   return (
     <div
       ref={itemsRef}
@@ -50,10 +54,12 @@ export const ProjectItem = ({
           className="font-body-sm font-medium transition-colors hover:text-(--accent)"
         >
           {noAnimation ? (
-            <span className="text-(--body)">{project.title}</span>
+            <span className={`text-(--body) ${titleClass}`}>
+              {formatProjectTitle(project.title)}
+            </span>
           ) : (
             <DiaTextReveal
-              text={project.title}
+              text={formatProjectTitle(project.title)}
               delay={0.4 + index * 0.1}
               duration={1.2}
               textColor="var(--body)"
@@ -67,20 +73,15 @@ export const ProjectItem = ({
             transform: noAnimation ? "scaleX(1)" : "scaleX(0)",
             transformOrigin: "left",
           }}
-        >
-          <div
-            ref={pulseRefs}
-            className="absolute inset-0 bg-linear-to-r from-transparent via-(--accent) to-transparent -translate-x-full"
-          />
-        </div>
+        />
       </div>
 
       {noAnimation ? (
-        <p className="font-light text-[13px] text-(--subtext)">
+        <p className={`font-light ${subtextClass} text-(--subtext)`}>
           {project.subtext}
         </p>
       ) : (
-        <p className="font-light text-[13px] text-(--subtext)">
+        <p className={`font-light ${subtextClass} text-(--subtext)`}>
           <DiaTextReveal
             text={project.subtext}
             delay={0.6 + index * 0.1}
@@ -92,7 +93,7 @@ export const ProjectItem = ({
 
       <div
         ref={dividerLinesRef}
-        className="absolute bottom-0 left-0 w-full h-px bg-(--border)/40 relative overflow-hidden"
+        className="absolute bottom-0 left-0 w-full h-px overflow-hidden bg-(--border)/40"
         style={{
           transform: noAnimation ? "scaleX(1)" : "scaleX(0)",
           transformOrigin: "left",
@@ -100,7 +101,7 @@ export const ProjectItem = ({
       >
         <div
           ref={dividerPulseRefs}
-          className="absolute inset-0 bg-linear-to-r from-transparent via-white/90 to-transparent -translate-x-full"
+          className="line-pulse"
         />
       </div>
     </div>

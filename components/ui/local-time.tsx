@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { DiaTextReveal } from "./dia-text-rv";
+import { cn } from "@/lib/utils";
 
-export function LocalTime() {
+export function LocalTime({ className }: { className?: string }) {
   const [timeStr, setTimeStr] = useState("");
   const [offsetStr, setOffsetStr] = useState("");
 
@@ -38,7 +39,7 @@ export function LocalTime() {
   if (!timeStr) return null;
 
   return (
-    <div className="flex items-center gap-4">
+    <div className={cn("flex items-center gap-4", className)}>
       <div
         className="flex items-center gap-3 cursor-default"
         title="India Standard Time"

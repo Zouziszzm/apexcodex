@@ -40,9 +40,19 @@ export const jobs: Job[] = [
       },
     ],
   },
+  {
+    company: "Power Store E-Com Pvt Ltd",
+    position: "Frontend Developer",
+    duration: "3 mos",
+    dateRange: "Mar 2023 - May 2023",
+    description: [
+      "Built and maintained customer-facing e-commerce UI as an on-site frontend developer in India.",
+    ],
+  },
 ];
 
 export const companySpans = [
   { start: "2025-02-01", end: "present" }, // Mantiqh
   { start: "2022-09-01", end: "2025-02-01" }, // NDTCCS
+  { start: "2023-03-01", end: "2023-05-01" }, // Power Store E-Com Pvt Ltd
 ];

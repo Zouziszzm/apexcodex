@@ -15,4 +15,10 @@ export interface Project {
   stack: string[];
   category: "Personal" | "Commercial" | "Freelance" | "Professional";
   liveUrl?: string;
+  markdown?: boolean;
+  group?: string;
+  order?: number;
+  portfolioMode?: "metadata-only" | "summary" | "summary-collapsible";
+  technicalDetails?: string;
+  detailsCollapsed?: boolean;
 }

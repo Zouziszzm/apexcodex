@@ -9,11 +9,11 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
 import { usePathname } from "next/navigation";
+
+import { usePathname } from "next/navigation";
 import { useSound } from "@/hooks/use-sound";
 
-
 export const VoxelDog = () => {
-  const pathname = usePathname();
   const refContainer = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const refRenderer = useRef<THREE.WebGLRenderer | null>(null);
@@ -22,6 +22,16 @@ export const VoxelDog = () => {
   const [isRotating, setIsRotating] = useState(true);
   const urlDogGLB = "/elvendeer.glb";
 
+  useEffect(() => {
+    if (refContainer.current) {
+      gsap.to(refContainer.current, {
+        opacity: 1,
+        duration: 1.5,
+        delay: 1.5,
+        ease: "power2.out",
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (refControls.current) {
@@ -117,7 +127,23 @@ export const VoxelDog = () => {
       let req: number;
       const animate = () => {
         req = requestAnimationFrame(animate);
-        controls.update();
+
+        frame = frame <= 100 ? frame + 1 : frame;
+
+        if (frame <= 100) {
+          const p = initialCameraPosition;
+          const rotSpeed = -easeOutCirc(frame / 120) * Math.PI * 20;
+
+          camera.position.y = 2; // Keep the lowered Y during animation
+          camera.position.x =
+            p.x * Math.cos(rotSpeed) + p.z * Math.sin(rotSpeed);
+          camera.position.z =
+            p.z * Math.cos(rotSpeed) - p.x * Math.sin(rotSpeed);
+          camera.lookAt(target);
+        } else {
+          controls.update();
+        }
+
         renderer.render(scene, camera);
       };
 
@@ -144,22 +170,19 @@ export const VoxelDog = () => {
   return (
     <div
       ref={refContainer}
-      className="voxel-dog relative w-full h-full  group opacity-0"
+      className="voxel-dog relative w-full h-full border border-(--accent) group opacity-0"
     >
       <button
         onClick={() => {
           setIsRotating(!isRotating);
-          playTick();
         }}
         className="absolute top-2 right-2 p-2 bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] hover:bg-[color-mix(in_srgb,var(--accent)_40%,transparent)] rounded-[4px] opacity-0 group-hover:opacity-100 transition-all z-10"
-        aria-label={isRotating ? "Pause 3D model rotation" : "Resume 3D model rotation"}
-        aria-pressed={isRotating}
         title={isRotating ? "Pause Rotation" : "Resume Rotation"}
       >
         {isRotating ? (
-          <Disc3 size={20} className="animate-spin text-(--body)" aria-hidden="true" />
+          <Disc3 size={20} className="animate-spin text-(--body)" />
         ) : (
-          <Disc size={20} className="text-(--body)" aria-hidden="true" />
+          <Disc size={20} className="text-(--body)" />
         )}
       </button>
       {loading && (
