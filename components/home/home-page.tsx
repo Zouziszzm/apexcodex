@@ -25,7 +25,6 @@ const HomePage = ({ projects }: HomePageProps) => {
               <span className="flex items-center gap-x-2 min-w-0 shrink-0 overflow-visible">
                 <DiaTextReveal
                   text={["Alfarhaankhan Inamdar"]}
-                  priority={true}
                   once={false}
                 />
                 <span className="relative z-20 overflow-visible">
@@ -51,7 +50,6 @@ const HomePage = ({ projects }: HomePageProps) => {
             <DiaTextReveal
               textColor="var(--body)"
               lineHeightGap="1"
-              priority={true}
               once={false}
             >
               <>
@@ -122,7 +120,6 @@ const HomePage = ({ projects }: HomePageProps) => {
               lineHeightGap="1"
               delay={1.0}
               duration={1.5}
-              priority={true}
             >
               <>
                 As an <IndieDevLink />
