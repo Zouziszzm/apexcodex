@@ -55,8 +55,6 @@
   --spacing-fluid-lg: clamp(1.5rem, 3vw, 5rem);
   --spacing-fluid-xl: clamp(2rem, 5vw, 8rem);
   --spacing-fluid-2xl: clamp(3rem, 8vw, 12rem);
-<<<<<<< Updated upstream
-=======
 
   /* Animations */
   --animate-gradient: gradient 8s linear infinite;
@@ -88,7 +86,6 @@
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
   opacity: 1;
->>>>>>> Stashed changes
 }
 
 @layer base {
@@ -120,8 +117,6 @@
       border-color 0.8s ease;
   }
 
-<<<<<<< Updated upstream
-=======
   :root.dark {
     --line-pulse-via: rgba(255, 255, 255, 0.9);
   }
@@ -137,7 +132,6 @@
     display: none;
   }
 
->>>>>>> Stashed changes
   body {
     font-family: var(--font-sans);
     font-size: var(--font-body);
@@ -149,9 +143,6 @@
     cursor: default;
   }
 
-<<<<<<< Updated upstream
-  a, button {
-=======
   body::before {
     content: "";
     position: fixed;
@@ -281,7 +272,6 @@
 
   a,
   button {
->>>>>>> Stashed changes
     cursor: pointer;
   }
 
@@ -584,8 +574,6 @@
     --subtext: #788592;
     --accent: #8fa1b5;
   }
-<<<<<<< Updated upstream
-=======
 
   /* DARK MODE SEASONS */
   /* Spring Dark */
@@ -895,7 +883,6 @@
 /* Scoped to AnimatedThemeToggler — the toggler sets the data-attribute and the variable only during a theme toggle. */
 html[data-magicui-theme-vt="active"]::view-transition-group(root) {
   animation-duration: var(--magicui-theme-toggle-vt-duration);
->>>>>>> Stashed changes
 }
 
 @layer utilities {

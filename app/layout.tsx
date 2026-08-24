@@ -1,15 +1,16 @@
-import Script from "next/script";
 import type { Metadata } from "next";
+import Script from "next/script";
 import { ThemeProvider } from "./contexts/ThemeContext";
-<<<<<<< Updated upstream
-=======
 import { TransitionProvider } from "@/components/providers/transition-provider";
 import { AmbientSoundProvider } from "@/components/providers/ambient-sound-provider";
->>>>>>> Stashed changes
 import { hankenGrotesk } from "./font";
+import { Footer } from "@/components/ui/footer";
+import { DevToolbar } from "@/components/ui/dev-toolbar";
+import ClickSpark from "@/components/ui/click-spark";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://alfarhaankhan.com"),
   title: {
     template: "%s | Alfarhaankhan",
     default: "Alfarhaankhan",
@@ -38,6 +39,13 @@ const themeScript = `
       else time = "evening";
       document.documentElement.setAttribute("data-season", season);
       document.documentElement.setAttribute("data-time", time);
+
+      var storedTheme = localStorage.getItem("theme");
+      if (storedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
       var link = document.createElement("link");
       link.rel = "icon";
       link.type = "image/svg+xml";
@@ -53,31 +61,36 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`h-full antialiased ${hankenGrotesk.variable}`} suppressHydrationWarning>
-      <head />
+    <html
+      lang="en"
+      className={`h-full antialiased ${hankenGrotesk.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <Script
+          id="theme-script"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: themeScript }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
-        <Script id="theme-script" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeScript }} />
         <ThemeProvider>
-<<<<<<< Updated upstream
-          {children}
-=======
           <AmbientSoundProvider>
-          <ClickSpark
-            sparkColor="var(--title)"
-            sparkSize={7}
-            sparkRadius={7}
-            sparkCount={7}
-            duration={300}
-            sparkLineWidth={1}
-          >
-            <DevToolbar />
-            <TransitionProvider>
-              {children}
-              <Footer />
-            </TransitionProvider>
-          </ClickSpark>
+            <ClickSpark
+              sparkColor="var(--title)"
+              sparkSize={7}
+              sparkRadius={7}
+              sparkCount={7}
+              duration={300}
+              sparkLineWidth={1}
+            >
+              <DevToolbar />
+              <TransitionProvider>
+                {children}
+                <Footer />
+              </TransitionProvider>
+            </ClickSpark>
           </AmbientSoundProvider>
->>>>>>> Stashed changes
         </ThemeProvider>
       </body>
     </html>
