@@ -66,14 +66,12 @@ export default function RootLayout({
       className={`h-full antialiased ${hankenGrotesk.variable}`}
       suppressHydrationWarning
     >
-      <head>
+      <body className="min-h-full flex flex-col">
         <Script
           id="theme-script"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: themeScript }}
         />
-      </head>
-      <body className="min-h-full flex flex-col">
         <ThemeProvider>
           <AmbientSoundProvider>
             <ClickSpark

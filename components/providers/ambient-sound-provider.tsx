@@ -11,8 +11,14 @@ import React, {
 import {
   AMBIENT_VOLUME,
   pickAmbientTrack,
-  readAmbientPreference,
 } from "@/lib/ambient-tracks";
+import {
+  readAmbientPreference,
+  readSiteConsent,
+  writeSiteConsent,
+  type SiteConsentStatus,
+} from "@/lib/site-preferences";
+import { SiteConsentDialog } from "@/components/ui/site-consent-dialog";
 
 interface AmbientSoundContextValue {
   enabled: boolean;
@@ -46,23 +52,18 @@ function createAmbientAudioChain(): AmbientAudioChain {
   return { audio, context, gain };
 }
 
-function isAmbientPlaying(chain: AmbientAudioChain) {
-  return (
-    !chain.audio.paused &&
-    !chain.audio.ended &&
-    chain.audio.currentTime > 0
-  );
-}
-
 export function AmbientSoundProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [enabled, setEnabled] = useState(true);
+  const [enabled, setEnabled] = useState(false);
+  const [consentStatus, setConsentStatus] =
+    useState<SiteConsentStatus>("unknown");
+  const [ready, setReady] = useState(false);
   const chainRef = useRef<AmbientAudioChain | null>(null);
   const currentTrackRef = useRef<string | undefined>(undefined);
-  const enabledRef = useRef(true);
+  const enabledRef = useRef(false);
   const skipEnabledEffectRef = useRef(true);
 
   const ensureChain = useCallback(() => {
@@ -89,7 +90,6 @@ export function AmbientSoundProvider({
     chain.audio.src = track;
     chain.gain.gain.value = AMBIENT_VOLUME;
 
-    // Resume synchronously when possible — iOS needs this inside a gesture.
     if (chain.context.state === "suspended") {
       void chain.context.resume();
     }
@@ -113,14 +113,36 @@ export function AmbientSoundProvider({
     currentTrackRef.current = undefined;
   }, []);
 
-  const startFromGesture = useCallback(() => {
-    if (!enabledRef.current) return;
+  const setAmbientEnabled = useCallback(
+    (next: boolean, persist = true) => {
+      enabledRef.current = next;
+      setEnabled(next);
 
-    const chain = chainRef.current;
-    if (chain && isAmbientPlaying(chain)) return;
+      if (next) {
+        void playRandomTrack();
+      } else {
+        stop();
+      }
 
-    void playRandomTrack();
-  }, [playRandomTrack]);
+      if (!persist) return;
+
+      try {
+        localStorage.setItem("ambient-sound", next ? "on" : "off");
+      } catch {
+        // Storage may be blocked in strict/private modes.
+      }
+    },
+    [playRandomTrack, stop],
+  );
+
+  const resolveConsent = useCallback(
+    (allowed: boolean) => {
+      writeSiteConsent(allowed);
+      setConsentStatus(allowed ? "accepted" : "declined");
+      setAmbientEnabled(allowed);
+    },
+    [setAmbientEnabled],
+  );
 
   useEffect(() => {
     enabledRef.current = enabled;
@@ -139,23 +161,18 @@ export function AmbientSoundProvider({
   }, [enabled, playRandomTrack, stop]);
 
   useEffect(() => {
-    const enabledOnLoad = readAmbientPreference();
-    enabledRef.current = enabledOnLoad;
-    setEnabled(enabledOnLoad);
+    const consent = readSiteConsent();
+    setConsentStatus(consent);
 
-    const onGesture = () => {
-      startFromGesture();
-    };
+    if (consent !== "unknown") {
+      const enabledOnLoad = readAmbientPreference();
+      enabledRef.current = enabledOnLoad;
+      setEnabled(enabledOnLoad);
+    }
 
-    window.addEventListener("pointerdown", onGesture, { capture: true });
-    window.addEventListener("touchstart", onGesture, { capture: true });
-    window.addEventListener("keydown", onGesture, { capture: true });
+    setReady(true);
 
     return () => {
-      window.removeEventListener("pointerdown", onGesture, { capture: true });
-      window.removeEventListener("touchstart", onGesture, { capture: true });
-      window.removeEventListener("keydown", onGesture, { capture: true });
-
       const chain = chainRef.current;
       if (chain) {
         chain.audio.pause();
@@ -163,32 +180,21 @@ export function AmbientSoundProvider({
         chainRef.current = null;
       }
     };
-  }, [startFromGesture]);
+  }, []);
 
   const toggle = useCallback(() => {
-    setEnabled((current) => {
-      const next = !current;
-      enabledRef.current = next;
-
-      if (next) {
-        void playRandomTrack();
-      } else {
-        stop();
-      }
-
-      try {
-        localStorage.setItem("ambient-sound", next ? "on" : "off");
-      } catch {
-        // Storage may be blocked in strict/private modes.
-      }
-
-      return next;
-    });
-  }, [playRandomTrack, stop]);
+    setAmbientEnabled(!enabledRef.current);
+  }, [setAmbientEnabled]);
 
   return (
     <AmbientSoundContext.Provider value={{ enabled, toggle }}>
       {children}
+      {ready && consentStatus === "unknown" ? (
+        <SiteConsentDialog
+          onAllow={() => resolveConsent(true)}
+          onDecline={() => resolveConsent(false)}
+        />
+      ) : null}
     </AmbientSoundContext.Provider>
   );
 }

@@ -162,7 +162,7 @@ export const VoxelDog = () => {
   return (
     <div
       ref={refContainer}
-      className="voxel-dog relative w-full h-full border border-(--accent) group opacity-0"
+      className="voxel-dog relative w-full h-full group opacity-0"
     >
       <button
         onClick={() => {

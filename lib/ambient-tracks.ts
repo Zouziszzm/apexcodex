@@ -17,13 +17,3 @@ export function pickAmbientTrack(previous?: string) {
 
   return next;
 }
-
-function readAmbientPreference(): boolean {
-  try {
-    return localStorage.getItem("ambient-sound") !== "off";
-  } catch {
-    return true;
-  }
-}
-
-export { readAmbientPreference };
