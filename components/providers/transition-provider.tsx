@@ -40,7 +40,7 @@ export const TransitionProvider = ({
       gsap.fromTo(
         contentRef.current,
         { opacity: 0 },
-        { opacity: 1, duration: 0.8, ease: "power2.inOut" },
+        { opacity: 1, duration: 0.4, ease: "power2.inOut" },
       );
     }
   }, [pathname]);
@@ -55,7 +55,7 @@ export const TransitionProvider = ({
 
     gsap.to(contentRef.current, {
       opacity: 0,
-      duration: 0.8,
+      duration: 0.4,
       ease: "power2.inOut",
       onComplete: () => router.push(href),
     });
