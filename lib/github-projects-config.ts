@@ -1,8 +1,8 @@
 export const GITHUB_PROJECT_SOURCES = [
   { owner: "Zouziszzm", repo: "Rust", branch: "main" },
   { owner: "Zouziszzm", repo: "TypeScript", branch: "main" },
-  { owner: "Zouziszzm", repo: "Tauri", branch: "main" },
-  { owner: "Zouziszzm", repo: "Flutter", branch: "main" },
+  { owner: "Zouziszzm", repo: "tauri", branch: "main" },
+  { owner: "Zouziszzm", repo: "flutter", branch: "main" },
   { owner: "Zouziszzm", repo: "OpenSource", branch: "main" },
 ] as const;
 
