@@ -5,7 +5,7 @@ import { TransitionLink } from "@/components/ui/transition-link";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import type { Project } from "@/types/projects";
+import type { Project, RelatedProject } from "@/types/projects";
 import { PortfolioMarkdown } from "@/components/projects/portfolio-markdown";
 import { DiaTextReveal } from "@/components/ui/dia-text-rv";
 import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
@@ -67,6 +67,64 @@ function ProjectNavLink({
         </>
       )}
     </TransitionLink>
+  );
+}
+
+function RelatedProjectLinks({
+  relatedProjects,
+}: {
+  relatedProjects: RelatedProject[];
+}) {
+  const backends = relatedProjects.filter((project) => project.role === "backend");
+  const frontends = relatedProjects.filter((project) => project.role === "frontend");
+  const other = relatedProjects.filter(
+    (project) => project.role !== "backend" && project.role !== "frontend",
+  );
+
+  const renderLinks = (projects: RelatedProject[]) =>
+    projects.map((related, index) => (
+      <React.Fragment key={related.id}>
+        {index > 0 && <span className="opacity-30">·</span>}
+        <TransitionLink
+          href={`/projects/${related.id}`}
+          className="border-b border-transparent pb-0.5 transition-colors hover:border-(--body)/20"
+        >
+          {related.label}
+        </TransitionLink>
+      </React.Fragment>
+    ));
+
+  if (relatedProjects.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-3 text-center">
+      {backends.length > 0 && (
+        <p className="text-body-sm font-light text-(--subtext)">
+          <span className="opacity-60">Backend: </span>
+          <span className="inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+            {renderLinks(backends)}
+          </span>
+        </p>
+      )}
+      {frontends.length > 0 && (
+        <p className="text-body-sm font-light text-(--subtext)">
+          <span className="opacity-60">Frontend available: </span>
+          <span className="inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+            {renderLinks(frontends)}
+          </span>
+        </p>
+      )}
+      {other.length > 0 && (
+        <p className="text-body-sm font-light text-(--subtext)">
+          <span className="opacity-60">Related: </span>
+          <span className="inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+            {renderLinks(other)}
+          </span>
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -274,32 +332,41 @@ export default function ProjectContent({
             </div>
           )}
 
-          {(project.github || project.liveUrl) && (
+          {(project.relatedProjects?.length ||
+            project.github ||
+            project.liveUrl) && (
             <div
               ref={githubRef}
-              className="flex justify-center gap-6 opacity-0"
+              className="flex flex-col items-center gap-4 opacity-0"
             >
-              {project.github && (
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-body-sm font-light transition-opacity flex items-center gap-2 border-b border-transparent hover:border-(--body)/20 pb-0.5 underline-offset-4"
-                >
-                  <ExternalLink size={12} className="opacity-100" />
-                  <DiaTextReveal text="GitHub" delay={0.8} />
-                </a>
+              {project.relatedProjects && project.relatedProjects.length > 0 && (
+                <RelatedProjectLinks relatedProjects={project.relatedProjects} />
               )}
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-body-sm font-light transition-opacity flex items-center gap-2 border-b border-transparent hover:border-(--body)/20 pb-0.5 underline-offset-4"
-                >
-                  <ExternalLink size={12} className="opacity-100" />
-                  <DiaTextReveal text="Live Site" delay={0.8} />
-                </a>
+              {(project.github || project.liveUrl) && (
+                <div className="flex justify-center gap-6">
+                  {project.github && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-body-sm font-light transition-opacity flex items-center gap-2 border-b border-transparent hover:border-(--body)/20 pb-0.5 underline-offset-4"
+                    >
+                      <ExternalLink size={12} className="opacity-100" />
+                      <DiaTextReveal text="GitHub" delay={0.8} />
+                    </a>
+                  )}
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-body-sm font-light transition-opacity flex items-center gap-2 border-b border-transparent hover:border-(--body)/20 pb-0.5 underline-offset-4"
+                    >
+                      <ExternalLink size={12} className="opacity-100" />
+                      <DiaTextReveal text="Live Site" delay={0.8} />
+                    </a>
+                  )}
+                </div>
               )}
             </div>
           )}
@@ -313,6 +380,21 @@ export default function ProjectContent({
                 <DiaTextReveal text={project.date} delay={0.7} />
               </span>
             </div>
+            {project.contributedTo && project.github && (
+              <div className="flex justify-between items-center py-3.5">
+                <span className="text-caption font-light opacity-40">
+                  <DiaTextReveal text="Contributed to" delay={0.72} />
+                </span>
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-caption font-light text-right max-w-[60%] truncate border-b border-transparent transition-colors hover:border-(--body)/20"
+                >
+                  <DiaTextReveal text={project.contributedTo} delay={0.72} />
+                </a>
+              </div>
+            )}
             <div className="flex justify-between items-center py-3.5 ">
               <span className="text-caption font-light opacity-40">
                 <DiaTextReveal text="Contribution" delay={0.75} />

@@ -1,7 +1,7 @@
 import matter from "gray-matter";
 import { readFile } from "fs/promises";
 import path from "path";
-import type { Project } from "@/types/projects";
+import type { Project, RelatedProject } from "@/types/projects";
 import {
   GITHUB_PROJECT_SOURCES,
   type GitHubProjectSource,
@@ -165,6 +165,9 @@ type ProjectFrontmatter = {
   order?: number;
   portfolioMode?: "metadata-only" | "summary" | "summary-collapsible";
   detailsCollapsed?: boolean;
+  relatedProjects?: unknown;
+  github?: string;
+  contributedTo?: string;
 };
 
 const DEFAULT_FOLDER_ORDER: Record<string, number> = {
@@ -177,6 +180,18 @@ const DEFAULT_FOLDER_ORDER: Record<string, number> = {
   "nihon-main": 1,
   "Conrad-reader": 2,
   "key-warriors": 3,
+  gogen: 1,
+  "kana-dojo": 2,
+  "centralized-logger-web": 3,
+  "response-helper": 4,
+};
+
+const DEFAULT_STACK_BY_REPO: Record<string, string> = {
+  rust: "Rust",
+  typescript: "TypeScript",
+  tauri: "Tauri",
+  flutter: "Flutter",
+  opensource: "Open Source",
 };
 
 function extractMarkdownSection(body: string, sectionName: string): string | null {
@@ -337,6 +352,35 @@ function asCategory(value: unknown): ProjectCategory {
   return "Personal";
 }
 
+function asRelatedProjects(value: unknown): RelatedProject[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.flatMap((item) => {
+    if (!item || typeof item !== "object") {
+      return [];
+    }
+
+    const record = item as Record<string, unknown>;
+    const id = record.id;
+    const label = record.label;
+    const role = record.role;
+
+    if (typeof id !== "string" || typeof label !== "string") {
+      return [];
+    }
+
+    const related: RelatedProject = { id, label };
+
+    if (role === "frontend" || role === "backend") {
+      related.role = role;
+    }
+
+    return [related];
+  });
+}
+
 async function getLastCommitDate(
   owner: string,
   repo: string,
@@ -455,20 +499,30 @@ async function fetchRepoProjects(
         order,
         markdown: true,
         devNotes: frontmatter.devNotes,
-        github: `https://github.com/${owner}/${repo}/tree/${branch}/${folder.name}`,
+        github:
+          typeof frontmatter.github === "string"
+            ? frontmatter.github
+            : `https://github.com/${owner}/${repo}/tree/${branch}/${folder.name}`,
         liveUrl: frontmatter.liveUrl,
         images: asStringArray(frontmatter.images),
         tags: asStringArray(frontmatter.tags),
         contribution: frontmatter.contribution || "Solo Developer",
         extent: asStringArray(frontmatter.extent).length
           ? asStringArray(frontmatter.extent)
-          : ["Develop"],
+          : slug === "opensource"
+            ? ["Contribute"]
+            : ["Develop"],
         stack:
           parsedStack.length > 0
             ? parsedStack
-            : [repo.toLowerCase() === "rust" ? "Rust" : "TypeScript"],
+            : [DEFAULT_STACK_BY_REPO[slug] ?? "TypeScript"],
         category: asCategory(frontmatter.category),
         group: slug,
+        relatedProjects: asRelatedProjects(frontmatter.relatedProjects),
+        contributedTo:
+          typeof frontmatter.contributedTo === "string"
+            ? frontmatter.contributedTo
+            : undefined,
       } satisfies Project;
     }),
   );

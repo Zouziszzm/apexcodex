@@ -19,6 +19,7 @@ interface ProjectsSectionProps {
 }
 
 function formatGroupLabel(group: string): string {
+  if (group === "opensource") return "Open Source";
   return group.charAt(0).toUpperCase() + group.slice(1);
 }
 
@@ -31,6 +32,7 @@ export const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
   const dividerPulseRefs = useRef<(HTMLDivElement | null)[]>([]);
   const expandedRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const chevronRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const groupTitleLineRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const [expandedGroups, setExpandedGroups] = React.useState<
     Record<string, boolean>
@@ -139,6 +141,16 @@ export const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
           { opacity: 1, x: 0, duration: 1, ease: "power2.out" },
           "-=0.6",
         );
+
+        const groupTitleLine = groupTitleLineRefs.current[group];
+        if (groupTitleLine) {
+          tl.fromTo(
+            groupTitleLine,
+            { scaleX: 0, transformOrigin: "left" },
+            { scaleX: 1, duration: 1.2, ease: "power4.inOut" },
+            "-=1",
+          );
+        }
       });
     },
     { scope: containerRef, dependencies: [topLevelProjects.length, groupNames.length] },
@@ -248,9 +260,9 @@ export const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
                       </span>
                       <div
                         ref={(el) => {
-                          titleLinesRef.current[toggleIndex] = el;
+                          groupTitleLineRefs.current[group] = el;
                         }}
-                        className="w-full h-px bg-(--body) relative overflow-hidden"
+                        className="h-px w-full bg-(--body) relative overflow-hidden"
                         style={{
                           transform: "scaleX(0)",
                           transformOrigin: "left",
