@@ -174,6 +174,9 @@ const DEFAULT_FOLDER_ORDER: Record<string, number> = {
   "s-s-generator": 4,
   "m-search": 5,
   "rate-limiter": 6,
+  "nihon-main": 1,
+  "Conrad-reader": 2,
+  "key-warriors": 3,
 };
 
 function extractMarkdownSection(body: string, sectionName: string): string | null {
