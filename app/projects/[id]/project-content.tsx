@@ -10,6 +10,7 @@ import { PortfolioMarkdown } from "@/components/projects/portfolio-markdown";
 import { DiaTextReveal } from "@/components/ui/dia-text-rv";
 import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { formatProjectTitle } from "@/lib/format-project-title";
+import { formatGroupLabel } from "@/lib/project-groups";
 
 interface ProjectContentProps {
   project: Project;
@@ -215,9 +216,22 @@ export default function ProjectContent({
           <span className="opacity-20" aria-hidden="true">
             /
           </span>
-          <span className="font-light text-caption text-(--subtext) opacity-50">
+          <TransitionLink
+            href="/projects"
+            className="font-light text-caption text-(--subtext) opacity-50 transition-colors hover:text-(--body) hover:opacity-100"
+          >
             Projects
-          </span>
+          </TransitionLink>
+          {project.group && (
+            <>
+              <span className="opacity-20" aria-hidden="true">
+                /
+              </span>
+              <span className="font-light text-caption text-(--subtext) opacity-50">
+                {formatGroupLabel(project.group)}
+              </span>
+            </>
+          )}
         </div>
       </nav>
 
