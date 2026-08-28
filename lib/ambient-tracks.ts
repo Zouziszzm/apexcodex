@@ -4,7 +4,7 @@ export const AMBIENT_TRACKS = [
 ] as const;
 
 /** Web Audio gain — keep very low; phone volume still affects output. */
-export const AMBIENT_VOLUME = 0.04;
+export const AMBIENT_VOLUME = 0.3;
 
 export function pickAmbientTrack(previous?: string) {
   let next =

@@ -90,11 +90,10 @@ export function AmbientSoundProvider({
     chain.audio.src = track;
     chain.gain.gain.value = AMBIENT_VOLUME;
 
-    if (chain.context.state === "suspended") {
-      void chain.context.resume();
-    }
-
     try {
+      if (chain.context.state === "suspended") {
+        await chain.context.resume();
+      }
       await chain.audio.play();
       return true;
     } catch {
