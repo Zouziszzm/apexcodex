@@ -1,5 +1,11 @@
 import { ReactNode } from "react";
 
+export interface RelatedProject {
+  id: string;
+  label: string;
+  role?: "frontend" | "backend";
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -21,4 +27,6 @@ export interface Project {
   portfolioMode?: "metadata-only" | "summary" | "summary-collapsible";
   technicalDetails?: string;
   detailsCollapsed?: boolean;
+  relatedProjects?: RelatedProject[];
+  contributedTo?: string;
 }

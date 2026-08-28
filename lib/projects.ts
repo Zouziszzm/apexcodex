@@ -1,10 +1,11 @@
 import { manualProjects } from "@/data/projects";
+import { openSourceProjects } from "@/data/open-source-projects";
 import { fetchGitHubProjects } from "@/lib/github-projects";
 import type { Project } from "@/types/projects";
 
 export async function getProjects(): Promise<Project[]> {
   const githubProjects = await fetchGitHubProjects();
-  return [...manualProjects, ...githubProjects];
+  return [...manualProjects, ...openSourceProjects, ...githubProjects];
 }
 
 export async function getProjectById(id: string): Promise<Project | undefined> {
