@@ -9,6 +9,7 @@ import { DiaTextReveal } from "@/components/ui/dia-text-rv";
 import { ChevronDown } from "lucide-react";
 import { setAccordionOpen } from "@/lib/animate-accordion";
 import { jobs, companySpans } from "@/data/experience";
+import { getDuration } from "@/lib/experience";
 import { RoleItem } from "./role-item";
 
 if (typeof window !== "undefined") {
@@ -33,12 +34,36 @@ export const ExperienceSection = () => {
   const expandedJobIndicesRef = useRef<Record<number, boolean>>({});
   const isExpandedRef = useRef(false);
 
-  const totalMonths = companySpans.reduce((acc, span) => {
-    const startDate = new Date(span.start);
-    const endDate = span.end === "present" ? new Date() : new Date(span.end);
+  // Merge intervals to avoid double-counting any overlapping periods
+  // Excludes non-technical experience and accurately calculates total technical experience
+  const sortedSpans = [...companySpans]
+    .filter((span) => span.isTechnical !== false)
+    .map((span) => ({
+      start: new Date(span.start),
+      end: span.end === "present" ? new Date() : new Date(span.end),
+    }))
+    .sort((a, b) => a.start.getTime() - b.start.getTime());
+
+  const mergedSpans: { start: Date; end: Date }[] = [];
+  for (const span of sortedSpans) {
+    if (mergedSpans.length === 0) {
+      mergedSpans.push({ start: span.start, end: span.end });
+    } else {
+      const prev = mergedSpans[mergedSpans.length - 1];
+      if (span.start <= prev.end) {
+        if (span.end > prev.end) {
+          prev.end = span.end;
+        }
+      } else {
+        mergedSpans.push({ start: span.start, end: span.end });
+      }
+    }
+  }
+
+  const totalMonths = mergedSpans.reduce((acc, span) => {
     const diff =
-      (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-      (endDate.getMonth() - startDate.getMonth());
+      (span.end.getFullYear() - span.start.getFullYear()) * 12 +
+      (span.end.getMonth() - span.start.getMonth());
     return acc + Math.max(0, diff);
   }, 0);
 
@@ -364,8 +389,9 @@ export const ExperienceSection = () => {
               <RoleItem
                 role={{
                   position: jobs[0].position!,
-                  duration: jobs[0].duration!,
+                  duration: getDuration(jobs[0]),
                   dateRange: jobs[0].dateRange!,
+                  description: jobs[0].description,
                 }}
                 index={0}
                 total={1}
@@ -491,7 +517,10 @@ export const ExperienceSection = () => {
                   {job.roles ? (
                     <div className="w-full">
                       <RoleItem
-                        role={job.roles[0]}
+                        role={{
+                          ...job.roles[0],
+                          duration: getDuration(job.roles[0]),
+                        }}
                         index={0}
                         total={job.roles.length}
                       />
@@ -500,12 +529,15 @@ export const ExperienceSection = () => {
                           rolesRefs.current[index] = el;
                         }}
                         className="overflow-hidden w-full"
-                style={{ height: 0, opacity: 0 }}
+                        style={{ height: 0, opacity: 0 }}
                       >
                         {job.roles.slice(1).map((role, rIdx) => (
                           <RoleItem
                             key={rIdx + 1}
-                            role={role}
+                            role={{
+                              ...role,
+                              duration: getDuration(role),
+                            }}
                             index={rIdx + 1}
                             total={job.roles!.length}
                             isMain={false}
@@ -518,8 +550,9 @@ export const ExperienceSection = () => {
                       <RoleItem
                         role={{
                           position: job.position!,
-                          duration: job.duration!,
+                          duration: getDuration(job),
                           dateRange: job.dateRange!,
+                          description: job.description,
                         }}
                         index={0}
                         total={1}

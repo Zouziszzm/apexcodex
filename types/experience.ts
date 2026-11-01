@@ -1,8 +1,20 @@
+export interface CompanySpan {
+  start: string;
+  end: string;
+  isTechnical?: boolean;
+}
+
 export interface Role {
   position: string;
-  duration: string;
+  duration?: string;
   dateRange: string;
+  startDate?: string;
+  endDate?: string;
   description?: string[];
+  employmentType?: string;
+  location?: string;
+  workArrangement?: string;
+  classification?: string;
 }
 
 export interface Job {
@@ -12,5 +24,11 @@ export interface Job {
   position?: string; // For single role jobs
   duration?: string;
   dateRange?: string;
+  startDate?: string;
+  endDate?: string;
   description?: string[];
+  employmentType?: string;
+  location?: string;
+  workArrangement?: string;
+  classification?: string;
 }

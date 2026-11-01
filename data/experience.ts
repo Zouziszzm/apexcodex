@@ -1,10 +1,15 @@
-import { Job } from "@/types/experience";
+import { Job, CompanySpan } from "@/types/experience";
+import { getDuration } from "@/lib/experience";
 
 export const jobs: Job[] = [
   {
     company: "Mantiqh",
-    position: "Sr. Frontend Developer / Mobile Developer",
-    duration: "1 yr 4 mos",
+    position: "Software Engineer",
+    startDate: "2025-02-01",
+    endDate: "present",
+    get duration() {
+      return getDuration(this);
+    },
     dateRange: "Feb 2025 - Present",
     href: "https://www.mantiqh.com",
     description: [
@@ -16,43 +21,69 @@ export const jobs: Job[] = [
   },
   {
     company: "NDTCCS",
+    position: "Quality Assurance Inspector (Documentation)",
+    startDate: "2024-09-01",
+    endDate: "2025-02-01",
+    get duration() {
+      return getDuration(this);
+    },
+    dateRange: "Sep 2024 - Feb 2025",
     href: "https://www.ndtcorrosion.com/",
-    roles: [
-      {
-        position: "Software Engineer (Full-time, Onsite)",
-        duration: "1 yr 9 mos",
-        dateRange: "Jun 2023 - Feb 2025",
-        description: [
-          "Led frontend development of Bexel, an in-house equipment management platform built with React + TypeScript, integrating real-time operational data—license status, calibration records, and site-location tracking via interactive maps—enhancing data visibility by ~40%.",
-          "Automated form-to-PDF workflows within Bexel by building dynamic document templates and integrating backend services, reducing manual report-generation time by 60% and cutting data errors by 30%.",
-          "Authored and executed end-to-end test scenarios with Playwright, achieving 85%+ UI flow coverage; validated WCAG 2.1 AA compliance using Lighthouse and axe, collaborating with cross-functional teams to reduce data inconsistencies by 25%.",
-          "Standardised internal development workflows using GitHub Actions (CI/CD) and Docker to containerise and deploy Bexel, reducing environment-related deployment failures by 30% and improving release consistency across environments."
-        ]
-      },
-      {
-        position: "Junior Frontend Developer (Contract, Remote)",
-        duration: "6 mos",
-        dateRange: "Sep 2022 - Feb 2023",
-        description: [
-          "Developed and maintained the main NDTCCS company website using HTML5, CSS3 (Grid, Flexbox), and JavaScript (ES6+), implementing responsive design and semantic markup for improved accessibility and SEO.",
-          "Built an in-house document creation tool enabling structured generation of internal reports and forms; collaborated with senior developers to translate requirements into functional UI components, establishing foundational React and TypeScript skills."
-        ]
-      },
-    ],
+    employmentType: "Temporary / Contract",
+    location: "Saudi Arabia",
+    workArrangement: "On-site (Office-based)",
+    classification: "Non-Technical",
+    description: [
+      "Worked as a temporary Quality Assurance Inspector responsible for inspecting, reviewing, and verifying Entity CCS documentation.",
+      "Office-based documentation quality assurance role on a six-month temporary contract in Saudi Arabia (non-technical, office-based; no field or oil-site inspections)."
+    ]
+  },
+  {
+    company: "Freelance Developer",
+    position: "Freelance / Self-Employed",
+    startDate: "2023-06-01",
+    endDate: "2024-08-01",
+    get duration() {
+      return getDuration(this);
+    },
+    dateRange: "Jun 2023 - Aug 2024",
+    employmentType: "Freelance / Self-Employed",
+    description: [
+      "Delivered freelance and contract frontend development projects, building responsive web applications and custom user interfaces."
+    ]
   },
   {
     company: "Power Store E-Com Pvt Ltd",
-    position: "Frontend Developer",
-    duration: "3 mos",
-    dateRange: "Mar 2023 - May 2023",
-    description: [
-      "Built and maintained customer-facing e-commerce UI as an on-site frontend developer in India.",
-    ],
-  },
+    roles: [
+      {
+        position: "Frontend Developer",
+        startDate: "2023-03-01",
+        endDate: "2023-05-01",
+        get duration() {
+          return getDuration(this);
+        },
+        dateRange: "Mar 2023 - May 2023",
+        description: [
+          "Built and maintained customer-facing e-commerce UI as an on-site frontend developer in India.",
+        ]
+      },
+      {
+        position: "Frontend Developer Intern",
+        startDate: "2022-09-01",
+        endDate: "2023-02-01",
+        get duration() {
+          return getDuration(this);
+        },
+        dateRange: "Aug 2022 - Feb 2023",
+        description: [
+          "Assisted in developing and testing customer-facing e-commerce interfaces and UI components.",
+        ]
+      }
+    ]
+  }
 ];
 
-export const companySpans = [
-  { start: "2025-02-01", end: "present" }, // Mantiqh
-  { start: "2022-09-01", end: "2025-02-01" }, // NDTCCS
-  { start: "2023-03-01", end: "2023-05-01" }, // Power Store E-Com Pvt Ltd
+export const companySpans: CompanySpan[] = [
+  { start: "2025-02-01", end: "present" }, // Mantiqh (Feb 2025 - Present)
+  { start: "2023-03-01", end: "2023-06-01" }, // Power Store E-Com Pvt Ltd (Mar 2023 - May 2023: 3 mos)
 ];

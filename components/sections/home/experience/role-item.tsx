@@ -50,6 +50,13 @@ export const RoleItem = ({
             `${role.dateRange} — ${role.duration}`
           )}
         </span>
+        {role.description && role.description.length > 0 && (
+          <div className="sr-only">
+            {role.description.map((desc, dIdx) => (
+              <p key={dIdx}>{desc}</p>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
