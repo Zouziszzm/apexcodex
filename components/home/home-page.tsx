@@ -1,6 +1,5 @@
 import { DiaTextReveal } from "@/components/ui/dia-text-rv";
 import { Highlighter } from "@/components/ui/marker";
-import { IndieDevLink } from "@/components/home/indie-dev-link";
 import { VoxelDog } from "@/components/ui/voxel-dog";
 import { LifeTodosTrigger } from "@/components/home/life-todos";
 import { SpotifyNowPlaying } from "@/components/home/spotify-now-playing";
@@ -122,8 +121,7 @@ const HomePage = ({ projects }: HomePageProps) => {
               duration={1.5}
             >
               <>
-                As an <IndieDevLink />
-                , I&apos;m looking for a change in environment and open to{" "}
+                I&apos;m looking for a change in environment and open to{" "}
                 <Highlighter
                   action="underline"
                   color="#d8c7f2"

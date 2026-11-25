@@ -85,5 +85,6 @@ export const jobs: Job[] = [
 
 export const companySpans: CompanySpan[] = [
   { start: "2025-02-01", end: "present" }, // Mantiqh (Feb 2025 - Present)
-  { start: "2023-03-01", end: "2023-06-01" }, // Power Store E-Com Pvt Ltd (Mar 2023 - May 2023: 3 mos)
+  { start: "2023-06-01", end: "2024-09-01" }, // Freelance Developer (Jun 2023 - Aug 2024: 15 mos)
+  { start: "2022-09-01", end: "2023-06-01" }, // Power Store E-Com Pvt Ltd (Sep 2022 - May 2023: 9 mos)
 ];

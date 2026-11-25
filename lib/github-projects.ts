@@ -151,6 +151,7 @@ function parseRootReadmeSummary(
 
 type ProjectFrontmatter = {
   id?: string;
+  show?: boolean;
   title?: string;
   subtext?: string;
   date?: string;
@@ -170,6 +171,8 @@ type ProjectFrontmatter = {
   contributedTo?: string;
 };
 
+const EXCLUDED_FOLDERS = new Set(["key-warriors"]);
+
 const DEFAULT_FOLDER_ORDER: Record<string, number> = {
   odot: 1,
   "op-exence": 2,
@@ -179,7 +182,6 @@ const DEFAULT_FOLDER_ORDER: Record<string, number> = {
   "rate-limiter": 6,
   "nihon-main": 1,
   "Conrad-reader": 2,
-  "key-warriors": 3,
   gogen: 1,
   "kana-dojo": 2,
   "centralized-logger-web": 3,
@@ -412,6 +414,57 @@ async function getLastCommitDate(
   }
 }
 
+function parseProjectFilterFromRoot(rootReadme: string): {
+  allowedFolders?: Set<string>;
+  disallowedFolders?: Set<string>;
+} {
+  const allowed = new Set<string>();
+  const disallowed = new Set<string>();
+
+  // 1. Check YAML frontmatter `projects`
+  try {
+    const { data } = matter(rootReadme);
+    if (data && Array.isArray(data.projects)) {
+      for (const p of data.projects) {
+        if (typeof p === "object" && p !== null) {
+          const record = p as Record<string, unknown>;
+          const folder = record.folder || record.id || record.name;
+          if (folder && typeof folder === "string") {
+            const key = folder.toLowerCase();
+            const show = record.show;
+            if (show === true) {
+              allowed.add(key);
+            } else if (show === false) {
+              disallowed.add(key);
+            }
+          }
+        }
+      }
+    }
+  } catch {
+    // ignore
+  }
+
+  // 2. Check markdown sections: ### [name](./folder/) ... with `show: true` or `show: false`
+  const sectionRegex =
+    /###\s+\[([^\]]+)\]\((?:\.\/)?([^/)]+)\/?\)([\s\S]*?)(?=\n###|\n##|\s*$)/gi;
+  let match;
+  while ((match = sectionRegex.exec(rootReadme)) !== null) {
+    const folder = match[2].trim().toLowerCase();
+    const content = match[3];
+    if (/\bshow\s*[:=]\s*true\b/i.test(content)) {
+      allowed.add(folder);
+    } else if (/\bshow\s*[:=]\s*false\b/i.test(content)) {
+      disallowed.add(folder);
+    }
+  }
+
+  return {
+    allowedFolders: allowed.size > 0 ? allowed : undefined,
+    disallowedFolders: disallowed.size > 0 ? disallowed : undefined,
+  };
+}
+
 async function fetchRepoProjects(
   source: GitHubProjectSource,
 ): Promise<Project[]> {
@@ -440,8 +493,24 @@ async function fetchRepoProjects(
       `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/README.md`,
     )) ?? "";
 
-  const projects = await Promise.all(
-    folders.map(async (folder) => {
+  const filter = rootReadme ? parseProjectFilterFromRoot(rootReadme) : {};
+
+  const foldersToProcess = folders.filter((folder) => {
+    const folderLower = folder.name.toLowerCase();
+    if (EXCLUDED_FOLDERS.has(folderLower)) {
+      return false;
+    }
+    if (filter.disallowedFolders?.has(folderLower)) {
+      return false;
+    }
+    if (filter.allowedFolders && !filter.allowedFolders.has(folderLower)) {
+      return false;
+    }
+    return true;
+  });
+
+  const projectResults = await Promise.all(
+    foldersToProcess.map(async (folder): Promise<Project | null> => {
       const readmeContent =
         (await readLocalReadme(repo, folder.name)) ??
         (await fetchRaw(
@@ -453,6 +522,10 @@ async function fetchRepoProjects(
         ? matter(readmeContent)
         : { data: {}, content: "" };
       const frontmatter = parseFrontmatter(data);
+
+      if (frontmatter.show === false) {
+        return null;
+      }
 
       const rootSummary = rootReadme
         ? parseRootReadmeSummary(rootReadme, folder.name)
@@ -485,6 +558,18 @@ async function fetchRepoProjects(
       const order =
         frontmatter.order ?? DEFAULT_FOLDER_ORDER[folder.name] ?? 999;
 
+      const rawImages = asStringArray(frontmatter.images);
+      const images = rawImages.map((img) => {
+        if (
+          img.startsWith("http://") ||
+          img.startsWith("https://") ||
+          img.startsWith("/")
+        ) {
+          return img;
+        }
+        return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${folder.name}/${img.replace(/^\.\//, "")}`;
+      });
+
       return {
         id,
         title,
@@ -504,7 +589,7 @@ async function fetchRepoProjects(
             ? frontmatter.github
             : `https://github.com/${owner}/${repo}/tree/${branch}/${folder.name}`,
         liveUrl: frontmatter.liveUrl,
-        images: asStringArray(frontmatter.images),
+        images,
         tags: asStringArray(frontmatter.tags),
         contribution: frontmatter.contribution || "Solo Developer",
         extent: asStringArray(frontmatter.extent).length
@@ -526,6 +611,8 @@ async function fetchRepoProjects(
       } satisfies Project;
     }),
   );
+
+  const projects = projectResults.filter((p): p is Project => p !== null);
 
   return projects.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
 }

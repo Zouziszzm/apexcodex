@@ -1,13 +1,14 @@
 import type { Project } from "@/types/projects";
 
 export const PINNED_PROJECT_GROUPS = [
+  "professional",
   "rust",
   "typescript",
   "opensource",
-  "flutter",
 ] as const;
 
 export const PROJECT_GROUP_ORDER = [
+  "professional",
   "rust",
   "typescript",
   "opensource",
@@ -17,6 +18,7 @@ export const PROJECT_GROUP_ORDER = [
 
 export function formatGroupLabel(group: string): string {
   if (group === "opensource") return "Open Source";
+  if (group === "professional") return "Professional Works";
   return group.charAt(0).toUpperCase() + group.slice(1);
 }
 
