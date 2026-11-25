@@ -76,24 +76,34 @@ export function Highlighter({
         currentAnnotation.show()
       }
 
-      resizeObserver = new ResizeObserver(() => {
-        if (currentAnnotation.isShowing()) {
-          currentAnnotation.hide()
-          currentAnnotation.show()
-        }
-      })
+      let lastRect = element.getBoundingClientRect()
+      const repositionIfMoved = () => {
+        if (!currentAnnotation.isShowing()) return
+        const nextRect = element.getBoundingClientRect()
+        const moved =
+          Math.abs(nextRect.left - lastRect.left) > 0.5 ||
+          Math.abs(nextRect.top - lastRect.top) > 0.5 ||
+          Math.abs(nextRect.width - lastRect.width) > 0.5 ||
+          Math.abs(nextRect.height - lastRect.height) > 0.5
+        if (!moved) return
+        lastRect = nextRect
+        currentAnnotation.hide()
+        currentAnnotation.show()
+      }
 
+      resizeObserver = new ResizeObserver(repositionIfMoved)
       resizeObserver.observe(element)
-      resizeObserver.observe(document.body)
-    }
+      window.addEventListener("resize", repositionIfMoved)
 
-    return () => {
-      clearTimeout(timeoutId)
-      annotation?.remove()
-      if (resizeObserver) {
-        resizeObserver.disconnect()
+      return () => {
+        clearTimeout(timeoutId)
+        annotation?.remove()
+        resizeObserver?.disconnect()
+        window.removeEventListener("resize", repositionIfMoved)
       }
     }
+
+    return undefined
   }, [
     shouldShow,
     action,
