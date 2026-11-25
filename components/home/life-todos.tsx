@@ -4,10 +4,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { cn } from "@/lib/utils";
-import { EMOJI_QUOTES, EMOJIS } from "@/data/emoji-moods";
+import { EMOJI_QUOTES_LITE, EMOJIS_LITE } from "@/data/emoji-moods-lite";
 
 function pickEmoji(exclude?: string) {
-  const pool = exclude ? EMOJIS.filter((e) => e !== exclude) : EMOJIS;
+  const pool = exclude ? EMOJIS_LITE.filter((e) => e !== exclude) : EMOJIS_LITE;
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
@@ -32,7 +32,10 @@ export function LifeTodosTrigger() {
   const readyRef = useRef(false);
 
   useEffect(() => {
-    setEmoji(pickEmoji());
+    const id = requestAnimationFrame(() => {
+      setEmoji(pickEmoji());
+    });
+    return () => cancelAnimationFrame(id);
   }, []);
 
   useGSAP(
@@ -67,7 +70,7 @@ export function LifeTodosTrigger() {
     return () => clearInterval(interval);
   }, []);
 
-  const quote = emoji ? (EMOJI_QUOTES[emoji] ?? "Hello, wanderer.") : "";
+  const quote = emoji ? (EMOJI_QUOTES_LITE[emoji] ?? "Hello, wanderer.") : "";
 
   return (
     <span
@@ -88,15 +91,17 @@ export function LifeTodosTrigger() {
       {emoji && (
         <span
           className={cn(
-            "absolute left-1/2 bottom-[calc(100%+0.45rem)] -translate-x-1/2 z-100",
-            "pointer-events-none whitespace-normal text-center w-max max-w-[min(260px,72vw)]",
-            "font-body-xs font-light italic text-(--subtext)/75 tracking-wide",
-            "transition-all duration-300 ease-out",
-            hovered ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1",
+            "pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 z-50",
+            "whitespace-nowrap rounded px-2 py-0.5 text-[11px] font-light tracking-normal",
+            "bg-surface text-(--body) border border-theme shadow-sm",
+            "transition-all duration-200 ease-out",
+            hovered
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-1",
           )}
-          aria-hidden={!hovered}
+          role="tooltip"
         >
-          &ldquo;{quote}&rdquo;
+          {quote}
         </span>
       )}
     </span>

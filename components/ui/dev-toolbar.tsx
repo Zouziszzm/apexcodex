@@ -16,7 +16,17 @@ export const DevToolbar = () => {
     // FPS Counter
     let frames = 0;
     let prevTime = performance.now();
+    let loadMeasured = false;
     const updateFps = () => {
+      if (!loadMeasured && window.performance) {
+        loadMeasured = true;
+        const navEntry = window.performance.getEntriesByType(
+          "navigation",
+        )[0] as PerformanceNavigationTiming | undefined;
+        if (navEntry && navEntry.loadEventEnd > 0) {
+          setLoadTime(Math.round(navEntry.loadEventEnd));
+        }
+      }
       frames++;
       const time = performance.now();
       if (time >= prevTime + 1000) {
@@ -27,13 +37,6 @@ export const DevToolbar = () => {
       requestAnimationFrame(updateFps);
     };
     const frameId = requestAnimationFrame(updateFps);
-
-    // Load Time
-    if (window.performance) {
-      const perfData = window.performance.timing;
-      const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
-      setLoadTime(pageLoadTime > 0 ? pageLoadTime : 0);
-    }
 
     return () => cancelAnimationFrame(frameId);
   }, []);

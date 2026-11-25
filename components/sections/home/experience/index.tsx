@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -10,6 +10,9 @@ import { ChevronDown } from "lucide-react";
 import { setAccordionOpen } from "@/lib/animate-accordion";
 import { jobs, companySpans } from "@/data/experience";
 import { getDuration } from "@/lib/experience";
+import { useLocale } from "@/app/contexts/LocaleContext";
+import { JOB_TRANSLATIONS_JP, UI_COPY } from "@/data/i18n";
+import { ExperienceHintDoodle } from "@/components/ui/editorial-doodles";
 import { RoleItem } from "./role-item";
 
 if (typeof window !== "undefined") {
@@ -17,6 +20,9 @@ if (typeof window !== "undefined") {
 }
 
 export const ExperienceSection = () => {
+  const { locale } = useLocale();
+  const copy = UI_COPY[locale];
+  const isJp = locale === "jp";
   const containerRef = useRef<HTMLDivElement>(null);
   const headerLineRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLElement | null)[]>([]);
@@ -72,9 +78,7 @@ export const ExperienceSection = () => {
   const autoCloseTimers = useRef<Record<number, NodeJS.Timeout>>({});
   const pastExpTimer = useRef<NodeJS.Timeout | null>(null);
 
-  const { contextSafe } = useGSAP({ scope: containerRef });
-
-  const toggleJobRoles = contextSafe((index: number, forcedState?: boolean) => {
+  const toggleJobRoles = useCallback((index: number, forcedState?: boolean) => {
     const rolesContainer = rolesRefs.current[index];
     if (!rolesContainer) return;
 
@@ -96,9 +100,9 @@ export const ExperienceSection = () => {
     setAccordionOpen(rolesContainer, isNowExpanded, {
       marginTop: isNowExpanded ? 12 : 0,
     });
-  });
+  }, []);
 
-  const onJobHover = contextSafe((index: number) => {
+  const onJobHover = useCallback((index: number) => {
     if (autoCloseTimers.current[index]) {
       clearTimeout(autoCloseTimers.current[index]);
       delete autoCloseTimers.current[index];
@@ -119,90 +123,94 @@ export const ExperienceSection = () => {
         },
       );
     }
-  });
+  }, []);
 
-  const onJobLeave = contextSafe((index: number) => {
-    const dividerPulse = dividerPulseRefs.current[index];
-    if (dividerPulse) {
-      gsap.killTweensOf(dividerPulse);
-      gsap.set(dividerPulse, { x: "-100%", opacity: 0 });
-    }
-
-    if (expandedJobIndicesRef.current[index]) {
-      autoCloseTimers.current[index] = setTimeout(() => {
-        toggleJobRoles(index);
-        delete autoCloseTimers.current[index];
-      }, 3000);
-    }
-  });
-
-  const togglePastExperience = contextSafe((forcedState?: boolean) => {
-    const nextState =
-      forcedState !== undefined ? forcedState : !isExpandedRef.current;
-
-    if (forcedState !== undefined && isExpandedRef.current === nextState) {
-      return;
-    }
-
-    isExpandedRef.current = nextState;
-    setIsExpanded(nextState);
-
-    // Clear hash from URL when closing the section
-    if (!nextState && window.location.hash === "#experience-metalinex") {
-      window.history.replaceState(
-        null,
-        document.title,
-        window.location.pathname + window.location.search,
-      );
-    }
-
-    if (expandedRef.current) {
-      if (nextState) {
-        setAccordionOpen(expandedRef.current, true, {
-          onComplete: () => {
-            jobs.slice(1).forEach((job, idx) => {
-              if (job.roles && job.roles.length > 1) {
-                toggleJobRoles(idx + 1, true);
-              }
-            });
-          },
-        });
-      } else {
-        jobs.slice(1).forEach((job, idx) => {
-          if (job.roles && job.roles.length > 1) {
-            toggleJobRoles(idx + 1, false);
-          }
-        });
-
-        setAccordionOpen(expandedRef.current, false);
+  const onJobLeave = useCallback(
+    (index: number) => {
+      const dividerPulse = dividerPulseRefs.current[index];
+      if (dividerPulse) {
+        gsap.killTweensOf(dividerPulse);
+        gsap.set(dividerPulse, { x: "-100%", opacity: 0 });
       }
-    }
-  });
 
-  const onPastExpEnter = contextSafe(() => {
+      if (expandedJobIndicesRef.current[index]) {
+        autoCloseTimers.current[index] = setTimeout(() => {
+          toggleJobRoles(index);
+          delete autoCloseTimers.current[index];
+        }, 3000);
+      }
+    },
+    [toggleJobRoles],
+  );
+
+  const togglePastExperience = useCallback(
+    (forcedState?: boolean) => {
+      const nextState =
+        forcedState !== undefined ? forcedState : !isExpandedRef.current;
+
+      if (forcedState !== undefined && isExpandedRef.current === nextState) {
+        return;
+      }
+
+      isExpandedRef.current = nextState;
+      setIsExpanded(nextState);
+
+      // Clear hash from URL when closing the section
+      if (!nextState && window.location.hash === "#experience-metalinex") {
+        window.history.replaceState(
+          null,
+          document.title,
+          window.location.pathname + window.location.search,
+        );
+      }
+
+      if (expandedRef.current) {
+        if (nextState) {
+          setAccordionOpen(expandedRef.current, true, {
+            onComplete: () => {
+              jobs.slice(1).forEach((job, idx) => {
+                if (job.roles && job.roles.length > 1) {
+                  toggleJobRoles(idx + 1, true);
+                }
+              });
+            },
+          });
+        } else {
+          jobs.slice(1).forEach((job, idx) => {
+            if (job.roles && job.roles.length > 1) {
+              toggleJobRoles(idx + 1, false);
+            }
+          });
+
+          setAccordionOpen(expandedRef.current, false);
+        }
+      }
+    },
+    [toggleJobRoles],
+  );
+
+  const onPastExpEnter = useCallback(() => {
     if (pastExpTimer.current) {
       clearTimeout(pastExpTimer.current);
       pastExpTimer.current = null;
     }
-  });
+  }, []);
 
-  const onPastExpLeave = contextSafe(() => {
+  const onPastExpLeave = useCallback(() => {
     if (isExpandedRef.current) {
       pastExpTimer.current = setTimeout(() => {
         togglePastExperience(false);
         pastExpTimer.current = null;
       }, 5000);
     }
-  });
+  }, [togglePastExperience]);
 
   // Handle deep linking for MetaLine X
   React.useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash;
       if (hash === "#experience-metalinex") {
-        // Small delay to ensure layout is ready
         setTimeout(() => {
-          // Find index of MetaLine X (it's index 2 in jobs)
           const metalinexIndex = 2;
 
           togglePastExperience(true);
@@ -219,7 +227,7 @@ export const ExperienceSection = () => {
     handleHash();
     window.addEventListener("hashchange", handleHash);
     return () => window.removeEventListener("hashchange", handleHash);
-  }, []); // Only run on mount or hash change
+  }, [toggleJobRoles, togglePastExperience]);
 
   useGSAP(
     () => {
@@ -273,7 +281,11 @@ export const ExperienceSection = () => {
   );
 
   return (
-    <section ref={containerRef} className="w-full mt-6 flex flex-col gap-2">
+    <section
+      ref={containerRef}
+      data-locale-blur
+      className="w-full mt-6 flex flex-col gap-2"
+    >
       <div className="relative pb-2 mb-2 flex items-baseline justify-between">
         <div
           ref={headerLineRef}
@@ -282,7 +294,7 @@ export const ExperienceSection = () => {
         />
         <h2 className="font-body-sm font-medium">
           <DiaTextReveal
-            text="01 Experience"
+            text={copy.experienceHeading}
             delay={0.2}
             duration={1.2}
             textColor="var(--body)"
@@ -290,7 +302,7 @@ export const ExperienceSection = () => {
         </h2>
         <span className="font-body-sm font-medium text-(--subtext)">
           <DiaTextReveal
-            text={`${totalYears} Years`}
+            text={copy.yearsUnit(totalYears)}
             delay={0.4}
             duration={1.2}
             textColor="var(--subtext)"
@@ -388,9 +400,13 @@ export const ExperienceSection = () => {
             <div className="w-full">
               <RoleItem
                 role={{
-                  position: jobs[0].position!,
-                  duration: getDuration(jobs[0]),
-                  dateRange: jobs[0].dateRange!,
+                  position:
+                    (isJp && JOB_TRANSLATIONS_JP[jobs[0].company]?.position) ||
+                    jobs[0].position!,
+                  duration: getDuration(jobs[0], locale),
+                  dateRange:
+                    (isJp && JOB_TRANSLATIONS_JP[jobs[0].company]?.dateRange) ||
+                    jobs[0].dateRange!,
                   description: jobs[0].description,
                 }}
                 index={0}
@@ -422,34 +438,37 @@ export const ExperienceSection = () => {
           onMouseEnter={onPastExpEnter}
           onMouseLeave={onPastExpLeave}
         >
-          <button
-            ref={(el) => {
-              itemsRef.current[1] = el;
-            }}
-            onClick={() => togglePastExperience()}
-            className="flex items-center gap-2  text-[12px] font-medium text-(--subtext) hover:text-(--body) transition-colors group/toggle w-fit"
-            style={{ opacity: 0, transform: "translateY(30px)" }}
-            aria-expanded={isExpanded}
-            aria-label={
-              isExpanded ? "Hide past experience" : "Show past experience"
-            }
-          >
-            <span>
-              <DiaTextReveal
-                text="Past Experience"
-                delay={0.8}
-                duration={1.2}
-                textColor="var(--subtext)"
-              />
-            </span>
-            <div ref={chevronRef} className="opacity-0">
-              <ChevronDown
-                size={14}
-                className={`transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
-                aria-hidden="true"
-              />
-            </div>
-          </button>
+          <div className="flex items-center gap-1 w-full">
+            <button
+              ref={(el) => {
+                itemsRef.current[1] = el;
+              }}
+              onClick={() => togglePastExperience()}
+              className="flex items-center gap-2 text-[12px] font-medium text-(--subtext) hover:text-(--body) transition-colors group/toggle w-fit"
+              style={{ opacity: 0, transform: "translateY(30px)" }}
+              aria-expanded={isExpanded}
+              aria-label={
+                isExpanded ? copy.hidePastExperience : copy.showPastExperience
+              }
+            >
+              <span>
+                <DiaTextReveal
+                  text={copy.pastExperience}
+                  delay={0.8}
+                  duration={1.2}
+                  textColor="var(--subtext)"
+                />
+              </span>
+              <div ref={chevronRef} className="opacity-0">
+                <ChevronDown
+                  size={14}
+                  className={`transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
+                  aria-hidden="true"
+                />
+              </div>
+            </button>
+            {!isExpanded && <ExperienceHintDoodle />}
+          </div>
 
           <div
             ref={expandedRef}
@@ -458,6 +477,8 @@ export const ExperienceSection = () => {
           >
             {jobs.slice(1).map((job, idx) => {
               const index = idx + 1;
+              const jpJob = isJp ? JOB_TRANSLATIONS_JP[job.company] : undefined;
+              const displayCompany = jpJob?.company || job.company;
               return (
                 <div
                   key={index}
@@ -477,14 +498,14 @@ export const ExperienceSection = () => {
                           <span className="opacity-40 text-(--subtext)">
                             0{jobs.length - index}
                           </span>
-                          {job.company}
+                          {displayCompany}
                         </Link>
                       ) : (
                         <div className="font-body-sm font-medium text-(--body) flex items-center gap-2">
                           <span className="opacity-40 text-(--subtext)">
                             0{jobs.length - index}
                           </span>
-                          {job.company}
+                          {displayCompany}
                         </div>
                       )}
                       <div
@@ -519,7 +540,12 @@ export const ExperienceSection = () => {
                       <RoleItem
                         role={{
                           ...job.roles[0],
-                          duration: getDuration(job.roles[0]),
+                          position:
+                            jpJob?.roles?.[0]?.position || job.roles[0].position,
+                          dateRange:
+                            jpJob?.roles?.[0]?.dateRange ||
+                            job.roles[0].dateRange,
+                          duration: getDuration(job.roles[0], locale),
                         }}
                         index={0}
                         total={job.roles.length}
@@ -536,7 +562,13 @@ export const ExperienceSection = () => {
                             key={rIdx + 1}
                             role={{
                               ...role,
-                              duration: getDuration(role),
+                              position:
+                                jpJob?.roles?.[rIdx + 1]?.position ||
+                                role.position,
+                              dateRange:
+                                jpJob?.roles?.[rIdx + 1]?.dateRange ||
+                                role.dateRange,
+                              duration: getDuration(role, locale),
                             }}
                             index={rIdx + 1}
                             total={job.roles!.length}
@@ -549,9 +581,9 @@ export const ExperienceSection = () => {
                     <div className="w-full">
                       <RoleItem
                         role={{
-                          position: job.position!,
-                          duration: getDuration(job),
-                          dateRange: job.dateRange!,
+                          position: jpJob?.position || job.position!,
+                          duration: getDuration(job, locale),
+                          dateRange: jpJob?.dateRange || job.dateRange!,
                           description: job.description,
                         }}
                         index={0}

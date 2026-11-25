@@ -132,7 +132,7 @@ function hash(s) {
   return h;
 }
 
-function quoteFor(emoji, index) {
+function quoteFor(emoji) {
   if (CATEGORY_HINTS[emoji]) return CATEGORY_HINTS[emoji];
   const h = hash(emoji);
   const base = QUOTE_POOL[h % QUOTE_POOL.length] ?? QUOTE_POOL[0];

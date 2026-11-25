@@ -2,9 +2,16 @@ import { NextResponse } from "next/server";
 import { getSpotifyRedirectUri, SPOTIFY_SCOPES } from "@/lib/spotify-config";
 
 export async function GET() {
+  if (process.env.NODE_ENV === "production") {
+    return new NextResponse("Not Found", { status: 404 });
+  }
+
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   if (!clientId) {
-    return NextResponse.json({ error: "Missing SPOTIFY_CLIENT_ID" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Missing SPOTIFY_CLIENT_ID" },
+      { status: 500 },
+    );
   }
 
   const redirectUri = getSpotifyRedirectUri();

@@ -3,7 +3,11 @@
 @theme {
   /* Font Family */
   --font-sans:
-    var(--font-hanken, "Hanken Grotesk"), ui-sans-serif, system-ui, sans-serif;
+    var(--font-hanken, "Hanken Grotesk"),
+    var(--font-noto-jp, "Noto Sans JP"),
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
 
   /* Fluid Typography Scale */
   --font-size-fluid-display: clamp(
@@ -86,6 +90,52 @@
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
   opacity: 1;
+}
+
+.doodle-en-text {
+  font-family: var(--font-doodle-en), cursive !important;
+  font-weight: 400;
+  -webkit-text-stroke: 0;
+}
+
+.doodle-jp-text {
+  font-family: var(--font-doodle-jp), cursive !important;
+  font-weight: 700;
+  font-synthesis-weight: auto;
+  -webkit-text-stroke: 0.02em currentColor;
+  paint-order: stroke fill;
+}
+
+html[data-locale="jp"] .text-\[13px\] {
+  font-size: calc(13px * 0.88);
+}
+
+html[data-locale="jp"] .text-\[12px\] {
+  font-size: calc(12px * 0.88);
+}
+
+html[data-locale="jp"] .text-\[11px\] {
+  font-size: calc(11px * 0.88);
+}
+
+html[data-locale="jp"] .text-\[10px\] {
+  font-size: calc(10px * 0.88);
+}
+
+html[data-locale="jp"] .text-sm {
+  font-size: calc(0.875rem * 0.88);
+}
+
+html[data-locale="jp"] .leading-relaxed {
+  line-height: calc(1.625 / 0.88);
+}
+
+html[data-locale="jp"] .leading-tight {
+  line-height: calc(1.25 / 0.88);
+}
+
+html[data-locale="jp"] .leading-snug {
+  line-height: calc(1.375 / 0.88);
 }
 
 @layer base {
@@ -288,6 +338,33 @@
   :lang(fa) {
     line-height: 1.9;
     direction: rtl;
+  }
+
+  html[data-locale="jp"] {
+    --font-display: calc(var(--font-size-fluid-display) * 0.88);
+    --font-heading: calc(var(--font-size-fluid-heading) * 0.88);
+    --font-title: calc(var(--font-size-fluid-title) * 0.88);
+    --font-subtitle: calc(var(--font-size-fluid-subtitle) * 0.88);
+    --font-kicker: calc(var(--font-size-fluid-kicker) * 0.88);
+    --font-body: calc(var(--font-size-fluid-body) * 0.88);
+    --font-body-sm: calc(var(--font-size-fluid-body-sm) * 0.88);
+    --font-body-xs: calc(var(--font-size-fluid-body-xs) * 0.88);
+
+    /* Inverse line-height multiplier so (font-size * 0.88) * (lh / 0.88) === exact English pixel line height (zero layout shift) */
+    --lh-heading: calc(1.15 / 0.88);
+    --lh-loose: calc(1.3 / 0.88);
+    --lh-body: calc(1.6 / 0.88);
+    --lh-tight: calc(1.5 / 0.88);
+  }
+
+  html[data-locale="jp"] body {
+    font-family:
+      var(--font-hanken-jp-scale),
+      var(--font-noto-jp, "Noto Sans JP"),
+      var(--font-hanken, "Hanken Grotesk"),
+      ui-sans-serif,
+      system-ui,
+      sans-serif;
   }
 
   /* Seasonal Colors */
@@ -878,11 +955,20 @@
   mix-blend-mode: normal;
   /* New snapshot sits on top — the clip-path animation reveals it */
   z-index: 1;
+  will-change: clip-path;
 }
 
-/* Scoped to AnimatedThemeToggler — the toggler sets the data-attribute and the variable only during a theme toggle. */
+/* Scoped to AnimatedThemeToggler — freeze per-element CSS transitions during snapshot capture so View Transition interpolates cleanly with zero mid-way snap. */
+html[data-magicui-theme-vt="active"],
+html[data-magicui-theme-vt="active"] *,
+html[data-magicui-theme-vt="active"] *::before,
+html[data-magicui-theme-vt="active"] *::after {
+  transition: none !important;
+}
+
 html[data-magicui-theme-vt="active"]::view-transition-group(root) {
   animation-duration: var(--magicui-theme-toggle-vt-duration);
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer utilities {

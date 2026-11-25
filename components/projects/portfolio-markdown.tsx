@@ -292,7 +292,7 @@ export function PortfolioMarkdown({
       animate
         ? createAnimatedMarkdownComponents(baseDelay, stagger)
         : staticMarkdownComponents,
-    [animate, baseDelay, stagger, content],
+    [animate, baseDelay, stagger],
   );
 
   return (

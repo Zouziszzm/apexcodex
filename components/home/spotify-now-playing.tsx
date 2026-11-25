@@ -69,12 +69,12 @@ function createSegmentStates(): EcgSegmentState[] {
 function SongWaveform() {
   const svgRef = useRef<SVGSVGElement>(null);
   const segmentsRef = useRef<EcgSegmentState[] | null>(null);
-  if (!segmentsRef.current) segmentsRef.current = createSegmentStates();
 
   useGSAP(
     () => {
       const svg = svgRef.current;
       if (!svg) return;
+      if (!segmentsRef.current) segmentsRef.current = createSegmentStates();
 
       const paths = svg.querySelectorAll<SVGPathElement>(".song-waveform-path");
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

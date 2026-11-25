@@ -11,6 +11,9 @@ import { DiaTextReveal } from "@/components/ui/dia-text-rv";
 import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { formatProjectTitle } from "@/lib/format-project-title";
 import { formatGroupLabel } from "@/lib/project-groups";
+import { HeaderControls } from "@/components/home/header-controls";
+import { useLocale } from "@/app/contexts/LocaleContext";
+import { PROJECT_TRANSLATIONS_JP, UI_COPY } from "@/data/i18n";
 
 interface ProjectContentProps {
   project: Project;
@@ -134,6 +137,10 @@ export default function ProjectContent({
   prevProject,
   nextProject,
 }: ProjectContentProps) {
+  const { locale } = useLocale();
+  const copy = UI_COPY[locale];
+  const isJp = locale === "jp";
+  const jpProj = isJp ? PROJECT_TRANSLATIONS_JP[project.id] : undefined;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const imageRef = useRef<HTMLDivElement>(null);
   const thumbsRef = useRef<HTMLDivElement>(null);
@@ -186,10 +193,15 @@ export default function ProjectContent({
     { scope: containerRef, dependencies: [project] },
   );
 
-  const description =
-    typeof project.description === "string" ? project.description.trim() : "";
-  const showDescription = description.length > 0;
+  const rawDescription =
+    jpProj?.description ??
+    (typeof project.description === "string" ? project.description : "");
+  const description = rawDescription.trim();
+  const showDescription =
+    description.length > 0 || typeof project.description !== "string";
   const showTechnicalDetails = Boolean(project.technicalDetails);
+  const displayContribution = jpProj?.contribution ?? project.contribution;
+  const displayExtent = (jpProj?.extent ?? project.extent).join(", ");
 
   return (
     <main
@@ -197,6 +209,7 @@ export default function ProjectContent({
       className="relative mx-auto flex w-full max-w-[1440px] flex-1 flex-col overflow-x-hidden px-6 pt-24 text-(--body)"
     >
       <nav
+        data-locale-blur
         className="absolute top-10 left-6 lg:left-12"
         aria-label="Breadcrumb"
       >
@@ -211,7 +224,9 @@ export default function ProjectContent({
               className="shrink-0 opacity-40 transition-all group-hover:-translate-x-0.5 group-hover:opacity-100"
               aria-hidden="true"
             />
-            <span className="font-medium text-caption opacity-100">Home</span>
+            <span className="font-medium text-caption opacity-100">
+              {copy.breadcrumbHome}
+            </span>
           </TransitionLink>
           <span className="opacity-20" aria-hidden="true">
             /
@@ -220,7 +235,7 @@ export default function ProjectContent({
             href="/projects"
             className="font-light text-caption text-(--subtext) opacity-50 transition-colors hover:text-(--body) hover:opacity-100"
           >
-            Projects
+            {copy.breadcrumbProjects}
           </TransitionLink>
           {project.group && (
             <>
@@ -228,12 +243,16 @@ export default function ProjectContent({
                 /
               </span>
               <span className="font-light text-caption text-(--subtext) opacity-50">
-                {formatGroupLabel(project.group)}
+                {formatGroupLabel(project.group, locale)}
               </span>
             </>
           )}
         </div>
       </nav>
+
+      <div className="absolute top-8 right-6 lg:right-12">
+        <HeaderControls />
+      </div>
 
       <div className="mx-auto flex w-full min-w-0 max-w-3xl flex-col">
         <header className="mt-4 flex w-full flex-col items-center gap-3">
@@ -331,6 +350,7 @@ export default function ProjectContent({
         )}
 
         <section
+          data-locale-blur
           className="mt-12 flex w-full min-w-0 flex-col gap-8"
           aria-label="Project Details"
         >
@@ -377,7 +397,7 @@ export default function ProjectContent({
                       className="text-body-sm font-light transition-opacity flex items-center gap-2 border-b border-transparent hover:border-(--body)/20 pb-0.5 underline-offset-4"
                     >
                       <ExternalLink size={12} className="opacity-100" />
-                      <DiaTextReveal text="Live Site" delay={0.8} />
+                      <DiaTextReveal text={copy.liveSite} delay={0.8} />
                     </a>
                   )}
                 </div>
@@ -388,7 +408,7 @@ export default function ProjectContent({
           <div className="mt-2 flex w-full min-w-0 flex-col gap-0">
             <div className="flex justify-between items-center py-3.5">
               <span className="text-caption font-light opacity-40 ">
-                <DiaTextReveal text="Date" delay={0.7} />
+                <DiaTextReveal text={copy.dateLabel} delay={0.7} />
               </span>
               <span className="text-caption font-light ">
                 <DiaTextReveal text={project.date} delay={0.7} />
@@ -397,7 +417,7 @@ export default function ProjectContent({
             {project.contributedTo && project.github && (
               <div className="flex justify-between items-center py-3.5">
                 <span className="text-caption font-light opacity-40">
-                  <DiaTextReveal text="Contributed to" delay={0.72} />
+                  <DiaTextReveal text={copy.contributedToLabel} delay={0.72} />
                 </span>
                 <a
                   href={project.github}
@@ -411,23 +431,23 @@ export default function ProjectContent({
             )}
             <div className="flex justify-between items-center py-3.5 ">
               <span className="text-caption font-light opacity-40">
-                <DiaTextReveal text="Contribution" delay={0.75} />
+                <DiaTextReveal text={copy.contributionLabel} delay={0.75} />
               </span>
               <span className="text-caption font-light text-right max-w-[60%]">
-                <DiaTextReveal text={project.contribution} delay={0.75} />
+                <DiaTextReveal text={displayContribution} delay={0.75} />
               </span>
             </div>
             <div className="flex justify-between items-center py-3.5 ">
               <span className="text-caption font-light opacity-40">
-                <DiaTextReveal text="Extent" delay={0.8} />
+                <DiaTextReveal text={copy.extentLabel} delay={0.8} />
               </span>
               <span className="text-caption font-light   ">
-                <DiaTextReveal text={project.extent.join(", ")} delay={0.8} />
+                <DiaTextReveal text={displayExtent} delay={0.8} />
               </span>
             </div>
             <div className="flex justify-between items-center py-3.5 ">
               <span className="text-caption font-light opacity-40">
-                <DiaTextReveal text="Stack" delay={0.85} />
+                <DiaTextReveal text={copy.stackLabel} delay={0.85} />
               </span>
               <span className="text-caption font-light   ">
                 <DiaTextReveal text={project.stack.join(", ")} delay={0.85} />
@@ -441,7 +461,7 @@ export default function ProjectContent({
               open={!project.detailsCollapsed}
             >
               <summary className="cursor-pointer px-4 py-3 text-caption font-light opacity-60 hover:opacity-100 transition-opacity">
-                Technical details
+                {copy.technicalDetails}
               </summary>
               <div className="px-4 pb-4">
                 <PortfolioMarkdown

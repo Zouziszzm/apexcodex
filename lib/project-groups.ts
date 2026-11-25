@@ -1,4 +1,6 @@
 import type { Project } from "@/types/projects";
+import type { Locale } from "@/app/contexts/LocaleContext";
+import { GROUP_LABELS_JP } from "@/data/i18n";
 
 export const PINNED_PROJECT_GROUPS = [
   "professional",
@@ -16,7 +18,13 @@ export const PROJECT_GROUP_ORDER = [
   "tauri",
 ] as const;
 
-export function formatGroupLabel(group: string): string {
+export function formatGroupLabel(
+  group: string,
+  locale: Locale = "en",
+): string {
+  if (locale === "jp" && GROUP_LABELS_JP[group]) {
+    return GROUP_LABELS_JP[group];
+  }
   if (group === "opensource") return "Open Source";
   if (group === "professional") return "Professional Works";
   return group.charAt(0).toUpperCase() + group.slice(1);

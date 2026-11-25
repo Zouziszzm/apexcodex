@@ -1,7 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSpotifyRedirectUri } from "@/lib/spotify-config";
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export async function GET(request: NextRequest) {
+  if (process.env.NODE_ENV === "production") {
+    return new NextResponse("Not Found", { status: 404 });
+  }
+
   const code = request.nextUrl.searchParams.get("code");
   const error = request.nextUrl.searchParams.get("error");
 
@@ -51,14 +64,15 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  const safeToken = escapeHtml(String(data.refresh_token));
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="utf-8"><title>Spotify connected</title></head>
 <body style="font-family:system-ui,sans-serif;max-width:640px;margin:3rem auto;padding:0 1.5rem;line-height:1.6">
   <h1>Spotify connected</h1>
   <p>Copy this into <code>.env.local</code> as <code>SPOTIFY_REFRESH_TOKEN</code>, then restart <code>pnpm dev</code>:</p>
-  <pre style="background:#111;color:#eee;padding:1rem;border-radius:8px;overflow:auto;word-break:break-all">${data.refresh_token}</pre>
-  <p>After saving, play something on Spotify and check the Contact section on your site.</p>
+  <pre style="background:#111;color:#eee;padding:1rem;border-radius:8px;overflow:auto;word-break:break-all">${safeToken}</pre>
+  <p>After saving, play something on Spotify and check your site.</p>
 </body>
 </html>`;
 

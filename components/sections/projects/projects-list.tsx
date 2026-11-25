@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -16,6 +16,9 @@ import {
 } from "@/lib/project-groups";
 import { setAccordionOpen } from "@/lib/animate-accordion";
 import { ProjectItem } from "@/components/sections/home/projects/project-item";
+import { useLocale } from "@/app/contexts/LocaleContext";
+import { UI_COPY } from "@/data/i18n";
+import { ProjectsHintDoodle } from "@/components/ui/editorial-doodles";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -33,10 +36,14 @@ export function ProjectsList({
   projects,
   variant,
   groupNames,
-  sectionTitle = "02 Projects",
+  sectionTitle,
   showViewAllLink = false,
 }: ProjectsListProps) {
+  const { locale } = useLocale();
+  const copy = UI_COPY[locale];
   const isFull = variant === "full";
+  const resolvedTitle =
+    sectionTitle ?? (isFull ? copy.projectsPageSection : copy.projectsHeading);
   const containerRef = useRef<HTMLDivElement>(null);
   const headerLineRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLElement | null)[]>([]);
@@ -59,8 +66,6 @@ export function ProjectsList({
   const topLevelProjects = getTopLevelProjects(projects);
   const totalGroupCount = getProjectGroups(projects).length;
 
-  const { contextSafe } = useGSAP({ scope: containerRef });
-
   useEffect(() => {
     groupNames.forEach((group) => {
       const panel = groupPanelRefs.current[group];
@@ -70,65 +75,68 @@ export function ProjectsList({
     });
   }, [groupNames]);
 
-  const closeGroupPanel = (group: string) => {
+  const closeGroupPanel = useCallback((group: string) => {
     const panel = groupPanelRefs.current[group];
     if (!panel) return;
 
     setAccordionOpen(panel, false);
-  };
+  }, []);
 
-  const openGroupPanel = (group: string) => {
+  const openGroupPanel = useCallback((group: string) => {
     const panel = groupPanelRefs.current[group];
     if (!panel) return;
 
     setAccordionOpen(panel, true, { marginTop: 8 });
-  };
+  }, []);
 
-  const toggleGroup = contextSafe((group: string) => {
-    if (!isFull) {
-      const isCurrentlyOpen = activeHomeGroupRef.current === group;
+  const toggleGroup = useCallback(
+    (group: string) => {
+      if (!isFull) {
+        const isCurrentlyOpen = activeHomeGroupRef.current === group;
 
-      if (isCurrentlyOpen) {
-        closeGroupPanel(group);
-        activeHomeGroupRef.current = null;
-        setActiveHomeGroup(null);
+        if (isCurrentlyOpen) {
+          closeGroupPanel(group);
+          activeHomeGroupRef.current = null;
+          setActiveHomeGroup(null);
+          return;
+        }
+
+        if (activeHomeGroupRef.current) {
+          closeGroupPanel(activeHomeGroupRef.current);
+        }
+
+        openGroupPanel(group);
+        activeHomeGroupRef.current = group;
+        setActiveHomeGroup(group);
         return;
       }
 
-      if (activeHomeGroupRef.current) {
-        closeGroupPanel(activeHomeGroupRef.current);
+      const isCurrentlyOpen = Boolean(expandedGroupsRef.current[group]);
+      const nextOpen = !isCurrentlyOpen;
+
+      expandedGroupsRef.current = {
+        ...expandedGroupsRef.current,
+        [group]: nextOpen,
+      };
+      setExpandedGroups((current) => ({
+        ...current,
+        [group]: nextOpen,
+      }));
+
+      if (nextOpen) {
+        openGroupPanel(group);
+        return;
       }
 
-      openGroupPanel(group);
-      activeHomeGroupRef.current = group;
-      setActiveHomeGroup(group);
-      return;
-    }
-
-    const isCurrentlyOpen = Boolean(expandedGroupsRef.current[group]);
-    const nextOpen = !isCurrentlyOpen;
-
-    expandedGroupsRef.current = {
-      ...expandedGroupsRef.current,
-      [group]: nextOpen,
-    };
-    setExpandedGroups((current) => ({
-      ...current,
-      [group]: nextOpen,
-    }));
-
-    if (nextOpen) {
-      openGroupPanel(group);
-      return;
-    }
-
-    closeGroupPanel(group);
-  });
+      closeGroupPanel(group);
+    },
+    [isFull, closeGroupPanel, openGroupPanel],
+  );
 
   const isGroupExpanded = (group: string) =>
     isFull ? Boolean(expandedGroups[group]) : activeHomeGroup === group;
 
-  const onHover = contextSafe((index: number) => {
+  const onHover = useCallback((index: number) => {
     const dividerPulse = dividerPulseRefs.current[index];
 
     if (dividerPulse) {
@@ -145,16 +153,16 @@ export function ProjectsList({
         },
       );
     }
-  });
+  }, []);
 
-  const onLeave = contextSafe((index: number) => {
+  const onLeave = useCallback((index: number) => {
     const dividerPulse = dividerPulseRefs.current[index];
 
     if (dividerPulse) {
       gsap.killTweensOf(dividerPulse);
       gsap.set(dividerPulse, { x: "-100%", opacity: 0 });
     }
-  });
+  }, []);
 
   useGSAP(
     () => {
@@ -279,33 +287,36 @@ export function ProjectsList({
               : { transform: "scaleX(0)", transformOrigin: "left" }
           }
         />
-        <h2 className="font-body-sm font-medium">
+        <h2 data-locale-blur className="font-body-sm font-medium">
           {isFull ? (
-            <span className="text-(--body)">{sectionTitle}</span>
+            <span className="text-(--body)">{resolvedTitle}</span>
           ) : (
             <DiaTextReveal
-              text={sectionTitle}
+              text={resolvedTitle}
               delay={0.2}
               duration={1.2}
               textColor="var(--body)"
             />
           )}
         </h2>
-        <span className="font-body-sm font-medium text-(--subtext)">
-          {isFull ? (
-            <span>{String(projects.length).padStart(2, "0")}</span>
-          ) : (
-            <DiaTextReveal
-              text={`0${projects.length}`}
-              delay={0.4}
-              duration={1.2}
-              textColor="var(--subtext)"
-            />
-          )}
-        </span>
+        <div className="relative flex items-center gap-3 overflow-visible">
+          {!isFull && activeHomeGroup === null && <ProjectsHintDoodle />}
+          <span className="font-body-sm font-medium text-(--subtext)">
+            {isFull ? (
+              <span>{String(projects.length).padStart(2, "0")}</span>
+            ) : (
+              <DiaTextReveal
+                text={String(projects.length).padStart(2, "0")}
+                delay={0.4}
+                duration={1.2}
+                textColor="var(--subtext)"
+              />
+            )}
+          </span>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div data-locale-blur className="flex flex-col gap-2">
         {topLevelProjects.map((project, index) =>
           renderProjectItem(project, { animationIndex: index }),
         )}
@@ -343,7 +354,7 @@ export function ProjectsList({
                           isExpanded ? "text-(--body)" : "text-(--subtext)"
                         }`}
                       >
-                        {formatGroupLabel(group)}
+                        {formatGroupLabel(group, locale)}
                       </span>
                       <div
                         ref={(el) => {
@@ -421,14 +432,14 @@ export function ProjectsList({
       </div>
 
       {showViewAllLink && totalGroupCount > groupNames.length && (
-        <div className="pt-2">
+        <div data-locale-blur className="pt-2">
           <TransitionLink
             href="/projects"
             className="inline-flex items-center gap-2 font-body-sm font-light text-(--subtext) transition-colors hover:text-(--accent)"
           >
-            <span>View all projects</span>
+            <span>{copy.viewAllProjects}</span>
             <span className="text-[10px] opacity-60">
-              ({totalGroupCount} stacks)
+              {copy.stacksCount(totalGroupCount)}
             </span>
           </TransitionLink>
         </div>

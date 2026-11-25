@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState, useSyncExternalStore } from "react"
 import { gsap } from "gsap"
 
 import { cn } from "@/lib/utils"
@@ -9,6 +9,20 @@ const DEFAULT_COLORS = ["var(--accent)", "var(--body)", "var(--title)", "var(--s
 const BAND_HALF = 17
 const SWEEP_START = -BAND_HALF
 const SWEEP_END = 100 + BAND_HALF
+
+function subscribeReducedMotion(listener: () => void) {
+  const mql = window.matchMedia("(prefers-reduced-motion: reduce)")
+  mql.addEventListener("change", listener)
+  return () => mql.removeEventListener("change", listener)
+}
+
+function getReducedMotionSnapshot(): boolean {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches
+}
+
+function getReducedMotionServerSnapshot(): boolean {
+  return false
+}
 
 function buildGradient(pos: number, colors: string[], textColor: string) {
   const bandStart = pos - BAND_HALF
@@ -90,7 +104,13 @@ export function DiaTextReveal({
   const texts = Array.isArray(text) ? text : [text]
   const isMulti = texts.length > 1
 
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const prefersReducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    getReducedMotionSnapshot,
+    getReducedMotionServerSnapshot,
+  )
+  const [hasCompleted, setHasCompleted] = useState(false)
+  const hasCompletedRef = useRef(false)
   const spanRef = useRef<HTMLSpanElement>(null)
   const optsRef = useRef({
     colors,
@@ -101,43 +121,18 @@ export function DiaTextReveal({
     repeatDelay,
     texts,
   })
-  optsRef.current = {
-    colors,
-    textColor,
-    duration,
-    delay,
-    repeat,
-    repeatDelay,
-    texts,
-  }
 
   useEffect(() => {
-    const mql = window.matchMedia("(prefers-reduced-motion: reduce)")
-    setPrefersReducedMotion(mql.matches)
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
-    mql.addEventListener("change", handler)
-    return () => mql.removeEventListener("change", handler)
-  }, [])
-
-  useEffect(() => {
-    const snapVisible = () => {
-      const el = spanRef.current
-      if (!el) return
-      el.style.backgroundImage = buildGradient(
-        SWEEP_END,
-        optsRef.current.colors,
-        optsRef.current.textColor,
-      )
+    optsRef.current = {
+      colors,
+      textColor,
+      duration,
+      delay,
+      repeat,
+      repeatDelay,
+      texts,
     }
-
-    const observer = new MutationObserver(snapVisible)
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    })
-
-    return () => observer.disconnect()
-  }, [])
+  })
 
   const indexRef = useRef(0)
   const hasPlayedRef = useRef(false)
@@ -147,6 +142,47 @@ export function DiaTextReveal({
   const [activeIndex, setActiveIndex] = useState(0)
   const [measuredWidths, setMeasuredWidths] = useState<number[]>([])
   const [isInView, setIsInView] = useState(!startOnView)
+
+  useEffect(() => {
+    const handleForceSnap = () => {
+      if (tweenRef.current) {
+        tweenRef.current.kill()
+        tweenRef.current = null
+      }
+      if (spanRef.current && !optsRef.current.repeat) {
+        spanRef.current.style.backgroundImage = buildGradient(
+          SWEEP_END,
+          optsRef.current.colors,
+          optsRef.current.textColor,
+        )
+      }
+      hasCompletedRef.current = true
+      setHasCompleted(true)
+    }
+
+    const handleThemeClass = () => {
+      if (tweenRef.current) return
+      const el = spanRef.current
+      if (!el) return
+      el.style.backgroundImage = buildGradient(
+        SWEEP_END,
+        optsRef.current.colors,
+        optsRef.current.textColor,
+      )
+    }
+
+    window.addEventListener("dia-snap-visible", handleForceSnap)
+    const observer = new MutationObserver(handleThemeClass)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    })
+
+    return () => {
+      window.removeEventListener("dia-snap-visible", handleForceSnap)
+      observer.disconnect()
+    }
+  }, [])
 
   useEffect(() => {
     if (!startOnView) return
@@ -162,53 +198,25 @@ export function DiaTextReveal({
           if (!once) setIsInView(false)
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     )
 
     observer.observe(el)
     return () => observer.disconnect()
   }, [startOnView, once])
 
+  const joinedText = Array.isArray(text) ? text.join("\0") : text
+
   useEffect(() => {
     const el = spanRef.current
     if (!el || !isMulti) return
-    // Wait for initial render to measure correctly
-    setMeasuredWidths(measureWidths(el, texts))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Array.isArray(text) ? text.join("\0") : text, isMulti])
-
-  const play = () => {
-    const { duration, delay, repeat, repeatDelay, texts, colors, textColor } = optsRef.current
-    const el = spanRef.current
-    if (!el) return
-
-    if (tweenRef.current) tweenRef.current.kill()
-
-    const obj = { pos: SWEEP_START }
-
-    el.style.backgroundImage = buildGradient(obj.pos, colors, textColor)
-
-    tweenRef.current = gsap.to(obj, {
-      pos: SWEEP_END,
-      duration,
-      delay,
-      ease: "power3.inOut",
-      onUpdate: () => {
-        if (spanRef.current) {
-          spanRef.current.style.backgroundImage = buildGradient(obj.pos, colors, textColor)
-        }
-      },
-      onComplete: () => {
-        if (!repeat) return
-        timerRef.current = setTimeout(() => {
-          const next = (indexRef.current + 1) % texts.length
-          indexRef.current = next
-          setActiveIndex(next)
-          play()
-        }, repeatDelay * 1000)
-      },
+    const rafId = requestAnimationFrame(() => {
+      if (spanRef.current) {
+        setMeasuredWidths(measureWidths(spanRef.current, optsRef.current.texts))
+      }
     })
-  }
+    return () => cancelAnimationFrame(rafId)
+  }, [joinedText, isMulti])
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -216,24 +224,84 @@ export function DiaTextReveal({
         spanRef.current.style.backgroundImage = buildGradient(
           SWEEP_END,
           optsRef.current.colors,
-          optsRef.current.textColor
+          optsRef.current.textColor,
         )
       }
+      hasCompletedRef.current = true
       return
     }
 
     if (startOnView && !isInView) return
     if (once && hasPlayedRef.current) return
+    if (hasCompletedRef.current) return
     hasPlayedRef.current = true
 
-    play()
+    const runSweep = () => {
+      const {
+        duration: d,
+        delay: dl,
+        repeat: rep,
+        repeatDelay: repDl,
+        texts: txts,
+        colors: cols,
+        textColor: tc,
+      } = optsRef.current
+      const el = spanRef.current
+      if (!el) return
+
+      if (tweenRef.current) tweenRef.current.kill()
+
+      const obj = { pos: SWEEP_START }
+      el.style.backgroundImage = buildGradient(obj.pos, cols, tc)
+
+      tweenRef.current = gsap.to(obj, {
+        pos: SWEEP_END,
+        duration: d,
+        delay: dl,
+        ease: "power3.inOut",
+        onUpdate: () => {
+          if (spanRef.current && !hasCompletedRef.current) {
+            spanRef.current.style.backgroundImage = buildGradient(
+              obj.pos,
+              cols,
+              tc,
+            )
+          }
+        },
+        onComplete: () => {
+          tweenRef.current = null
+          if (!rep) {
+            if (spanRef.current) {
+              spanRef.current.style.backgroundImage = buildGradient(
+                SWEEP_END,
+                cols,
+                tc,
+              )
+            }
+            hasCompletedRef.current = true
+            setHasCompleted(true)
+            return
+          }
+          timerRef.current = setTimeout(() => {
+            const next = (indexRef.current + 1) % txts.length
+            indexRef.current = next
+            setActiveIndex(next)
+            runSweep()
+          }, repDl * 1000)
+        },
+      })
+    }
+
+    runSweep()
 
     return () => {
-      if (tweenRef.current) tweenRef.current.kill()
+      if (tweenRef.current) {
+        tweenRef.current.kill()
+        tweenRef.current = null
+      }
       clearTimeout(timerRef.current)
       hasPlayedRef.current = false
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInView, startOnView, once, prefersReducedMotion])
 
   const fixedW =
@@ -256,6 +324,8 @@ export function DiaTextReveal({
     }
   }, [animatedW])
 
+  const showEndGradient = (hasCompleted || prefersReducedMotion) && !repeat
+
   return (
     <span
       ref={spanRef}
@@ -267,7 +337,11 @@ export function DiaTextReveal({
         boxDecorationBreak: "clone",
         WebkitBoxDecorationBreak: "clone",
         backgroundSize: "100% 100%",
-        backgroundImage: buildGradient(SWEEP_START, colors, textColor),
+        backgroundImage: buildGradient(
+          showEndGradient ? SWEEP_END : SWEEP_START,
+          colors,
+          textColor,
+        ),
         ...(lineHeightGap !== undefined && { lineHeight: lineHeightGap }),
         ...(isMulti && {
           display: "inline-block",

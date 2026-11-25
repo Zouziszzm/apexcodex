@@ -8,10 +8,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  AMBIENT_VOLUME,
-  pickAmbientTrack,
-} from "@/lib/ambient-tracks";
+import { AMBIENT_VOLUME, pickAmbientTrack } from "@/lib/ambient-tracks";
 import {
   readAmbientPreference,
   readSiteConsent,
@@ -25,9 +22,9 @@ interface AmbientSoundContextValue {
   toggle: () => void;
 }
 
-const AmbientSoundContext = createContext<AmbientSoundContextValue | undefined>(
-  undefined,
-);
+const AmbientSoundContext = createContext<
+  AmbientSoundContextValue | undefined
+>(undefined);
 
 type AmbientAudioChain = {
   audio: HTMLAudioElement;
@@ -65,6 +62,7 @@ export function AmbientSoundProvider({
   const currentTrackRef = useRef<string | undefined>(undefined);
   const enabledRef = useRef(false);
   const skipEnabledEffectRef = useRef(true);
+  const playRandomTrackRef = useRef<() => Promise<boolean>>(async () => false);
 
   const ensureChain = useCallback(() => {
     if (chainRef.current) return chainRef.current;
@@ -78,8 +76,6 @@ export function AmbientSoundProvider({
 
     return chain;
   }, []);
-
-  const playRandomTrackRef = useRef<() => Promise<boolean>>(async () => false);
 
   const playRandomTrack = useCallback(async (): Promise<boolean> => {
     if (!enabledRef.current) return false;
@@ -101,7 +97,9 @@ export function AmbientSoundProvider({
     }
   }, [ensureChain]);
 
-  playRandomTrackRef.current = playRandomTrack;
+  useEffect(() => {
+    playRandomTrackRef.current = playRandomTrack;
+  }, [playRandomTrack]);
 
   const stop = useCallback(() => {
     const chain = chainRef.current;
@@ -160,18 +158,21 @@ export function AmbientSoundProvider({
   }, [enabled, playRandomTrack, stop]);
 
   useEffect(() => {
-    const consent = readSiteConsent();
-    setConsentStatus(consent);
+    const rafId = requestAnimationFrame(() => {
+      const consent = readSiteConsent();
+      setConsentStatus(consent);
 
-    if (consent !== "unknown") {
-      const enabledOnLoad = readAmbientPreference();
-      enabledRef.current = enabledOnLoad;
-      setEnabled(enabledOnLoad);
-    }
+      if (consent !== "unknown") {
+        const enabledOnLoad = readAmbientPreference();
+        enabledRef.current = enabledOnLoad;
+        setEnabled(enabledOnLoad);
+      }
 
-    setReady(true);
+      setReady(true);
+    });
 
     return () => {
+      cancelAnimationFrame(rafId);
       const chain = chainRef.current;
       if (chain) {
         chain.audio.pause();
@@ -198,10 +199,12 @@ export function AmbientSoundProvider({
   );
 }
 
-export function useAmbientSound() {
-  const context = useContext(AmbientSoundContext);
-  if (!context) {
-    throw new Error("useAmbientSound must be used within AmbientSoundProvider");
+export function useAmbientSound(): AmbientSoundContextValue {
+  const ctx = useContext(AmbientSoundContext);
+  if (ctx === undefined) {
+    throw new Error(
+      "useAmbientSound must be used within an AmbientSoundProvider",
+    );
   }
-  return context;
+  return ctx;
 }

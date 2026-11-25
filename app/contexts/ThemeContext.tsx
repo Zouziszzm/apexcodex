@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 
 export type Season = "spring" | "summer" | "autumn" | "winter";
 export type TimeOfDay =
@@ -19,13 +25,36 @@ interface ThemeContextType {
   setTime: (time: TimeOfDay) => void;
 }
 
+function computeThemeFromClock(): { season: Season; time: TimeOfDay } {
+  const now = new Date();
+  const month = now.getMonth();
+  const hour = now.getHours();
+
+  let currentSeason: Season = "spring";
+  if (month >= 2 && month <= 4) currentSeason = "spring";
+  else if (month >= 5 && month <= 7) currentSeason = "summer";
+  else if (month >= 8 && month <= 10) currentSeason = "autumn";
+  else currentSeason = "winter";
+
+  let currentTime: TimeOfDay = "morning";
+  if (hour >= 0 && hour < 5) currentTime = "night-00";
+  else if (hour >= 5 && hour < 7) currentTime = "dawn";
+  else if (hour >= 7 && hour < 11) currentTime = "morning";
+  else if (hour >= 11 && hour < 14) currentTime = "noon";
+  else if (hour >= 14 && hour < 17) currentTime = "afternoon";
+  else if (hour >= 17 && hour < 19) currentTime = "dusk";
+  else currentTime = "evening";
+
+  return { season: currentSeason, time: currentTime };
+}
+
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [themeState, setThemeState] = useState<{ season: Season; time: TimeOfDay }>({
-    season: "spring",
-    time: "morning",
-  });
+  const [themeState, setThemeState] = useState<{
+    season: Season;
+    time: TimeOfDay;
+  }>(computeThemeFromClock);
 
   const updateAttributes = useCallback((season: Season, time: TimeOfDay) => {
     document.documentElement.setAttribute("data-season", season);
@@ -33,7 +62,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     const icons = document.querySelectorAll("link[rel~='icon']");
     const href = `/favicons/${season}@2x.svg`;
-    
+
     if (icons.length > 0) {
       icons.forEach((icon) => {
         (icon as HTMLLinkElement).href = href;
@@ -47,60 +76,48 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const setSeason = useCallback((season: Season) => {
-    setThemeState(prev => {
-      const newState = { ...prev, season };
-      updateAttributes(newState.season, newState.time);
-      return newState;
-    });
-  }, [updateAttributes]);
+  const setSeason = useCallback(
+    (season: Season) => {
+      setThemeState((prev) => {
+        const newState = { ...prev, season };
+        updateAttributes(newState.season, newState.time);
+        return newState;
+      });
+    },
+    [updateAttributes],
+  );
 
-  const setTime = useCallback((time: TimeOfDay) => {
-    setThemeState(prev => {
-      const newState = { ...prev, time };
-      updateAttributes(newState.season, newState.time);
-      return newState;
-    });
-  }, [updateAttributes]);
+  const setTime = useCallback(
+    (time: TimeOfDay) => {
+      setThemeState((prev) => {
+        const newState = { ...prev, time };
+        updateAttributes(newState.season, newState.time);
+        return newState;
+      });
+    },
+    [updateAttributes],
+  );
 
   useEffect(() => {
-    const getInitialTheme = () => {
-      const now = new Date();
-      const month = now.getMonth();
-      const hour = now.getHours();
-
-      let currentSeason: Season = "spring";
-      if (month >= 2 && month <= 4) currentSeason = "spring";
-      else if (month >= 5 && month <= 7) currentSeason = "summer";
-      else if (month >= 8 && month <= 10) currentSeason = "autumn";
-      else currentSeason = "winter";
-
-      let currentTime: TimeOfDay = "morning";
-      if (hour >= 0 && hour < 5) currentTime = "night-00";
-      else if (hour >= 5 && hour < 7) currentTime = "dawn";
-      else if (hour >= 7 && hour < 11) currentTime = "morning";
-      else if (hour >= 11 && hour < 14) currentTime = "noon";
-      else if (hour >= 14 && hour < 17) currentTime = "afternoon";
-      else if (hour >= 17 && hour < 19) currentTime = "dusk";
-      else currentTime = "evening";
-
-      return { season: currentSeason, time: currentTime };
-    };
-
-    const initial = getInitialTheme();
-    setThemeState(initial);
+    const initial = computeThemeFromClock();
     updateAttributes(initial.season, initial.time);
 
+    const rafId = requestAnimationFrame(() => {
+      setThemeState(initial);
+    });
+
     const interval = setInterval(() => {
-      const current = getInitialTheme();
-      // Only auto-update if not in dev mode or no manual override (simplified here)
       if (process.env.NEXT_PUBLIC_IS_DEV !== "true") {
+        const current = computeThemeFromClock();
         setThemeState(current);
         updateAttributes(current.season, current.time);
       }
     }, 60000);
 
-    return () => clearInterval(interval);
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearInterval(interval);
+    };
   }, [updateAttributes]);
 
   return (

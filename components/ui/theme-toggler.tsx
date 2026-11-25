@@ -6,6 +6,7 @@ import { flushSync } from "react-dom"
 import { gsap } from "gsap"
 
 import { cn } from "@/lib/utils"
+import { tweenBlur } from "@/lib/blur-tween"
 
 export type TransitionVariant =
   | "circle"
@@ -129,7 +130,7 @@ function getThemeTransitionClipPaths(
 
 export const AnimatedThemeToggler = ({
   className,
-  duration = 400,
+  duration = 800,
   variant,
   fromCenter = false,
   ...props
@@ -138,6 +139,7 @@ export const AnimatedThemeToggler = ({
   const [isDark, setIsDark] = useState(false)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const iconContainerRef = useRef<HTMLDivElement>(null)
+  const isVtRunningRef = useRef(false)
 
   useEffect(() => {
     const updateTheme = () => {
@@ -156,13 +158,14 @@ export const AnimatedThemeToggler = ({
     return () => observer.disconnect()
   }, [])
 
-  // Icon switch animation
+  // Icon switch animation (skip during View Transition so snapshot captures icon at full opacity)
   useEffect(() => {
+    if (isVtRunningRef.current) return
     if (iconContainerRef.current) {
       gsap.fromTo(
         iconContainerRef.current,
-        { opacity: 0, scale: 0.8 },
-        { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(1.7)" }
+        { opacity: 0, scale: 0.8, rotate: -25 },
+        { opacity: 1, scale: 1, rotate: 0, duration: 0.45, ease: "power2.out" }
       )
     }
   }, [isDark])
@@ -198,18 +201,47 @@ export const AnimatedThemeToggler = ({
       try { localStorage.setItem("theme", newTheme ? "dark" : "light") } catch {}
     }
 
-    if (typeof document.startViewTransition !== "function") {
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+    if (prefersReducedMotion) {
       applyTheme()
       return
     }
 
+    if (typeof document.startViewTransition !== "function") {
+      const mainEl = document.querySelector<HTMLElement>("main") ?? document.body
+      tweenBlur(mainEl, {
+        from: 0,
+        to: 10,
+        duration: 0.22,
+        ease: "power2.in",
+        clearOnZero: false,
+      })
+      window.setTimeout(() => {
+        flushSync(applyTheme)
+        requestAnimationFrame(() => {
+          tweenBlur(mainEl, {
+            from: 10,
+            to: 0,
+            duration: 0.55,
+            ease: "power3.out",
+          })
+        })
+      }, 220)
+      return
+    }
+
     const root = document.documentElement
+    isVtRunningRef.current = true
     root.dataset.magicuiThemeVt = "active"
     root.style.setProperty(
       "--magicui-theme-toggle-vt-duration",
       `${duration}ms`
     )
     const cleanup = () => {
+      isVtRunningRef.current = false
       delete root.dataset.magicuiThemeVt
       root.style.removeProperty("--magicui-theme-toggle-vt-duration")
     }
@@ -233,20 +265,26 @@ export const AnimatedThemeToggler = ({
         viewportWidth,
         viewportHeight
       )
-      ready.then(() => {
-        document.documentElement.animate(
-          {
-            clipPath,
-          },
-          {
-            duration,
-            // Star: linear avoids easing overshoot that fights polygon interpolation at t→1; VT group duration is synced above.
-            easing: shape === "star" ? "linear" : "ease-in-out",
-            fill: "forwards",
-            pseudoElement: "::view-transition-new(root)",
-          }
-        )
-      })
+      ready
+        .then(() => {
+          document.documentElement.animate(
+            {
+              clipPath,
+            },
+            {
+              duration,
+              easing:
+                shape === "star"
+                  ? "linear"
+                  : "cubic-bezier(0.22, 1, 0.36, 1)",
+              fill: "forwards",
+              pseudoElement: "::view-transition-new(root)",
+            }
+          )
+        })
+        .catch(() => {
+          cleanup()
+        })
     }
   }, [shape, fromCenter, duration, isDark])
 

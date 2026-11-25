@@ -1,3 +1,5 @@
+import type { Locale } from "@/app/contexts/LocaleContext";
+
 export function calculateMonthsBetween(startStr: string, endStr: string): number {
   const start = new Date(startStr);
   const end = endStr === "present" ? new Date() : new Date(endStr);
@@ -13,11 +15,25 @@ export function calculateMonthsBetween(startStr: string, endStr: string): number
   return Math.max(1, totalMonths);
 }
 
-export function formatDurationString(startStr: string, endStr: string): string {
+export function formatDurationString(
+  startStr: string,
+  endStr: string,
+  locale: Locale = "en",
+): string {
   const totalMonths = calculateMonthsBetween(startStr, endStr);
 
   const years = Math.floor(totalMonths / 12);
   const remMonths = totalMonths % 12;
+
+  if (locale === "jp") {
+    if (years > 0 && remMonths > 0) {
+      return `${years}年 ${remMonths}ヶ月`;
+    } else if (years > 0) {
+      return `${years}年`;
+    } else {
+      return `${remMonths}ヶ月`;
+    }
+  }
 
   if (years > 0 && remMonths > 0) {
     return `${years} yr${years > 1 ? "s" : ""} ${remMonths} mo${remMonths > 1 ? "s" : ""}`;
@@ -28,14 +44,16 @@ export function formatDurationString(startStr: string, endStr: string): string {
   }
 }
 
-export function getDuration(item: {
-  startDate?: string;
-  endDate?: string;
-  duration?: string;
-}): string {
+export function getDuration(
+  item: {
+    startDate?: string;
+    endDate?: string;
+    duration?: string;
+  },
+  locale: Locale = "en",
+): string {
   if (item.startDate && item.endDate) {
-    return formatDurationString(item.startDate, item.endDate);
+    return formatDurationString(item.startDate, item.endDate, locale);
   }
   return item.duration || "";
 }
-

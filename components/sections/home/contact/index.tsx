@@ -1,26 +1,29 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { DiaTextReveal } from "@/components/ui/dia-text-rv";
 import { socialLinks } from "@/data/socials";
+import { useLocale } from "@/app/contexts/LocaleContext";
+import { UI_COPY } from "@/data/i18n";
+import { DoodleUnderline } from "@/components/ui/editorial-doodles";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
 export const ContactSection = () => {
+  const { locale } = useLocale();
+  const copy = UI_COPY[locale];
   const containerRef = useRef<HTMLDivElement>(null);
   const headerLineRef = useRef<HTMLDivElement>(null);
   const linkLinesRef = useRef<(HTMLDivElement | null)[]>([]);
   const pulseRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const { contextSafe } = useGSAP({ scope: containerRef });
-
-  const onHover = contextSafe((index: number) => {
+  const onHover = useCallback((index: number) => {
     const pulse = pulseRefs.current[index];
     if (pulse) {
       gsap.fromTo(
@@ -36,15 +39,15 @@ export const ContactSection = () => {
         },
       );
     }
-  });
+  }, []);
 
-  const onLeave = contextSafe((index: number) => {
+  const onLeave = useCallback((index: number) => {
     const pulse = pulseRefs.current[index];
     if (pulse) {
       gsap.killTweensOf(pulse);
       gsap.set(pulse, { x: "-100%", opacity: 0 });
     }
-  });
+  }, []);
 
   useGSAP(
     () => {
@@ -76,7 +79,11 @@ export const ContactSection = () => {
   );
 
   return (
-    <section ref={containerRef} className="w-full flex flex-col gap-2 ">
+    <section
+      ref={containerRef}
+      data-locale-blur
+      className="w-full flex flex-col gap-2 "
+    >
       <div className="relative pb-2 mb-2">
         <div
           ref={headerLineRef}
@@ -85,7 +92,7 @@ export const ContactSection = () => {
         />
         <h2 className="font-body-sm font-medium">
           <DiaTextReveal
-            text="03 Contact"
+            text={copy.contactHeading}
             delay={0.2}
             duration={1.2}
             textColor="var(--body)"
@@ -94,14 +101,17 @@ export const ContactSection = () => {
       </div>
 
       <div className="flex flex-col gap-2 max-w-xl">
-        <p className="font-light text-[13px] text-(--subtext) leading-relaxed">
-          <DiaTextReveal
-            text="If something here resonates, please reach out! I'd love to connect :)"
-            delay={0.4}
-            duration={1.5}
-            textColor="var(--subtext)"
-          />
-        </p>
+        <div className="flex flex-col items-start gap-0.5">
+          <p className="font-light text-[13px] text-(--subtext) leading-relaxed">
+            <DiaTextReveal
+              text={copy.contactMessage}
+              delay={0.4}
+              duration={1.5}
+              textColor="var(--subtext)"
+            />
+          </p>
+          <DoodleUnderline className="mt-0.5" />
+        </div>
 
         <div className="flex flex-wrap gap-x-6 gap-y-4">
           {socialLinks.map((link, index) => (

@@ -1,12 +1,13 @@
+import { cache } from "react";
 import { manualProjects } from "@/data/projects";
 import { openSourceProjects } from "@/data/open-source-projects";
 import { fetchGitHubProjects } from "@/lib/github-projects";
 import type { Project } from "@/types/projects";
 
-export async function getProjects(): Promise<Project[]> {
+export const getProjects = cache(async (): Promise<Project[]> => {
   const githubProjects = await fetchGitHubProjects();
   return [...manualProjects, ...openSourceProjects, ...githubProjects];
-}
+});
 
 export async function getProjectById(id: string): Promise<Project | undefined> {
   const projects = await getProjects();

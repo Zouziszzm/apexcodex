@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 interface SiteConsentDialogProps {
@@ -11,6 +12,16 @@ export function SiteConsentDialog({
   onAllow,
   onDecline,
 }: SiteConsentDialogProps) {
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onDecline();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onDecline]);
+
   return (
     <div
       className="fixed inset-0 z-[10000] bg-(--body)/10 backdrop-blur-md"

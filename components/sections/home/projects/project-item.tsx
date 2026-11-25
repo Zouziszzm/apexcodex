@@ -4,6 +4,8 @@ import React from "react";
 import { TransitionLink } from "@/components/ui/transition-link";
 import { DiaTextReveal } from "@/components/ui/dia-text-rv";
 import { formatProjectTitle } from "@/lib/format-project-title";
+import { useLocale } from "@/app/contexts/LocaleContext";
+import { PROJECT_TRANSLATIONS_JP } from "@/data/i18n";
 
 interface ProjectItemProps {
   project: {
@@ -34,6 +36,10 @@ export const ProjectItem = ({
   noAnimation = false,
   nested = false,
 }: ProjectItemProps) => {
+  const { locale } = useLocale();
+  const displaySubtext =
+    (locale === "jp" && PROJECT_TRANSLATIONS_JP[project.id]?.subtext) ||
+    project.subtext;
   const titleClass = nested ? "text-[13px]" : "";
   const subtextClass = nested ? "text-[11px]" : "text-[13px]";
 
@@ -78,12 +84,12 @@ export const ProjectItem = ({
 
       {noAnimation ? (
         <p className={`font-light ${subtextClass} text-(--subtext)`}>
-          {project.subtext}
+          {displaySubtext}
         </p>
       ) : (
         <p className={`font-light ${subtextClass} text-(--subtext)`}>
           <DiaTextReveal
-            text={project.subtext}
+            text={displaySubtext}
             delay={0.6 + index * 0.1}
             duration={1.5}
             textColor="var(--subtext)"

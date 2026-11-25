@@ -5,8 +5,7 @@ import { Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAmbientSound } from "@/components/providers/ambient-sound-provider";
 
-interface AmbientSoundTogglerProps
-  extends React.ComponentPropsWithoutRef<"button"> {}
+type AmbientSoundTogglerProps = React.ComponentPropsWithoutRef<"button">;
 
 export function AmbientSoundToggler({
   className,
